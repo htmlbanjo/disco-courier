@@ -1,0 +1,52 @@
+{
+  "name": "DiscoRider",
+  "version": "0.0.1",
+  "description": "create-express-typescript.",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./build/src/index.js",
+    "dev": "ts-node ./src/index.ts",
+    "live": "nodemon -w src -e ts,json -x ts-node ./src/index.ts",
+    "migrate": "sequelize db:migrate && sequelize db:seed:all",
+    "rollback": "sequelize db:seed:undo:all && sequelize db:migrate:undo:all",
+    "setup:db": "npm install && rollback && ts-node ./src/setup.ts --export=db && migrate",
+    "setup:json": "npm install && ts-node ./src/setup.ts --export=json",
+    "setup": "ts-node ./src/setup.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "typescript"
+  ],
+  "devDependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/morgan": "^1.9.2",
+    "@types/node": "^14.17.4",
+    "@types/sequelize": "github:types/sequelize",
+    "@types/validator": "^13.6.3",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "chalk": "^4.1.1",
+    "eslint": "^7.29.0",
+    "minimist2": "^1.0.2",
+    "nodemon": "^2.0.12",
+    "progress": "^2.0.3",
+    "sequelize-cli": "^6.2.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "helmet": "^4.6.0",
+    "morgan": "^1.10.0",
+    "prompts": "^2.4.1",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2",
+    "stream-json": "^1.7.2"
+  }
+}
