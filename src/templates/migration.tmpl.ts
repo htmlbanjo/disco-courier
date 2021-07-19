@@ -1,6 +1,6 @@
 import { Field } from '../defs/import'
 import { DialogueEntry, DialogueItem } from '../defs/import'
-import { TmplDialogEntry, TmplDialogEntryField } from '../defs/templates'
+import { ITmplDialogEntry, ITmplDialogEntryField } from '../defs/templates'
 
 import {
   titleIs,
@@ -12,7 +12,7 @@ import {
   description
 } from '../util/inspection.util'
 
-const templatize = (entity,item) => {
+const templatize = (entity, item) => {
   switch(entity) {
     case 'actors':
       return ActorTemplate(item)
@@ -108,7 +108,7 @@ const ConversationTemplate = (item, select: 'all' | number = 'all') => {
 }
 
 const getDialogEntryFields = (fields: Field[], index: number) => {
-  return fields.reduce((result: TmplDialogEntryField[], field: Field ) => {
+  return fields.reduce((result: ITmplDialogEntryField[], field: Field ) => {
     /*
     result.push({
       id: index + 1,
@@ -124,10 +124,10 @@ const getDialogEntryFields = (fields: Field[], index: number) => {
     })
     */
     return result
-  }, [] as TmplDialogEntryField[])
+  }, [] as ITmplDialogEntryField[])
 }
 const getDialogEntries = (entries: DialogueEntry[]) => {
-  return entries.reduce((entries: TmplDialogEntry[], entry: DialogueEntry, index: number) => {
+  return entries.reduce((entries: ITmplDialogEntry[], entry: DialogueEntry, index: number) => {
     /*
     entries.push({
       "id": entry.id,
@@ -141,7 +141,7 @@ const getDialogEntries = (entries: DialogueEntry[]) => {
     })
     */
     return entries;
-  },[] as TmplDialogEntry[])
+  },[] as ITmplDialogEntry[])
 }
 
 export {

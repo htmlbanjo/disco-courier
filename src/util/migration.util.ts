@@ -1,20 +1,57 @@
 import fs from 'fs'
 import chalk from 'chalk'
 
+
+function sourceFileExists(value: string):boolean {
+  return (!!!fs.existsSync(`./src/data/${value}.json`) && !!!fs.existsSync(`./src/data/${value}`)) ? false : true
+}
+
+function confirmOrCreateDirectory(dirName: string):void {
+  try {
+    if (!fs.existsSync(`./src/data/json/${dirName}`)){
+      fs.mkdirSync(`./src/data/json/${dirName}`)
+    }
+  } catch(err) {
+    console.log(chalk.red(`Error creating directory ./src/data/json/${dirName}. do you have the correct permissions? ${err}`))
+    process.exit(1)
+  }
+}
+
 /*****************************************************************
  * AS JSON
  *****************************************************************/
-const write = (entityname: string, file: string, data, action: () => void) => {
+function jsonHeader(entity:string):string {
+  return `
+{
+  "${entity}": [
+`
+}
+
+function jsonFooter():string {
+  return `
+  ]
+}`
+}
+
+function write(entity: string, file: string, data, action: () => void) {
   // Common use case is "actors/actors.json" but supports "/actors/392.json" 
   // for e.g. a standalone entry containing INT_Rhetoric details.
   try {
-    if (!fs.existsSync(`./src/data/json/${entityname}`)){
-      fs.mkdirSync(`./src/data/json/${entityname}`)
-    }
-    fs.writeFile(`./src/data/json/${entityname}/${file}.json`, JSON.stringify(data, null, 2), 'utf8', action)
+    confirmOrCreateDirectory(entity)
+    fs.writeFile(`./src/data/json/${entity}/${file}.json`, JSON.stringify(data, null, 2), 'utf8', action)
   } catch(err) {
-    console.log(chalk.red(`Error writing file "data/json/${entityname}/${file}.json": ${err}`))     
+    console.log(chalk.red(`Error writing file "data/json/${entity}/${file}.json": ${err}`))     
   }
+}
+
+function writeStream(entity: string, file: string):NodeJS.WritableStream  {
+  try {
+    confirmOrCreateDirectory(entity)
+    return fs.createWriteStream(`./src/data/json/${entity}/${file}.json`)
+  } catch(err) {
+    console.log(chalk.red(`Error writing file "data/json/${entity}/${file}.json": ${err}`))
+    process.exit(1)
+  }  
 }
 
 /*****************************************************************
@@ -23,11 +60,13 @@ const write = (entityname: string, file: string, data, action: () => void) => {
 const zeroPadded = (value: number):string => {
   return value.toString().padStart(2,'0')
 }
-const seederFileName = (entity: string):string => {
+
+const seedFileName = (entity: string):string => {
   const now = new Date()
   return `${now.getUTCFullYear()}${zeroPadded(now.getUTCMonth() + 1)}${zeroPadded(now.getUTCDay())}${zeroPadded(now.getUTCHours())}${zeroPadded(now.getUTCMinutes())}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
 }
-const seederFile = (entity:string, data):string => {
+
+const seedHeader = (entity:string, data):string => {
   // entity arg gets the first letter uppercased to match model names
   // e.g. 'actors' key exports to an 'Actors' table.
   const table:string = `${entity.charAt(0).toUpperCase()}${entity.slice(1)}`
@@ -44,12 +83,13 @@ module.exports = {
 }
 `
 }
+
 /* Writes a Sequelize seeder file into the seeder directory, 
    using data imported from the dialog file. */
 const seed = (entity: string, id:number, data):string | void => {
-  const filename:string = seederFileName(entity)
+  const filename:string = seedFileName(entity)
   try {
-    fs.writeFileSync(`src/data/seeders/${filename}`, seederFile(entity, data), 'utf8')
+    fs.writeFileSync(`src/data/seeders/${filename}`, seedHeader(entity, data), 'utf8')
     return filename
   } catch(err) {
     console.log(
@@ -73,7 +113,13 @@ const seed = (entity: string, id:number, data):string | void => {
 }
 
 export  {
+  sourceFileExists,
+  seedFileName,
+  seedHeader,
+  jsonHeader,
+  jsonFooter,
   write,
+  writeStream,
   read,
   seed
 }

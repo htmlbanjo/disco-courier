@@ -43,6 +43,7 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "helmet": "^4.6.0",
+    "immer": "^9.0.5",
     "morgan": "^1.10.0",
     "prompts": "^2.4.1",
     "sequelize": "^6.6.5",

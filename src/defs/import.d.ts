@@ -93,6 +93,29 @@ export interface DialogueItem extends BaseItem {
   dialogueEntries: DialogueEntry[];
 }
 
-export type Item = BaseItem | ActorItem | ConversationItem;
-export type TSearchableItem = Item | DialogueEntry | Field;
-export type TWithFields = Item | DialogueEntry;
+
+interface ISupportedVersion {
+  version: string;
+  rowCounts?: {
+    actors: number;
+    locations: number;
+    variables: number;
+    items: number;
+    conversations: number;
+  }
+}
+interface ICurrentVersion extends ISupportedVersion {
+  version: string | false;
+}
+
+type TItem = BaseItem | ActorItem | ConversationItem
+type TSearchableItem = Item | DialogueEntry | Field
+type TWithFields = Item | DialogueEntry
+
+export { 
+  TItem,
+  TSearchableItem,
+  TWithFields,
+  ISupportedVersion,
+  ICurrentVersion 
+}

@@ -1,7 +1,7 @@
 import {
   TWithFields, 
   Field, 
-  Item
+  TItem
 } from '../defs/import'
 
 const whereKeyMatches = (key: string, match: string, item: TWithFields, lowercase=false):Field => {
@@ -44,32 +44,32 @@ const isTask = (item: any) => {
   return getSearchString('subtask_title', item)
 }
 
-const booleanValueOf = (key: string, item: Item):boolean  => {
+const booleanValueOf = (key: string, item: TItem):boolean  => {
   return (valueOf(key, item, true) === 'true') ? true : false
 }
 
-const findInField = (data: Item[], key: string, value: string) => {
-  return data.reduce((matches, item: Item) => {
+const findInField = (data: TItem[], key: string, value: string) => {
+  return data.reduce((matches, item: TItem) => {
     if(item?.fields?.find(d => (d.title.toLowerCase() === key && d.value.toLowerCase() === value))) {
       matches.push(item)
     }
     return matches
-  },[] as Item[])
+  },[] as TItem[])
 }
 
-const getName = (item: Item) => {
+const getName = (item: TItem) => {
   return valueOf('name', item)
 }
 
-const techName = (item: Item) => {
+const techName = (item: TItem) => {
   return valueOf('technical name', item)
 }
 
-const shortDescription = (item: Item) => {
+const shortDescription = (item: TItem) => {
   return valueOf('short_description', item)
 }
 
-const description = (item: Item) => {
+const description = (item: TItem) => {
   return valueOf('description', item) || undefined
 }
 

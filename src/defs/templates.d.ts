@@ -1,4 +1,4 @@
-export interface TmplDialogEntry {
+export interface ITmplDialogEntry {
   id: number;
   parent: number;
   meta: TmplDialogEntryField[];
@@ -9,7 +9,7 @@ export interface TmplDialogEntry {
   links?: OutgoingLink[];
 }
 
-export interface TmplDialogEntryField {
+export interface ITmplDialogEntryField {
   id: number;
   isDialog: string | undefined;
   isTask: string | undefined;
