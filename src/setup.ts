@@ -40,7 +40,7 @@ import { ICurrentVersion, ISupportedVersion } from './defs/import'
       version: false
     }
   }
-  const entities = ['actors','locations'] //'actors','locations', 'variables','items','conversations'
+  const entities = ['actors','locations'] //'actors','locations','variables','items','conversations'
 
   const updateProgress = (note:string = '...'):void => {
     let prog = ''
@@ -150,11 +150,12 @@ import { ICurrentVersion, ISupportedVersion } from './defs/import'
 
           case 'write':
             const fileStream = writeStream(entity, entity)
-            fileStream.write(JSON.stringify(entityData, null, 2))
-            // TODO - need callback from fileStream so we know we're *actually* done with the write portion
-            state.messages.push(`Exporting ${entityname} data (${entityData[entity].length} rows) to ${entityname}.json )......Success!`)
-            updateProgress()
-            end(i)
+            fileStream.write(JSON.stringify(entityData, null, 2), () => {
+              // TODO - need callback from fileStream so we know we're *actually* done with the write portion
+              state.messages.push(`Exporting ${entityname} data (${entityData[entity].length} rows) to ${entityname}.json )......Success!`)
+              updateProgress()
+              end(i)
+            })
             break
 
           case 'seed':
