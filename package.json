@@ -4,15 +4,12 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./build/src/index.js",
-    "dev": "ts-node ./src/index.ts",
-    "live": "nodemon -w src -e ts,json -x ts-node ./src/index.ts",
-    "migrate": "sequelize db:migrate && sequelize db:seed:all",
-    "rollback": "sequelize db:seed:undo:all && sequelize db:migrate:undo:all",
-    "setup:db": "npm install && rollback && ts-node ./src/setup.ts --export=db && migrate",
-    "setup:json": "npm install && ts-node ./src/setup.ts --export=json",
-    "setup": "ts-node ./src/setup.ts",
+    "dev": "nodemon -w src -e ts,json -x ts-node ./src/setup.ts",
+    "populate": "sequelize db:migrate && sequelize db:seed:all",
+    "depopulate": "sequelize db:seed:undo:all && sequelize db:migrate:undo:all",
+    "setup:db": "ts-node ./src/setup.ts --export=db",
+    "setup:json": "ts-node ./src/setup.ts --export=json",
+    "setup:read": "ts-node ./src/setup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

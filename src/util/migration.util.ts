@@ -16,40 +16,32 @@ function confirmOrCreateDirectory(dirName: string):void {
     process.exit(1)
   }
 }
+function zeroPadded(value: number):string {
+  return value.toString().padStart(2,'0')
+}
+
+function capitalize(entity: string):string {
+  // entity arg gets the first letter uppercased to match model names
+  // e.g. 'actors' key exports to an 'Actors' table.
+  return `${entity.charAt(0).toUpperCase()}${entity.slice(1)}`
+}
 
 /*****************************************************************
  * AS JSON
  *****************************************************************/
-function jsonHeader(entity:string):string {
-  return `
-{
-  "${entity}": [
-`
+function jsonFileName(entity: string, file: string):string {
+  confirmOrCreateDirectory(entity)
+  return `./src/data/json/${entity}/${file}.json`
 }
 
-function jsonFooter():string {
-  return `
-  ]
-}`
-}
-
-function write(entity: string, file: string, data, action: () => void) {
-  // Common use case is "actors/actors.json" but supports "/actors/392.json" 
-  // for e.g. a standalone entry containing INT_Rhetoric details.
+function writeStream(mode: 'write' | 'seed', entity: string, file: string):NodeJS.WritableStream  {
+  let pathAndFilename
   try {
-    confirmOrCreateDirectory(entity)
-    fs.writeFile(`./src/data/json/${entity}/${file}.json`, JSON.stringify(data, null, 2), 'utf8', action)
+    pathAndFilename = (mode === 'seed') ? pathAndFilename = seedFileName(entity) : jsonFileName(entity,file)
+    return fs.createWriteStream(pathAndFilename)
   } catch(err) {
-    console.log(chalk.red(`Error writing file "data/json/${entity}/${file}.json": ${err}`))     
-  }
-}
-
-function writeStream(entity: string, file: string):NodeJS.WritableStream  {
-  try {
-    confirmOrCreateDirectory(entity)
-    return fs.createWriteStream(`./src/data/json/${entity}/${file}.json`)
-  } catch(err) {
-    console.log(chalk.red(`Error writing file "data/json/${entity}/${file}.json": ${err}`))
+    console.log(chalk.red(`Error writing file "${pathAndFilename}": ${err}`))
+    chalk.italic(chalk.blueBright('Do we have permission to write files here?'))
     process.exit(1)
   }  
 }
@@ -57,68 +49,44 @@ function writeStream(entity: string, file: string):NodeJS.WritableStream  {
 /*****************************************************************
  * AS SEQUELIZE SEEDER
  *****************************************************************/
-const zeroPadded = (value: number):string => {
-  return value.toString().padStart(2,'0')
-}
-
-const seedFileName = (entity: string):string => {
+function seedFileName (entity: string):string {
   const now = new Date()
-  return `${now.getUTCFullYear()}${zeroPadded(now.getUTCMonth() + 1)}${zeroPadded(now.getUTCDay())}${zeroPadded(now.getUTCHours())}${zeroPadded(now.getUTCMinutes())}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
+  return `./src/data/seeders/${now.getUTCFullYear()}${zeroPadded(now.getUTCMonth() + 1)}${zeroPadded(now.getUTCDay())}${zeroPadded(now.getUTCHours())}${zeroPadded(now.getUTCMinutes())}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
 }
 
-const seedHeader = (entity:string, data):string => {
-  // entity arg gets the first letter uppercased to match model names
-  // e.g. 'actors' key exports to an 'Actors' table.
-  const table:string = `${entity.charAt(0).toUpperCase()}${entity.slice(1)}`
+function seed(entity:string, data):string {
   // don't indent.
 return `
 'use-strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('${table}', ${JSON.stringify(data, null, 2)}, {})
+    return queryInterface.bulkInsert('${capitalize(entity)}', ${JSON.stringify(data, null, 2)}, {})
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('${table}', null, {})
+    return queryInterface.bulkDelete('${capitalize(entity)}', null, {})
   }
 }
 `
-}
-
-/* Writes a Sequelize seeder file into the seeder directory, 
-   using data imported from the dialog file. */
-const seed = (entity: string, id:number, data):string | void => {
-  const filename:string = seedFileName(entity)
-  try {
-    fs.writeFileSync(`src/data/seeders/${filename}`, seedHeader(entity, data), 'utf8')
-    return filename
-  } catch(err) {
-    console.log(
-      chalk.red(`Error writing seeder file #${id}: "src/data/seeders/${filename}": ${err}\n`),
-      chalk.italic(chalk.blueBright('Do we have permission to write files here?'))
-    )
-    process.exit(1)
-  }
 }
 
 /*****************************************************************
  * AS TERMINAL OUTPUT
  *****************************************************************/
  const read = (entity, file, data) => {
-  // TODO: chalk it up!
-  console.log('--------------------------------------------------------')
-  console.log(`${chalk.inverse(`entity:`)} ${chalk.yellow(entity)} \n ${chalk.inverse(`filename:`)} ${chalk.cyan(`${file}.json`)} \n ${chalk.inverse(data)}: `)
-  console.log('--------------------------------------------------------')
-  console.dir(data, {depth: null})
-  console.log('_________________________________________________________')
+  return () => {
+    console.log(`--------------------------------------------------------\n`)
+    console.log(`${chalk.bold(chalk.bgMagenta(` ENTITY: `))} ${chalk.magenta(entity)}\n`)
+    console.log(`${chalk.bold(chalk.bgCyan(` FILENAME: `))} ${chalk.cyan(`${file}.json`)}\n`)
+    console.log(`${chalk.bold(chalk.inverse(' DATA '))}:\n`)
+    console.log(`--------------------------------------------------------\n`)
+    console.dir(data, { depth: null})
+    console.log(`_________________________________________________________`)
+  }
 }
 
 export  {
   sourceFileExists,
   seedFileName,
-  seedHeader,
-  jsonHeader,
-  jsonFooter,
-  write,
   writeStream,
   read,
   seed

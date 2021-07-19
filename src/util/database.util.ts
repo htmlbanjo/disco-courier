@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 import chalk from 'chalk'
 
-export const connect = async () => {
+export const connect = async (type:string) => {
   const db = new Sequelize({
     "dialect": "sqlite",
     "storage": "src/data/storage.sqlite3",
