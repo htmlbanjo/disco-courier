@@ -1,0 +1,79 @@
+import chalk from 'chalk'
+
+function activityIndicatorList () {
+  return ['◉', '⧇', '⦾', '⦿', '✿']
+}
+
+function getMessageText () {
+  /* errors */
+  this.noResults = () =>
+    chalk.red(`\n\n\n
+             FAIL: Mister Dubois! Harry! Harry I really am sorry to tell you this big guy, I really am. 
+             But my informants tell me there are No Entries Found for your search.\n\n
+             It's just going to be impossible at this stage I'm afraid. Totally, utterly impossible. 
+             I just can't see any way we're gonna find what you're looking for.
+             But you're a nice guy Harry, I can tell. It really comes through. \n\n
+             Maybe try running a few errands first? That always seems to help.\n\n\n`)
+
+  this.noSourceFileFound = (sourcename: string) =>
+    chalk.red(
+      `Installation failed. Couldn't find "data/${sourcename}.json" file.`
+    )
+
+  this.versionUnsupported = (supportedVersions: string) =>
+    chalk.red(
+      `Sorry, the version of your data isn't supported. Supported versions: ${supportedVersions}`
+    )
+
+  this.failedToCreateDirectory = (dirName, err) =>
+    chalk.red(
+      `Error creating directory ./src/data/json/${dirName}. do you have the correct permissions? ${err}`
+    )
+
+  /* init checklist */
+  this.checkingForSourceFile = () => 'Do you even json?'
+
+  this.sourceFileFound = sourceFile =>
+    `${sourceFile}.json file found. You did it! You showed up.`
+
+  this.checkingForSupportedVersion = () =>
+    'Peeking under the hood for a valid version of data...'
+
+  this.foundSupportedVersion = (version: string) =>
+    `Supported version found! (${version}) Well done detective.`
+
+  this.openingSourceFile = () => 'Opening Source Json...'
+
+  /* performing work */
+  this.readProgressStep = (entity: string) =>
+    `Applying template to ${entity}....Success!`
+
+  this.writeProgressStep = (entity: string, dataLength: number) =>
+    `Exporting ${entity} data (${dataLength} rows) to ${entity}.json )......Success!`
+
+  this.seedProgressStep = (
+    entity: string,
+    dataLength: number,
+    seedFile: string
+  ) =>
+    `Exporting ${entity} data (${dataLength} rows) to "${seedFile}".......Success!`
+
+  this.processingLoop = (entity: string) => `* Processing ${entity}...`
+
+  this.writingToFile = () => `Exporting data...`
+
+  this.generatingEntity = (entity: string) =>
+    `Generating output for ${entity}...`
+
+  /* wrapping up */
+  this.completedWithTime = (totalTime: number) =>
+    `  ✓ Setup Completed in ${totalTime} seconds. Sorry it wasn't sooner. (+1 Sorry app)`
+
+  this.completedEntityNote = () => 'Entity Complete'
+
+  this.applicationEOL = () => `Done!`
+
+  return this
+}
+
+export { getMessageText, activityIndicatorList }

@@ -39,11 +39,10 @@ const getSearchString = (search: string, item: any, lowercase=false):string | nu
     return (titleContains(search, item, lowercase).value)
   }
 }
-
-const isTask = (item: any) => {
-  return getSearchString('subtask_title', item)
+const  titleValueStartsWith = (search: string, item:any):boolean => {
+  const searchStr = new RegExp(`^${search}`)
+  return (!!valueOf('Name', item).match(searchStr))
 }
-
 const booleanValueOf = (key: string, item: TItem):boolean  => {
   return (valueOf(key, item, true) === 'true') ? true : false
 }
@@ -73,6 +72,19 @@ const description = (item: TItem) => {
   return valueOf('description', item) || undefined
 }
 
+/**** ITEMS */
+const itemIsAKey = (item:any):boolean => {
+  return titleValueStartsWith('key_', item)
+  //return (!!valueOf('Name', item).match(/^\bkey_/))
+}
+const itemIsADrug = (item:any):boolean => {
+  return (titleValueStartsWith('drug_', item) || !!booleanValueOf('isSubstance',item))
+}
+
+/**** DIALOG */
+const isTask = (item: any) => {
+  return getSearchString('subtask_title', item)
+}
 
 export  {
   whereKeyMatches,
@@ -86,5 +98,7 @@ export  {
   description,
   valueOf,
   getSearchString,
-  findInField
+  findInField,
+  itemIsAKey,
+  itemIsADrug
 }

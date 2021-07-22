@@ -1,6 +1,61 @@
 import fs from 'fs'
 import chalk from 'chalk'
 
+import { parser } from 'stream-json'
+import { chain } from 'stream-chain'
+import { pick } from 'stream-json/filters/Pick'
+import { ignore } from 'stream-json/filters/Ignore'
+import { streamArray } from 'stream-json/streamers/StreamArray'
+import { streamValues } from 'stream-json/streamers/StreamValues'
+
+import { templatize } from '../templates/all'
+import { ISupportedVersion } from '../defs/import'
+import { getMessageText } from '../lib/out'
+
+function versionList(supportedVersions: ISupportedVersion[]):string {
+  return supportedVersions.reduce((versions:string[], v:ISupportedVersion) =>  {
+    versions.push(v.version)
+    return versions
+  },[] as string[]).join(', ')
+}
+
+const isSupportedVersion = (source: string, supportedVersionList: ISupportedVersion[], action: (matchedVersion) => void) =>  {
+  const pipe = chain([
+    fs.createReadStream(`./src/data/${source}.json`),
+    parser(),
+    pick({ filter: 'version' }),
+    streamValues(),
+    data => supportedVersionList.find(entry => entry.version === data.value) || false
+  ])
+  pipe.on('data', data => {
+    if(!!data?.version) {
+      action(data)
+    } else {
+      console.log(getMessageText().versionUnsupported(versionList(supportedVersionList)))
+      process.exit(0)
+    }
+  })
+}
+
+const streamSource = (source: string, entity: string, defaults: string[]) => {
+  const [entityParent, ] = entity.split('.')
+  const ignoreExpression = buildIgnoreExpression(entityParent, defaults)
+  return chain([
+    fs.createReadStream(`./src/data/${source}.json`),
+    parser(),
+    pick({ filter: entityParent, once:true }),
+    ignore({ filter: ignoreExpression, once: true }),
+    streamArray(),
+    data => templatize(entity, data.value) || false,
+  ])
+}
+
+function buildIgnoreExpression(entityParent: string, defaults: string[]):RegExp {
+  const indexOfEntityInEntities = defaults.findIndex(e => e === entityParent)
+  const ignoreList = [...defaults]
+  ignoreList.splice(indexOfEntityInEntities, 1)
+  return new RegExp(`\\b${ignoreList.join('\\b|\\b')}\\b`)
+}
 
 function sourceFileExists(value: string):boolean {
   return (!!!fs.existsSync(`./src/data/${value}.json`) && !!!fs.existsSync(`./src/data/${value}`)) ? false : true
@@ -12,7 +67,7 @@ function confirmOrCreateDirectory(dirName: string):void {
       fs.mkdirSync(`./src/data/json/${dirName}`)
     }
   } catch(err) {
-    console.log(chalk.red(`Error creating directory ./src/data/json/${dirName}. do you have the correct permissions? ${err}`))
+    console.log(getMessageText().failedToCreateDirectory(dirName, err))
     process.exit(1)
   }
 }
@@ -34,7 +89,10 @@ function jsonFileName(entity: string, file: string):string {
   return `./src/data/json/${entity}/${file}.json`
 }
 
-function writeStream(mode: 'write' | 'seed', entity: string, file: string):NodeJS.WritableStream  {
+function writeStream(mode: 'write' | 'seed' | 'read', entity: string, file: string):NodeJS.WritableStream  {
+  if(mode === 'read') {
+    return
+  }
   let pathAndFilename
   try {
     pathAndFilename = (mode === 'seed') ? pathAndFilename = seedFileName(entity) : jsonFileName(entity,file)
@@ -85,6 +143,9 @@ module.exports = {
 }
 
 export  {
+  versionList,
+  isSupportedVersion,
+  streamSource,
   sourceFileExists,
   seedFileName,
   writeStream,

@@ -16,9 +16,6 @@ export interface OutgoingLink {
   priority: number;
 }
 
-//interface DialogueEntryField {
-//  title: "Title" | "Articy Id" | "Actor" | "Dialogue Text" | "Conversant" | "inputId" | "outputId" | "Sequence",
-
 export interface DialogueEntry {
   id: number;
   conversationID: string;
@@ -88,11 +85,9 @@ export interface ConversationItem extends BaseItem {
   }
 }
 
-
 export interface DialogueItem extends BaseItem {
   dialogueEntries: DialogueEntry[];
 }
-
 
 interface ISupportedVersion {
   version: string;
@@ -102,7 +97,8 @@ interface ISupportedVersion {
     variables: number;
     items: number;
     conversations: number;
-  }
+  },
+  selectors?: {}
 }
 interface ICurrentVersion extends ISupportedVersion {
   version: string | false;

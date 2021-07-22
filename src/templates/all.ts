@@ -9,19 +9,31 @@ import {
   booleanValueOf,
   techName,
   shortDescription,
-  description
-} from '../util/inspection.util'
+  description,
+  itemIsAKey,
+  itemIsADrug,
+} from '../lib/inspection'
 
 const templatize = (entity, item) => {
   switch(entity) {
     case 'actors':
       return ActorTemplate(item)
+    case 'actors.skill':
+      return SkillTemplate(item)
+    case 'actors.attribute':
+      return AttributeTemplate(item)
+    case 'items':
+      return ItemTemplate(item)  
+    case 'items.thought':
+      return ThoughtTemplate(item)
+    case 'items.key':
+      return KeyTemplate(item)
+    case 'items.drug':
+      return KeyTemplate(item)
     case 'locations':
       return LocationTemplate(item)
     case 'variables':
       return VariableTemplate(item)
-    case 'items':
-      return ItemTemplate(item)
     case 'conversations':
       return ConversationTemplate(item)
     default:
@@ -45,9 +57,21 @@ const ActorTemplate = (item) => {
 
 // TODO: normalize actors 389-416
 const SkillTemplate = (item) => {
+  if((item.id < 389) || (item.id > 416)) { return }
   return {
     "id": item.id,
-    "gameID": valueOf('Articy ID', item),
+    "gameID": valueOf('Articy Id', item),
+    "name": valueOf('Name', item),
+    "description": shortDescription(item),
+  }
+}
+
+// TODO: normalize actors 416-end
+const AttributeTemplate = (item) => {
+  if(item.id < 417) { return null }
+  return {
+    "id": item.id,
+    "gameID": valueOf('Articy Id', item),
     "name": valueOf('Name', item),
     "description": shortDescription(item),
   }
@@ -82,14 +106,65 @@ const ItemTemplate = (item) => {
   return {
     "id": item.id,
     "name": valueOf('Name', item),
-    "techName": techName(item),
     "displayName": valueOf('displayname', item),
     "isItem": booleanValueOf('isitem', item),
-    "isConsumable": booleanValueOf('issubstance', item),
+    "itemType": valueOf('itemType', item),
+    "itemGroup": valueOf('itemGroup', item),
+    "isConsumable": booleanValueOf('isConsumable', item),
+    "isSubstance": booleanValueOf('isSubstance', item),
     "isAutoEquipable": booleanValueOf('autoequip', item),
     "isCursed": booleanValueOf('cursed', item),
     "createdAt": new Date(),
     "updatedAt": new Date()
+  }
+}
+const ThoughtTemplate = (item) => {
+  if(item.id < 53) { return null }
+  return {
+    "id": item.id,
+    "name": valueOf('Name', item),
+    "displayName": valueOf('displayname', item),
+    "isItem": booleanValueOf('isitem', item),
+    "itemType": valueOf('itemType', item),
+    "itemGroup": valueOf('itemGroup', item),
+    "isConsumable": booleanValueOf('isConsumable', item),
+    "isSubstance": booleanValueOf('isSubstance', item),
+    "createdAt": new Date(),
+    "updatedAt": new Date()
+  }
+}
+const KeyTemplate = (item) => {
+  if(itemIsAKey(item)) {
+    return {
+      "id": item.id,
+      "name": valueOf('Name', item),
+      "displayName": valueOf('displayname', item),
+      "isItem": booleanValueOf('isitem', item),
+      "itemType": valueOf('itemType', item),
+      "itemGroup": valueOf('itemGroup', item),
+      "isConsumable": booleanValueOf('isConsumable', item),
+      "isSubstance": booleanValueOf('isSubstance', item),
+      "isAutoEquipable": booleanValueOf('autoequip', item),
+      "createdAt": new Date(),
+      "updatedAt": new Date()
+    }
+  }
+}
+const DrugTemplate = (item) => {
+  if(itemIsADrug(item)) {
+    return {
+      "id": item.id,
+      "name": valueOf('Name', item),
+      "displayName": valueOf('displayname', item),
+      "isItem": booleanValueOf('isitem', item),
+      "itemType": valueOf('itemType', item),
+      "itemGroup": valueOf('itemGroup', item),
+      "isConsumable": booleanValueOf('isConsumable', item),
+      "isSubstance": booleanValueOf('isSubstance', item),
+      "isAutoEquipable": booleanValueOf('autoequip', item),
+      "createdAt": new Date(),
+      "updatedAt": new Date()
+    }
   }
 }
 
