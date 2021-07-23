@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { getMessageText, activityIndicatorList } from './lib/out'
-import { getOptions, getState, setState } from './shared'
+import { getOptions, getState, setState } from './lib/shared'
 import { paging } from './lib/paging'
 import {
   addProgressStep,

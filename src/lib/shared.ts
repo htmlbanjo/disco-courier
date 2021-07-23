@@ -1,6 +1,11 @@
 import produce, { castDraft } from 'immer'
-import { outputMode, setEntityList, entityListDefaults } from './lib/args'
-import { ISupportedVersion } from './defs/import'
+import {
+  outputMode,
+  setEntityList,
+  entityListDefaults,
+  setPaging
+} from './args'
+import { ISupportedVersion } from '../defs/import'
 
 /*
  * OPTIONS
@@ -27,8 +32,8 @@ import { ISupportedVersion } from './defs/import'
 const options = {
   debug: <boolean>false,
   entityListDefaults: entityListDefaults,
-  entityList: setEntityList(),
-  paging: <[number, number?]>[0], //setPaging(),
+  entityList: <string[]>setEntityList(),
+  paging: <[number, number?]>setPaging(),
   merge: <boolean>true,
   outputMode: <'read' | 'seed' | 'write'>outputMode,
   sourceJSON: <string>'dialog',

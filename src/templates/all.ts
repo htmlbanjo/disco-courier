@@ -10,12 +10,12 @@ import {
   techName,
   shortDescription,
   description,
-  itemIsAKey,
-  itemIsADrug,
+  isAKey,
+  isADrug
 } from '../lib/inspection'
 
 const templatize = (entity, item) => {
-  switch(entity) {
+  switch (entity) {
     case 'actors':
       return ActorTemplate(item)
     case 'actors.skill':
@@ -23,7 +23,7 @@ const templatize = (entity, item) => {
     case 'actors.attribute':
       return AttributeTemplate(item)
     case 'items':
-      return ItemTemplate(item)  
+      return ItemTemplate(item)
     case 'items.thought':
       return ThoughtTemplate(item)
     case 'items.key':
@@ -42,128 +42,136 @@ const templatize = (entity, item) => {
 }
 
 // TODO: move isNPC to xref
-const ActorTemplate = (item) => {
-  return { 
-    "id": item.id,
-    "name": valueOf('Name', item),
-    "isPlayer": booleanValueOf('IsPlayer', item),
-    "isNPC": booleanValueOf('IsNPC', item),
-    "gameID": valueOf('Articy ID', item),
-    "description": shortDescription(item),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+const ActorTemplate = item => {
+  return {
+    id: item.id,
+    name: valueOf('Name', item),
+    isPlayer: booleanValueOf('IsPlayer', item),
+    isNPC: booleanValueOf('IsNPC', item),
+    gameID: valueOf('Articy ID', item),
+    description: shortDescription(item),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
 
 // TODO: normalize actors 389-416
-const SkillTemplate = (item) => {
-  if((item.id < 389) || (item.id > 416)) { return }
+const SkillTemplate = item => {
+  if (item.id < 389 || item.id > 416) {
+    return
+  }
   return {
-    "id": item.id,
-    "gameID": valueOf('Articy Id', item),
-    "name": valueOf('Name', item),
-    "description": shortDescription(item),
+    id: item.id,
+    gameID: valueOf('Articy Id', item),
+    name: valueOf('Name', item),
+    description: shortDescription(item)
   }
 }
 
 // TODO: normalize actors 416-end
-const AttributeTemplate = (item) => {
-  if(item.id < 417) { return null }
+const AttributeTemplate = item => {
+  if (item.id < 417) {
+    return null
+  }
   return {
-    "id": item.id,
-    "gameID": valueOf('Articy Id', item),
-    "name": valueOf('Name', item),
-    "description": shortDescription(item),
+    id: item.id,
+    gameID: valueOf('Articy Id', item),
+    name: valueOf('Name', item),
+    description: shortDescription(item)
   }
 }
 
-const LocationTemplate = (item) => {
+const LocationTemplate = item => {
   return {
-    "id": item.id,
-    "name": valueOf('Name', item),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+    id: item.id,
+    name: valueOf('Name', item),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
 
-const VariableTemplate = (item) => {
+const VariableTemplate = item => {
   const name = valueOf('Name', item)
-  const initValue = item?.fields.find(a => a.title.toLowerCase() === 'initial value')
+  const initValue = item?.fields.find(
+    a => a.title.toLowerCase() === 'initial value'
+  )
   return {
-    "id": item.id,
-    "name": name,
-    "type": name.split('.')[0],
-    "label": name.split('.')[1],
-    "valueType": initValue.typeString.split('_')[1],
-    "defaultValue": initValue.value,
-    "description": description(item),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+    id: item.id,
+    name: name,
+    type: name.split('.')[0],
+    label: name.split('.')[1],
+    valueType: initValue.typeString.split('_')[1],
+    defaultValue: initValue.value,
+    description: description(item),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
 
-const ItemTemplate = (item) => {
+const ItemTemplate = item => {
   return {
-    "id": item.id,
-    "name": valueOf('Name', item),
-    "displayName": valueOf('displayname', item),
-    "isItem": booleanValueOf('isitem', item),
-    "itemType": valueOf('itemType', item),
-    "itemGroup": valueOf('itemGroup', item),
-    "isConsumable": booleanValueOf('isConsumable', item),
-    "isSubstance": booleanValueOf('isSubstance', item),
-    "isAutoEquipable": booleanValueOf('autoequip', item),
-    "isCursed": booleanValueOf('cursed', item),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+    id: item.id,
+    name: valueOf('Name', item),
+    displayName: valueOf('displayname', item),
+    isItem: booleanValueOf('isitem', item),
+    itemType: valueOf('itemType', item),
+    itemGroup: valueOf('itemGroup', item),
+    isConsumable: booleanValueOf('isConsumable', item),
+    isSubstance: booleanValueOf('isSubstance', item),
+    isAutoEquipable: booleanValueOf('autoequip', item),
+    isCursed: booleanValueOf('cursed', item),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
-const ThoughtTemplate = (item) => {
-  if(item.id < 53) { return null }
+const ThoughtTemplate = item => {
+  if (item.id < 53) {
+    return null
+  }
   return {
-    "id": item.id,
-    "name": valueOf('Name', item),
-    "displayName": valueOf('displayname', item),
-    "isItem": booleanValueOf('isitem', item),
-    "itemType": valueOf('itemType', item),
-    "itemGroup": valueOf('itemGroup', item),
-    "isConsumable": booleanValueOf('isConsumable', item),
-    "isSubstance": booleanValueOf('isSubstance', item),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+    id: item.id,
+    name: valueOf('Name', item),
+    displayName: valueOf('displayname', item),
+    isItem: booleanValueOf('isitem', item),
+    itemType: valueOf('itemType', item),
+    itemGroup: valueOf('itemGroup', item),
+    isConsumable: booleanValueOf('isConsumable', item),
+    isSubstance: booleanValueOf('isSubstance', item),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
-const KeyTemplate = (item) => {
-  if(itemIsAKey(item)) {
+const KeyTemplate = item => {
+  if (isAKey(item)) {
     return {
-      "id": item.id,
-      "name": valueOf('Name', item),
-      "displayName": valueOf('displayname', item),
-      "isItem": booleanValueOf('isitem', item),
-      "itemType": valueOf('itemType', item),
-      "itemGroup": valueOf('itemGroup', item),
-      "isConsumable": booleanValueOf('isConsumable', item),
-      "isSubstance": booleanValueOf('isSubstance', item),
-      "isAutoEquipable": booleanValueOf('autoequip', item),
-      "createdAt": new Date(),
-      "updatedAt": new Date()
+      id: item.id,
+      name: valueOf('Name', item),
+      displayName: valueOf('displayname', item),
+      isItem: booleanValueOf('isitem', item),
+      itemType: valueOf('itemType', item),
+      itemGroup: valueOf('itemGroup', item),
+      isConsumable: booleanValueOf('isConsumable', item),
+      isSubstance: booleanValueOf('isSubstance', item),
+      isAutoEquipable: booleanValueOf('autoequip', item),
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 }
-const DrugTemplate = (item) => {
-  if(itemIsADrug(item)) {
+const DrugTemplate = item => {
+  if (isADrug(item)) {
     return {
-      "id": item.id,
-      "name": valueOf('Name', item),
-      "displayName": valueOf('displayname', item),
-      "isItem": booleanValueOf('isitem', item),
-      "itemType": valueOf('itemType', item),
-      "itemGroup": valueOf('itemGroup', item),
-      "isConsumable": booleanValueOf('isConsumable', item),
-      "isSubstance": booleanValueOf('isSubstance', item),
-      "isAutoEquipable": booleanValueOf('autoequip', item),
-      "createdAt": new Date(),
-      "updatedAt": new Date()
+      id: item.id,
+      name: valueOf('Name', item),
+      displayName: valueOf('displayname', item),
+      isItem: booleanValueOf('isitem', item),
+      itemType: valueOf('itemType', item),
+      itemGroup: valueOf('itemGroup', item),
+      isConsumable: booleanValueOf('isConsumable', item),
+      isSubstance: booleanValueOf('isSubstance', item),
+      isAutoEquipable: booleanValueOf('autoequip', item),
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 }
@@ -172,18 +180,21 @@ const DrugTemplate = (item) => {
  * TODO
  */
 const ConversationTemplate = (item, select: 'all' | number = 'all') => {
-  const entries: DialogueEntry[] = (select === 'all') ? [...item.dialogueEntries] : [...item.dialogueEntries[select]]
+  const entries: DialogueEntry[] =
+    select === 'all'
+      ? [...item.dialogueEntries]
+      : [...item.dialogueEntries[select]]
   return {
-    "id": item.id,
-    "title": valueOf('title', item, true),
-    "dialogs": getDialogEntries(entries),
-    "createdAt": new Date(),
-    "updatedAt": new Date()
+    id: item.id,
+    title: valueOf('title', item, true),
+    dialogs: getDialogEntries(entries),
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
 
 const getDialogEntryFields = (fields: Field[], index: number) => {
-  return fields.reduce((result: ITmplDialogEntryField[], field: Field ) => {
+  return fields.reduce((result: ITmplDialogEntryField[], field: Field) => {
     /*
     result.push({
       id: index + 1,
@@ -202,8 +213,9 @@ const getDialogEntryFields = (fields: Field[], index: number) => {
   }, [] as ITmplDialogEntryField[])
 }
 const getDialogEntries = (entries: DialogueEntry[]) => {
-  return entries.reduce((entries: ITmplDialogEntry[], entry: DialogueEntry, index: number) => {
-    /*
+  return entries.reduce(
+    (entries: ITmplDialogEntry[], entry: DialogueEntry, index: number) => {
+      /*
     entries.push({
       "id": entry.id,
       "parent": parseInt(entry.conversationID),
@@ -215,15 +227,17 @@ const getDialogEntries = (entries: DialogueEntry[]) => {
       "metaLength": entry.fields.length,
     })
     */
-    return entries;
-  },[] as ITmplDialogEntry[])
+      return entries
+    },
+    [] as ITmplDialogEntry[]
+  )
 }
 
 export {
   templatize,
   ActorTemplate,
   LocationTemplate,
-  VariableTemplate, 
+  VariableTemplate,
   ItemTemplate,
   ConversationTemplate
 }

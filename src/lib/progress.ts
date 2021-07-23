@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { outputMode } from './args'
-import { getOptions, getState, setState } from '../shared'
+import { getOptions, getState, setState } from './shared'
+import { getMessageText } from './out'
 /*
  * Progressbar and detail rendering
  */
@@ -11,8 +12,10 @@ const addProgressStep = message => {
   setState('messages', [...getState('messages'), message])
 }
 
+// TODO: memoize sections of this (e.g. paging)
 const updateProgress = (note: string = '...'): void => {
   const messages = getState('messages')
+  const paging = getOptions().paging
   let numMessages: number = 4
   let prog: string = ''
   let messageHistory: string = ''
@@ -31,23 +34,17 @@ const updateProgress = (note: string = '...'): void => {
   if (!options.debug) {
     console.clear()
   }
-
   console.log(
     `\n\n\n   [${chalk.bgGreen(chalk.green(prog))}${rest}]\n\n\n
-        ${chalk.bold(
-          chalk.blueBright(
-            `*~~~ DISCO-COURIER: tossing ${
-              options.entityList.length > 1
-                ? `${options.entityList.length} entities`
-                : `${options.entityList[0]}`
-            } into the Coupris and setting "${outputMode}" mode as the destination. ~~~*`
-          )
-        )}\n
-        ${chalk.blue(note)}`,
-    `${chalk.green(messageHistory)}`
+    ${getMessageText().commandBanner(
+      options.entityList,
+      paging,
+      outputMode,
+      note
+    )}`,
+    chalk.green(messageHistory)
   )
 }
-
 const advanceRowProgress = (
   data: any,
   activity: string[],

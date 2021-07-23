@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { getOptions } from './shared'
 
 function activityIndicatorList () {
   return ['◉', '⧇', '⦾', '⦿', '✿']
@@ -70,6 +71,30 @@ function getMessageText () {
     `  ✓ Setup Completed in ${totalTime} seconds. Sorry it wasn't sooner. (+1 Sorry app)`
 
   this.completedEntityNote = () => 'Entity Complete'
+
+  /* Generic App */
+  this.commandBanner = (
+    entityList: string[],
+    paging: [number, number?],
+    outputMode: string,
+    note: string
+  ) =>
+    `${chalk.bold(
+      chalk.blueBright(
+        `*~~~ DISCO-COURIER: tossing ${
+          entityList.length > 1
+            ? `${entityList.length} entities`
+            : `${entityList[0]}`
+        } into the Coupris${
+          paging[0] !== 0
+            ? ` (starting at: ${paging[0]}${
+                !!paging[1] ? `, ending at: ${paging[1]}` : ``
+              })`
+            : ``
+        } and setting "${outputMode}" mode as the destination. ~~~*`
+      )
+    )}\n
+    ${chalk.blue(note)}`
 
   this.applicationEOL = () => `Done!`
 

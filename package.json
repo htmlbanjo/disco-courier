@@ -1,16 +1,21 @@
 {
-  "name": "DiscoRider",
+  "name": "Disco-Courier",
   "version": "1.0.0-alpha.1",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon -w src -e ts,json -x ts-node ./src/setup.ts",
+    "dev": "nodemon -w src -e ts,json -x ts-node ./src/index.ts",
     "db:up": "sequelize db:migrate && sequelize db:seed:all",
     "db:down": "sequelize db:seed:undo:all && sequelize db:migrate:undo:all",
-    "courier:db": "ts-node ./src/setup.ts --export=db",
-    "courier:json": "ts-node ./src/setup.ts --export=json",
-    "courier:read": "ts-node ./src/setup.ts --export=read",
+    "courier-seed": "ts-node ./src/index.ts --export=db",
+    "courier-write": "ts-node ./src/index.ts --export=json",
+    "courier-read": "ts-node ./src/index.ts --export=read",
+    "courier-health": "ts-node ./src/index.ts --export=read --start=4 --results=1 actors.attribute",
+    "courier": "ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "courier": "./index.js"
   },
   "keywords": [
     "express",
