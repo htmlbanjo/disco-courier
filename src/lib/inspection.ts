@@ -1,4 +1,5 @@
 import { TWithFields, Field, TItem } from '../defs/import'
+import { outputMode } from './args'
 
 const whereKeyMatches = (
   key: string,
@@ -21,6 +22,15 @@ const whereKeyContains = (
         (a: Field): Field => a[key].toLowerCase().includes(search)
       )
     : item?.fields?.find((a: Field): Field => a[key].includes(search))
+}
+
+const tableDates = item => {
+  if (outputMode === 'seed') {
+    return {
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  }
 }
 
 /**** CONVENIENCE / TEMPLATE SUGAR ****/
@@ -50,8 +60,8 @@ const valueContains = (
 
 const valueOf = (key: string, item: any, lowercase = false): string => {
   return !!lowercase
-    ? titleIs(key, item, lowercase)?.value.toLowerCase()
-    : titleIs(key, item, lowercase)?.value
+    ? titleIs(key, item, false)?.value.toLowerCase()
+    : titleIs(key, item, false)?.value
 }
 
 const getSearchString = (
@@ -86,6 +96,23 @@ const findInField = (data: TItem[], key: string, value: string) => {
   }, [] as TItem[])
 }
 
+const keyFunction = (
+  key: string,
+  type: string,
+  item: any,
+  keyname: string = undefined
+) => {
+  switch (type) {
+    case 'string':
+      return { [keyname || key]: valueOf(key, item) }
+    case 'bool':
+      return { [keyname || key]: booleanValueOf(key, item) }
+    case 'number':
+      return { [keyname || key]: parseInt(valueOf(key, item)) }
+  }
+}
+
+/** GENERAL */
 const getName = (item: TItem) => valueOf('name', item)
 
 const techName = (item: TItem) => valueOf('technical name', item)
@@ -95,16 +122,91 @@ const shortDescription = (item: TItem) => valueOf('short_description', item)
 const description = (item: TItem) => valueOf('description', item) || undefined
 
 /**** ITEMS */
+
+const items = {
+  itemType (item) {
+    return keyFunction('itemType', 'number', item)
+  },
+  itemGroup (item) {
+    return keyFunction('itemGroup', 'number', item)
+  },
+  itemValue (item) {
+    return keyFunction('itemValue', 'number', item)
+  },
+  conversation (item) {
+    return keyFunction('conversation', 'string', item)
+  },
+  multipleAllowed (item) {
+    return keyFunction('multipleAllowed', 'string', item)
+  },
+  stackName (item) {
+    return keyFunction('stackName', 'string', item)
+  },
+  isItem (item) {
+    return keyFunction('isItem', 'boolean', item)
+  },
+  isCursed (item) {
+    return item => keyFunction('isCursed', 'boolean', item)
+  },
+  isThought (item) {
+    return keyFunction('isThought', 'boolean', item)
+  },
+  isSubstance (item) {
+    return keyFunction('isSubstance', 'boolean', item)
+  },
+  isConsumable (item) {
+    return keyFunction('isConsumable', 'boolean', item)
+  },
+  equipOrb (item) {
+    return keyFunction('equipOrb', 'string', item)
+  },
+  mediumTextValue (item) {
+    return keyFunction('MediumTextValue', 'string', item, 'mediumText')
+  },
+  isAutoEquipable (item) {
+    return keyFunction('autoequip', 'string', item, 'isAutoEquipable')
+  },
+  thoughtType (item) {
+    return keyFunction('thoughtType', 'number', item)
+  },
+  bonus (item) {
+    return keyFunction('bonus', 'string', item)
+  },
+  fixtureBonus (item) {
+    return keyFunction('fixtureBonus', 'string', item)
+  },
+  fixtureDescription (item) {
+    return keyFunction('fixtureDescription', 'string', item)
+  },
+  requirement (item) {
+    return keyFunction('requirement', 'string', item)
+  },
+  timeLeft (item) {
+    return keyFunction('timeLeft', 'number', item)
+  }
+}
+
 const isAKey = (item: any): boolean => titleValueStartsWith('key_', item)
 
+const isAThought = (item: any): boolean => booleanValueOf('isThought', item)
+
 const isADrug = (item: any): boolean =>
-  titleValueStartsWith('drug_', item) || !!booleanValueOf('isSubstance', item)
+  titleValueStartsWith('drug_', item) || booleanValueOf('isSubstance', item)
+
+const isAConsumable = (item: any): boolean =>
+  booleanValueOf('isConsumable', item)
+
+const isABook = (item: any): boolean => titleValueStartsWith('book_', item)
+
+const isAGame = (item: any): boolean => titleValueStartsWith('game_', item)
 
 /**** DIALOG */
 const isTask = (item: any) => getSearchString('subtask_title', item)
 
 export {
   whereKeyMatches,
+  whereKeyContains,
+  tableDates,
   titleIs,
   titleContains,
   valueContains,
@@ -116,7 +218,12 @@ export {
   valueOf,
   getSearchString,
   findInField,
+  items,
+  isAThought,
   isAKey,
   isADrug,
+  isAConsumable,
+  isABook,
+  isAGame,
   isTask
 }

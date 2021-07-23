@@ -8,74 +8,90 @@ import { ignore } from 'stream-json/filters/Ignore'
 import { streamArray } from 'stream-json/streamers/StreamArray'
 import { streamValues } from 'stream-json/streamers/StreamValues'
 
-import { templatize } from '../templates/all'
+import { templatize } from '../templates'
 import { ISupportedVersion } from '../defs/import'
 import { getMessageText } from '../lib/out'
 
-function versionList(supportedVersions: ISupportedVersion[]):string {
-  return supportedVersions.reduce((versions:string[], v:ISupportedVersion) =>  {
-    versions.push(v.version)
-    return versions
-  },[] as string[]).join(', ')
+function versionList (supportedVersions: ISupportedVersion[]): string {
+  return supportedVersions
+    .reduce((versions: string[], v: ISupportedVersion) => {
+      versions.push(v.version)
+      return versions
+    }, [] as string[])
+    .join(', ')
 }
 
-const isSupportedVersion = (source: string, supportedVersionList: ISupportedVersion[], action: (matchedVersion) => void) =>  {
+const isSupportedVersion = (
+  source: string,
+  supportedVersionList: ISupportedVersion[],
+  action: (matchedVersion) => void
+) => {
   const pipe = chain([
     fs.createReadStream(`./src/data/${source}.json`),
     parser(),
     pick({ filter: 'version' }),
     streamValues(),
-    data => supportedVersionList.find(entry => entry.version === data.value) || false
+    data =>
+      supportedVersionList.find(entry => entry.version === data.value) || false
   ])
   pipe.on('data', data => {
-    if(!!data?.version) {
+    if (!!data?.version) {
       action(data)
     } else {
-      console.log(getMessageText().versionUnsupported(versionList(supportedVersionList)))
+      console.log(
+        getMessageText().versionUnsupported(versionList(supportedVersionList))
+      )
       process.exit(0)
     }
   })
 }
 
 const streamSource = (source: string, entity: string, defaults: string[]) => {
-  const [entityParent, ] = entity.split('.')
+  const [entityParent] = entity.split('.')
   const ignoreExpression = buildIgnoreExpression(entityParent, defaults)
   return chain([
     fs.createReadStream(`./src/data/${source}.json`),
     parser(),
-    pick({ filter: entityParent, once:true }),
+    pick({ filter: entityParent, once: true }),
     ignore({ filter: ignoreExpression, once: true }),
     streamArray(),
-    data => templatize(entity, data.value) || false,
+    data => templatize(entity, data.value) || false
   ])
 }
 
-function buildIgnoreExpression(entityParent: string, defaults: string[]):RegExp {
+function buildIgnoreExpression (
+  entityParent: string,
+  defaults: string[]
+): RegExp {
   const indexOfEntityInEntities = defaults.findIndex(e => e === entityParent)
   const ignoreList = [...defaults]
   ignoreList.splice(indexOfEntityInEntities, 1)
   return new RegExp(`\\b${ignoreList.join('\\b|\\b')}\\b`)
 }
 
-function sourceFileExists(value: string):boolean {
-  return (!!!fs.existsSync(`./src/data/${value}.json`) && !!!fs.existsSync(`./src/data/${value}`)) ? false : true
+function sourceFileExists (value: string): boolean {
+  return !!!fs.existsSync(`./src/data/${value}.json`) &&
+    !!!fs.existsSync(`./src/data/${value}`)
+    ? false
+    : true
 }
 
-function confirmOrCreateDirectory(dirName: string):void {
+function confirmOrCreateDirectory (dirName: string): void {
   try {
-    if (!fs.existsSync(`./src/data/json/${dirName}`)){
+    if (!fs.existsSync(`./src/data/json/${dirName}`)) {
       fs.mkdirSync(`./src/data/json/${dirName}`)
     }
-  } catch(err) {
+  } catch (err) {
     console.log(getMessageText().failedToCreateDirectory(dirName, err))
     process.exit(1)
   }
 }
-function zeroPadded(value: number):string {
-  return value.toString().padStart(2,'0')
+function zeroPadded (value: number): string {
+  return value.toString().padStart(2, '0')
 }
 
-function capitalize(entity: string):string {
+function formatTableName (entity: string): string {
+  entity = entity.split('.').join('_')
   // entity arg gets the first letter uppercased to match model names
   // e.g. 'actors' key exports to an 'Actors' table.
   return `${entity.charAt(0).toUpperCase()}${entity.slice(1)}`
@@ -84,44 +100,57 @@ function capitalize(entity: string):string {
 /*****************************************************************
  * AS JSON
  *****************************************************************/
-function jsonFileName(entity: string, file: string):string {
+function jsonFileName (entity: string, file: string): string {
   confirmOrCreateDirectory(entity)
   return `./src/data/json/${entity}/${file}.json`
 }
 
-function writeStream(mode: 'write' | 'seed' | 'read', entity: string, file: string):NodeJS.WritableStream  {
-  if(mode === 'read') {
+function writeStream (
+  mode: 'write' | 'seed' | 'read',
+  entity: string,
+  file: string
+): NodeJS.WritableStream {
+  if (mode === 'read') {
     return
   }
   let pathAndFilename
   try {
-    pathAndFilename = (mode === 'seed') ? pathAndFilename = seedFileName(entity) : jsonFileName(entity,file)
+    pathAndFilename =
+      mode === 'seed'
+        ? (pathAndFilename = seedFileName(entity))
+        : jsonFileName(entity, file)
     return fs.createWriteStream(pathAndFilename)
-  } catch(err) {
+  } catch (err) {
     console.log(chalk.red(`Error writing file "${pathAndFilename}": ${err}`))
     chalk.italic(chalk.blueBright('Do we have permission to write files here?'))
     process.exit(1)
-  }  
+  }
 }
 
 /*****************************************************************
  * AS SEQUELIZE SEEDER
  *****************************************************************/
-function seedFileName (entity: string):string {
+function seedFileName (entity: string): string {
   const now = new Date()
-  return `./src/data/seeders/${now.getUTCFullYear()}${zeroPadded(now.getUTCMonth() + 1)}${zeroPadded(now.getUTCDay())}${zeroPadded(now.getUTCHours())}${zeroPadded(now.getUTCMinutes())}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
+  return `./src/data/seeders/${now.getUTCFullYear()}${zeroPadded(
+    now.getUTCMonth() + 1
+  )}${zeroPadded(now.getUTCDay())}${zeroPadded(now.getUTCHours())}${zeroPadded(
+    now.getUTCMinutes()
+  )}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
 }
 
-function seed(entity:string, data):string {
+function seed (entity: string, data): string {
   // don't indent.
-return `
+  return `
 'use-strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('${capitalize(entity)}', ${JSON.stringify(data, null, 2)}, {})
+    return queryInterface.bulkInsert('${formatTableName(
+      entity
+    )}', ${JSON.stringify(data, null, 2)}, {})
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('${capitalize(entity)}', null, {})
+    return queryInterface.bulkDelete('${formatTableName(entity)}', null, {})
   }
 }
 `
@@ -130,19 +159,25 @@ module.exports = {
 /*****************************************************************
  * AS TERMINAL OUTPUT
  *****************************************************************/
- const read = (entity, file, data) => {
+const read = (entity, file, data) => {
   return () => {
     console.log(`--------------------------------------------------------\n`)
-    console.log(`${chalk.bold(chalk.bgMagenta(` ENTITY: `))} ${chalk.magenta(entity)}\n`)
-    console.log(`${chalk.bold(chalk.bgCyan(` FILENAME: `))} ${chalk.cyan(`${file}.json`)}\n`)
+    console.log(
+      `${chalk.bold(chalk.bgMagenta(` ENTITY: `))} ${chalk.magenta(entity)}\n`
+    )
+    console.log(
+      `${chalk.bold(chalk.bgCyan(` FILENAME: `))} ${chalk.cyan(
+        `${file}.json`
+      )}\n`
+    )
     console.log(`${chalk.bold(chalk.inverse(' DATA '))}:\n`)
     console.log(`--------------------------------------------------------\n`)
-    console.dir(data, { depth: null})
+    console.dir(data, { depth: null })
     console.log(`_________________________________________________________`)
   }
 }
 
-export  {
+export {
   versionList,
   isSupportedVersion,
   streamSource,

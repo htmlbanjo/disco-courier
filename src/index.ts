@@ -66,7 +66,7 @@ import {
     })
     pipe.on('close', data => {
       if (all[entity].length < 1) {
-        console.log(getMessageText().noReults())
+        console.log(getMessageText().noResults())
         process.exit(0)
       }
       // TODO: Performance - assess paging during compilation rather than on whole result.
