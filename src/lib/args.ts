@@ -36,8 +36,6 @@ const entityListAll = [
   'items.clothing',
   'items.tare',
   'locations',
-  'locations.exterior',
-  'locations.interior',
   'variables',
   'conversations',
   'conversations.task',
