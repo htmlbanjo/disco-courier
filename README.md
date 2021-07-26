@@ -20,7 +20,7 @@ You need a purchased copy of the game and access to its data.
 - place a copy of your exported data in /data/dialog.json
 - run a health check: `npm run courier:health`
 
-If everything is setup correctly, you'll get a json response with the details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me neither._)
+If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me neither._)
 
 ### Usage
 
@@ -37,6 +37,8 @@ Some sample commands you can try:
 | `courier --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                 |
 | `courier --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
 | `courier --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
+
+Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
 #### Entities and groups
 
