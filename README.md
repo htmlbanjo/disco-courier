@@ -1,7 +1,7 @@
 # Disco-Courier
 
 _A data-mover-and-shaker for Disco Elysium._
-The goal of Disco-Courier is to normalize and compress data for easy reading.
+The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice.
 
 Some things you could use it for:
 
@@ -61,6 +61,12 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - options are defined in /lib/args.ts
 - routing to templates is done in /templates/index.ts
 - if stuck, refer to /lib/migration.ts for details on how entities and groups are managed.
+- if using the group with the `--output=db` flag, you'll need to generate a new schema using the sequelize-cli.
+
+#### Sequelize Option
+
+- after you've generated some seed files, you can do `npm run db:up` to populate the database of your choice.
+- SQLite should be ready out-of-the-box, you'll need to follow the standard Sequelize setup for Postgres, etc.
 
 ### Notes
 
