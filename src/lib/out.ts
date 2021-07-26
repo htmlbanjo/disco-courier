@@ -59,6 +59,8 @@ function getMessageText () {
   ) =>
     `Exporting ${entity} data (${dataLength} rows) to "${seedFile}".......Success!`
 
+  this.openingProcess = (entity: string) => `* Opening ${entity}...`
+
   this.processingLoop = (entity: string) => `* Processing ${entity}...`
 
   this.writingToFile = () => `Exporting data...`
@@ -73,7 +75,7 @@ function getMessageText () {
   this.completedEntityNote = () => 'Entity Complete'
 
   /* Generic App */
-  this.commandBanner = (
+  this.commandHeader = (
     entityList: string[],
     paging: [number, number?],
     outputMode: string,
@@ -81,11 +83,11 @@ function getMessageText () {
   ) =>
     `${chalk.bold(
       chalk.blueBright(
-        `*~~~ DISCO-COURIER: tossing ${
+        `     :: ${chalk.magentaBright('DISCO-COURIER')}: tossing ${
           entityList.length > 1
             ? `${entityList.length} entities`
             : `${entityList[0]}`
-        } into the Coupris ${
+        } into the Coupris${
           paging[0] !== 0
             ? ` (starting at: ${paging[0]}${
                 !!paging[1]
@@ -93,10 +95,12 @@ function getMessageText () {
                   : ``
               })`
             : ``
-        } Destination is "${outputMode}" mode for this SSSSOUPED UP MOTOR CARRIAGE. ~~~*`
+        } Destination is "${outputMode}" mode for this SSSSOUPED UP MOTOR CARRIAGE. ::`
       )
-    )}\n
-    ${chalk.blue(note)}`
+    )}`
+
+  this.commandFooter = (note: string) =>
+    `          ${chalk.bold(chalk.greenBright(note))}`
 
   this.streamEOL = () =>
     chalk.red(

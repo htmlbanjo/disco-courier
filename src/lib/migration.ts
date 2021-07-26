@@ -11,6 +11,7 @@ import { streamValues } from 'stream-json/streamers/StreamValues'
 import { templatize } from '../templates'
 import { ISupportedVersion } from '../defs/import'
 import { getMessageText } from '../lib/out'
+import { updateProgress } from '../lib/progress'
 
 function versionList (supportedVersions: ISupportedVersion[]): string {
   return supportedVersions
@@ -58,13 +59,24 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
     entitySubProcess,
     defaults
   )
+  let streamcount = 0
   return chain([
     fs.createReadStream(`./src/data/${source}.json`),
     parser(),
     pick({ filter: entityParent, once: true }),
     ignore({ filter: ignoreExpression, once: true }),
     streamArray(),
-    data => templatize(entity, data.value) || false
+    data => {
+      updateProgress(
+        `${getMessageText().processingLoop(
+          entity,
+          streamcount
+        )} >> ${chalk.yellowBright(++streamcount)} ${chalk.yellow(
+          data?.value?.fields[0]?.value
+        )}`
+      )
+      return templatize(entity, data.value) || false
+    }
   ])
 }
 
@@ -178,13 +190,7 @@ const read = (entity, file, data) => {
     console.log(
       `${chalk.bold(chalk.bgMagenta(` ENTITY: `))} ${chalk.magenta(entity)}\n`
     )
-    console.log(
-      `${chalk.bold(chalk.bgCyan(` FILENAME: `))} ${chalk.cyan(
-        `${file}.json`
-      )}\n`
-    )
-    console.log(`${chalk.bold(chalk.inverse(' DATA '))}:\n`)
-    console.log(`--------------------------------------------------------\n`)
+    console.log(`${chalk.bold(chalk.bgCyan(' DATA '))}:\n`)
     console.dir(data, { depth: null })
     console.log(`_________________________________________________________`)
   }

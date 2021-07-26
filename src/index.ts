@@ -112,7 +112,7 @@ import {
     let fileStream
     let entityCount: number = 0
     options.entityList.map((entity, i) => {
-      updateProgress(getMessageText().processingLoop(entity))
+      updateProgress(getMessageText().openingProcess(entity))
       parseEntity(source, entity, (entityname, entityId, entityData) => {
         // TODO: consider moving these into case to improve on hooks.
         updateProgress(getMessageText().writingToFile())

@@ -170,7 +170,9 @@ function getSubtasks (item: TWithFields) {
   return Object.values(st)
 }
 
-function getDialogEntries (item: TWithFields) {
+/* TODO: a rollup version that preserves the graph,
+ * for use with noSQL or de-normalized projects */
+function getNormalizedDialogEntries (item: TWithFields) {
   const dialogRows = item?.dialogueEntries?.reduce(
     (entries: IResultEntry[], entry: TWithFields) => {
       entry.outgoingLinks.map(row => {
@@ -179,7 +181,6 @@ function getDialogEntries (item: TWithFields) {
           internalId: entry.id,
           gameId: gameId(item),
           name: valueOf('Title', entry),
-          sequence: valueOf('Sequence', entry),
           isRoot: entry.isRoot,
           isGroup: entry.isGroup,
           conditionPriority: entry.conditionPriority,
@@ -192,7 +193,8 @@ function getDialogEntries (item: TWithFields) {
           isConnector: row.isConnector,
           priority: row.priority,
           InputId: valueOf('InputId', entry),
-          OutputId: valueOf('OutputId', entry)
+          OutputId: valueOf('OutputId', entry),
+          sequence: valueOf('Sequence', entry)
         })
       })
       return entries
@@ -244,7 +246,7 @@ export {
   isACheck,
   jumpsToHub,
   isTerminalDialog,
-  getDialogEntries
+  getNormalizedDialogEntries
 }
 
 /*

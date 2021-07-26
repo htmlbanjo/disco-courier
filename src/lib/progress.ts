@@ -26,23 +26,21 @@ const updateProgress = (note: string = '...'): void => {
   }
   messages.map((msg, m) => {
     prog += '==='
-    messageHistory +=
-      m + 1 === messages.length
-        ? `\n\n          ✓ ${chalk.bold(chalk.greenBright(msg))}`
-        : `\n\n          ✓ ${msg}`
+    messageHistory += `\n\n          ✓ ${msg}`
   })
   if (!options.debug) {
     console.clear()
   }
   console.log(
     `\n\n\n   [${chalk.bgGreen(chalk.green(prog))}${rest}]\n\n\n
-    ${getMessageText().commandBanner(
+    ${getMessageText().commandHeader(
       options.entityList,
       paging,
       outputMode,
       note
     )}`,
-    chalk.green(messageHistory)
+    chalk.green(messageHistory),
+    `\n\n${getMessageText().commandFooter(note)}`
   )
 }
 const advanceRowProgress = (

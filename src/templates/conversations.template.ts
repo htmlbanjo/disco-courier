@@ -14,7 +14,7 @@ import {
   conversations,
   getSubtaskCount,
   getSubtasks,
-  getDialogEntries,
+  getNormalizedDialogEntries,
   isATask,
   hasASubtask,
   isADoor,
@@ -62,7 +62,8 @@ function CourierExtendedTemplate (item: TWithFields) {
     isOrb: isAnOrb(item),
     hasSubtask: hasASubtask(item),
     isHub: isAHub(item),
-    isDoor: isADoor(item)
+    isDoor: isADoor(item),
+    dialogLength: item?.dialogueEntries?.length
   }
 }
 
@@ -100,7 +101,7 @@ export const SubtaskTemplate = (item: TWithFields) => {
 
 export const DialogTemplate = (item: TWithFields) => {
   if (item?.dialogueEntries?.length > 0) {
-    return getDialogEntries(item)
+    return getNormalizedDialogEntries(item)
   }
 }
 
