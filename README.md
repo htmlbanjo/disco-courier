@@ -50,7 +50,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 |**actors**|`actors:skill`, `actors:attribute`
 |**variables**| (none)
 |**items**| `items.thought`, `items.key`, `items.substance`, `items.consumable`, `items.game`, `items.book`, `items.clothing`, `items.tare`
-|**conversations**|`conversations.task`,`conversations.subtask`,`conversations.dialog`,`conversations.orb`,`conversations.check`
+|**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.orb`, `conversations.check`
 
 #### Customizing output
 
