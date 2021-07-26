@@ -1,13 +1,18 @@
 # Disco-Courier
 
 _A data-mover-and-shaker for Disco Elysium._
-The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice.
+
+The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice. It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
 Some things you could use it for:
 
-- export only Garte dialog and train an AI model on it
-- use it to plan a walkthrough
-- normalize data into a SQL or noSQL db for use in your personal project.
+- export only Garte dialog and train an AI model on it.*
+- use it to plan a walkthrough.
+- normalize data into a SQL db for use in your personal project.
+- slice-and-dice results as pre-prep for putting into noSQL docs.
+
+
+\*please, please let me know if you do this.
 
 ## Requirements
 
@@ -20,7 +25,7 @@ You need a purchased copy of the game and access to its data.
 - place a copy of your exported data in /data/dialog.json
 - run a health check: `npm run courier:health`
 
-If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me neither._)
+If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me either_).
 
 ### Usage
 
@@ -65,6 +70,9 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - if stuck, refer to /lib/migration.ts for details on how entities and groups are managed.
 - if using the group with the `--output=db` flag, you'll need to generate a new schema using the sequelize-cli.
 
+#### Live / Exporation Option
+- use `npm run dev -- --output=read <rest-of-options>` if you want to use nodemon. Useful when making edits to the template system.
+
 #### Sequelize Option
 
 - after you've generated some seed files, you can do `npm run db:up` to populate the database of your choice.
@@ -78,10 +86,10 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - **USE CAUTION** when working with a large amount of conversations.
 - There are _lengthy_ TODO comments in the source for contributors to check out. I don't have a lot of time, so contributions welcome.
 
-### Roadmap, barring time or help
+### Roadmap, barring time/interest/help
 
-- Finish up dialogueEntry formatting
-- Finish up checks and modifiers
-- Add support for foreign key relationships for sequelize
+- Finish up dialogueEntry formatting.
+- Finish up checks and modifiers.
+- Add support for foreign key relationships for sequelize.
 - While you can do a lot with the json export option for getting items into noSQL databases, better support.
-- CSV and spreadsheets would be nice (for easy dumps for things like checks)
+- CSV and spreadsheets would be nice (for easy dumps for things like checks).
