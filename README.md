@@ -6,9 +6,13 @@ The goal of Disco-Courier is to normalize and condense data for easy reading or 
 
 Some things you could use it for:
 
-- export only Garte dialog and train an AI model on it.
+- export only Garte dialog and train an AI model on it.*
 - use it to plan a walkthrough.
-- normalize data into a SQL or noSQL db for use in your personal project.
+- normalize data into a SQL db for use in your personal project.
+- slice-and-dice results as pre-prep for putting into noSQL docs.
+
+
+\*please, please let me know if you do this.
 
 ## Requirements
 
