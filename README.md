@@ -3,6 +3,8 @@
 _A data-mover-and-shaker for Disco Elysium._
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice.
 
+It drives data around in a SSSSOUPED UP MOTOR CARRIAGE!
+
 Some things you could use it for:
 
 - export only Garte dialog and train an AI model on it
@@ -78,7 +80,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - **USE CAUTION** when working with a large amount of conversations.
 - There are _lengthy_ TODO comments in the source for contributors to check out. I don't have a lot of time, so contributions welcome.
 
-### Roadmap, barring time or help
+### Roadmap, barring time/interest/help
 
 - Finish up dialogueEntry formatting
 - Finish up checks and modifiers
