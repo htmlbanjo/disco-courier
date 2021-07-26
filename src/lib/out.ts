@@ -85,13 +85,15 @@ function getMessageText () {
           entityList.length > 1
             ? `${entityList.length} entities`
             : `${entityList[0]}`
-        } into the Coupris${
+        } into the Coupris ${
           paging[0] !== 0
             ? ` (starting at: ${paging[0]}${
-                !!paging[1] ? `, ending at: ${paging[1]}` : ``
+                !!paging[1]
+                  ? `, heavy on the foot for ${paging[1]} entries.`
+                  : ``
               })`
             : ``
-        } and setting "${outputMode}" mode as the destination. ~~~*`
+        } Destination is "${outputMode}" mode for this SSSSOUPED UP MOTOR CARRIAGE. ~~~*`
       )
     )}\n
     ${chalk.blue(note)}`

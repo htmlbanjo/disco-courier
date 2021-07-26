@@ -9,7 +9,7 @@ import {
 
 function BaseTemplate (item: TWithFields, extended: any) {
   return {
-    id: item.id,
+    internalID: item.id,
     gameID: valueOf('Articy Id', item),
     name: valueOf('Name', item),
     shortDescription: shortDescription(item),

@@ -14,18 +14,20 @@ import {
   conversations,
   getSubtaskCount,
   getSubtasks,
+  getDialogEntries,
   isATask,
   hasASubtask,
   isADoor,
   isAnOrb,
   isAHub,
+  isACheck,
   jumpsToHub,
   isTerminalDialog
 } from '../search/conversation.search'
 
 function BaseTemplate (item: TWithFields, extended: any): TConversationEntry {
   return {
-    id: item.id,
+    internalID: item.id,
     name: valueOf('Title', item),
     description: description(item),
     ...tableDates(item),
@@ -34,22 +36,33 @@ function BaseTemplate (item: TWithFields, extended: any): TConversationEntry {
 }
 function ExtendedTemplate (item: TWithFields): TConversationEntry {
   return BaseTemplate(item, {
-    isDoor: isADoor(item),
     ...conversations.taskActive(item),
     ...conversations.taskCompleted(item),
     ...conversations.taskCancelled(item),
     ...conversations.taskReward(item),
     ...conversations.taskIsTimed(item),
-    subtasks: getSubtaskCount(item)
+
+    ...conversations.getCheckType(item),
+    ...conversations.getCondition(item),
+    ...conversations.getInstruction(item),
+    ...conversations.getPlacement(item),
+    ...conversations.getActor(item),
+    ...conversations.getConversant(item),
+    ...conversations.getAltOrbText(item),
+    ...conversations.getOnUse(item),
+    ...conversations.getDialogOverride(item),
+    subTasks: getSubtasks(item)
   })
 }
 
 function CourierExtendedTemplate (item: TWithFields) {
   return {
+    numSubtasks: getSubtaskCount(item),
     isTask: isATask(item),
     isOrb: isAnOrb(item),
     hasSubtask: hasASubtask(item),
-    isHub: isAHub(item)
+    isHub: isAHub(item),
+    isDoor: isADoor(item)
   }
 }
 
@@ -81,9 +94,13 @@ export const TaskTemplate = (item: TWithFields) => {
 
 export const SubtaskTemplate = (item: TWithFields) => {
   if (hasASubtask(item)) {
-    return BaseTemplate(item, {
-      ...item
-    })
+    return getSubtasks(item)
+  }
+}
+
+export const DialogTemplate = (item: TWithFields) => {
+  if (item?.dialogueEntries?.length > 0) {
+    return getDialogEntries(item)
   }
 }
 
@@ -96,53 +113,28 @@ export const OrbTemplate = (item: TWithFields): TConversationEntry => {
       ...conversations.getDifficulty(item),
       ...conversations.getPlacement(item),
       ...conversations.getActor(item),
-      ...conversations.getConversant(item)
+      ...conversations.getConversant(item),
+
+      ...conversations.getActor(item),
+      ...conversations.getConversant(item),
+      ...conversations.getAltOrbText(item),
+      ...conversations.getOnUse(item),
+      ...conversations.getDialogOverride(item)
     })
   }
 }
 
+// Note: Joyce seems to be the only top-level hub there is.
 export const HubTemplate = (item: TWithFields): TConversationEntry => {
   if (isAHub(item)) {
     return BaseTemplate(item, {})
   }
 }
 
-export const getDialogEntryFields = (fields: Field[], index: number) => {
-  return fields.reduce((result: ITmplDialogEntryField[], field: Field) => {
-    /*
-    result.push({
-      id: index + 1,
-      isDialog: (valueWhereTitle(field, 'dialogue text')),
-      isTask: getSearchString('subtask', field),
-      text: valueWhereTitle(field, 'title'),
-      textFull: valueWhereTitle(field, 'dialogue text'),
-      sequence: valueWhereTitle(field, 'sequence'),
-      actor: valueWhereTitle(field, 'actor'),
-      conversant: valueWhereTitle(field, 'conversant'),
-      inputID: valueWhereTitle(field, 'inputid'),
-      outputID: valueWhereTitle(field, 'outputid'),
+export const CheckTemplate = (item: TWithFields): TConversationEntry => {
+  if (isACheck(item)) {
+    return BaseTemplate(item, {
+      ...ExtendedTemplate
     })
-    */
-    return result
-  }, [] as ITmplDialogEntryField[])
-}
-export const getDialogEntries = (entries: DialogueEntry[]) => {
-  return entries.reduce(
-    (entries: ITmplDialogEntry[], entry: DialogueEntry, index: number) => {
-      /*
-    entries.push({
-      "id": entry.id,
-      "parent": parseInt(entry.conversationID),
-      "isRoot": entry.isRoot,
-      "isGroup": entry.isGroup,
-      "branches": entry?.outgoingLinks?.length,
-      "links": entry.outgoingLinks,
-      "meta": getDialogEntryFields(entry.fields, index, select),
-      "metaLength": entry.fields.length,
-    })
-    */
-      return entries
-    },
-    [] as ITmplDialogEntry[]
-  )
+  }
 }

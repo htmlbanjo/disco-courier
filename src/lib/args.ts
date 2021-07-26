@@ -42,10 +42,10 @@ const entityListAll = [
   'conversations',
   'conversations.task',
   'conversations.subtask',
+  'conversations.dialog',
   'conversations.orb',
   'conversations.hub',
-  'conversations.check',
-  'conversations.dialog'
+  'conversations.check'
 ]
 
 const setEntityList = (): string[] => {

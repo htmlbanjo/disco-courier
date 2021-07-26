@@ -20,8 +20,10 @@ import {
   ConversationTemplate,
   TaskTemplate,
   SubtaskTemplate,
+  DialogTemplate,
   OrbTemplate,
-  HubTemplate
+  HubTemplate,
+  CheckTemplate
 } from './conversations.template'
 
 const templatize = (entity, item) => {
@@ -60,10 +62,14 @@ const templatize = (entity, item) => {
       return TaskTemplate(item)
     case 'conversations.subtask':
       return SubtaskTemplate(item)
+    case 'conversations.dialog':
+      return DialogTemplate(item)
     case 'conversations.orb':
       return OrbTemplate(item)
     case 'conversations.hub':
       return HubTemplate(item)
+    case 'conversations.check':
+      return CheckTemplate(item)
     default:
       return { item: item }
   }

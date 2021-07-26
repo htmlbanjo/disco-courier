@@ -25,7 +25,7 @@ import {
 
 function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
   return {
-    id: item.id,
+    internalID: item.id,
     name: valueOf('Name', item),
     displayName: valueOf('displayname', item),
     description: description(item),
@@ -67,7 +67,7 @@ function CourierExtrasTemplate (item: TWithFields): IResultEntry {
     isEvidence: isAnEvidence(item),
     isInventoryItem: isAnInventoryItem(item),
     isClothing: isAClothing(item),
-    isANote: isANote(item),
+    isNote: isANote(item),
     isTare: isATare(item),
     isDice: isADie(item)
   }

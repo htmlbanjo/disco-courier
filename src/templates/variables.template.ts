@@ -10,7 +10,7 @@ import {
 
 function BaseTemplate (item: TWithFields, extended: any) {
   return {
-    id: item.id,
+    internalID: item.id,
     name: valueOf('Name', item),
     description: description(item),
     initialValue: booleanValueOf('Initial Value', item),

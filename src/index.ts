@@ -114,6 +114,7 @@ import {
     options.entityList.map((entity, i) => {
       updateProgress(getMessageText().processingLoop(entity))
       parseEntity(source, entity, (entityname, entityId, entityData) => {
+        // TODO: consider moving these into case to improve on hooks.
         updateProgress(getMessageText().writingToFile())
         fileStream = writeStream(options.outputMode, entity, entity)
 
@@ -152,6 +153,13 @@ import {
               end(++entityCount)
             })
             break
+
+          /*
+           * TODO (in order of priority)
+           * case 'nosql'  - for now use json option and import
+           * case 'csv' via https://www.npmjs.com/package/json2csv
+           * case 'sheet' (direct spreadsheet output) reallllly low-priority
+           */
 
           default:
             setState('output', [

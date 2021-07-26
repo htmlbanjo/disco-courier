@@ -1,6 +1,7 @@
 {
   "name": "Disco-Courier",
   "version": "1.0.0-alpha.1",
+  "author": "htmlbanjo",
   "description": "",
   "main": "src/index.ts",
   "scripts": {

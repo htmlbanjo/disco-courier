@@ -8,6 +8,9 @@ import {
   keyFunction,
   valueOf,
   titleIs,
+  gameId,
+  titleContains,
+  whereKeyContains,
   valueExistsInKey,
   cleanVariableName,
   cleanVariableNameNoPrefix
@@ -17,19 +20,19 @@ const conversations = {
   taskActive (item: TWithFields): IResultEntry {
     return keyFunction('display_condition_main', 'string', item, {
       returnKey: 'task_active_variable',
-      returnValueFn: cleanVariableNameNoPrefix
+      returnValueFn: cleanVariableName
     })
   },
   taskCompleted (item: TWithFields): IResultEntry {
     return keyFunction('done_condition_main', 'string', item, {
       returnKey: 'task_complete_variable',
-      returnValueFn: cleanVariableNameNoPrefix
+      returnValueFn: cleanVariableName
     })
   },
   taskCancelled (item: TWithFields): IResultEntry {
     return keyFunction('cancel_condition_main', 'string', item, {
       returnKey: 'task_canceled_variable',
-      returnValueFn: cleanVariableNameNoPrefix
+      returnValueFn: cleanVariableName
     })
   },
   taskReward (item: TWithFields): IResultEntry {
@@ -71,6 +74,19 @@ const conversations = {
   getConversant (item: TWithFields): IResultEntry {
     return keyFunction('Conversant', 'number', item, {
       returnKey: 'conversantId'
+    })
+  },
+  getAltOrbText (item: TWithFields): IResultEntry {
+    return keyFunction('AlternateOrbText', 'string', item, {
+      returnKey: 'altOrbText'
+    })
+  },
+  getOnUse (item: TWithFields): IResultEntry {
+    return keyFunction('OnUse', 'string', item)
+  },
+  getDialogOverride (item: TWithFields): IResultEntry {
+    return keyFunction('OverrideDialogueCondition', 'string', item, {
+      returnKey: 'dialogOverrideCondition'
     })
   }
 }
@@ -115,40 +131,75 @@ function getSubtaskCount (item: TWithFields): number {
 }
 
 function getSubtasks (item: TWithFields) {
-  //TODO: DRY
-  const st = {
-    taskId: item.id
-  }
+  //TODO: DRY up with existing search functions
+  const st = {}
+
+  // TODO: this is such an obvious scenario for reduce.
   item?.fields?.map(field => {
-    if (field.title.includes('subtask_title') && field.value) {
+    if (field.title.includes('subtask_title_') && field.value) {
       const [taskHeading, taskNumber] = field.title.split('subtask_title_')
-      st[taskNumber] = st[taskNumber] || {}
+      st[taskNumber] = st[taskNumber] || { parentTaskId: item.id }
       st[taskNumber]['name'] = field.value
     }
     if (field.title.includes('display_subtask_') && field.value) {
       const [taskHeading, taskNumber] = field.title.split('display_subtask_')
-      st[taskNumber] = st[taskNumber] || {}
+      st[taskNumber] = st[taskNumber] || { parentTaskId: item.id }
       st[taskNumber]['active'] = field.value
     }
     if (field.title.includes('done_subtask_') && field.value) {
       const [taskHeading, taskNumber] = field.title.split('done_subtask_')
-      st[taskNumber] = st[taskNumber] || {}
+      st[taskNumber] = st[taskNumber] || { parentTaskId: item.id }
       st[taskNumber]['done'] = field.value
     }
     if (field.title.includes('cancel_subtask_') && field.value) {
       const [taskHeading, taskNumber] = field.title.split('cancel_subtask_')
-      st[taskNumber] = st[taskNumber] || {}
+      st[taskNumber] = st[taskNumber] || { parentTaskId: item.id }
       st[taskNumber]['cancel'] = field.value
     }
 
     if (field.title.includes('timed_subtask_') && field.value) {
       const [taskHeading, taskNumber] = field.title.split('timed_subtask_')
       if (taskNumber in st) {
-        st[taskNumber]['isTimed'] = field.value
+        const result =
+          field.value === 'true' || field.value === 'True' ? true : false
+        st[taskNumber]['isTimed'] = result
       }
     }
   })
-  return st
+  // TODO: really, really obvious...
+  return Object.values(st)
+}
+
+function getDialogEntries (item: TWithFields) {
+  const dialogRows = item?.dialogueEntries?.reduce(
+    (entries: IResultEntry[], entry: TWithFields) => {
+      entry.outgoingLinks.map(row => {
+        entries.push({
+          parentId: item.id,
+          internalId: entry.id,
+          gameId: gameId(item),
+          name: valueOf('Title', entry),
+          sequence: valueOf('Sequence', entry),
+          isRoot: entry.isRoot,
+          isGroup: entry.isGroup,
+          conditionPriority: entry.conditionPriority,
+          conditionString: entry.conditionString,
+          userScript: entry.userScript,
+          originConversationId: row.originConversationID,
+          originDialogId: row.originDialogueID,
+          destinationConversationId: row.destinationConversationID,
+          destinationDialogId: row.destinationDialogID,
+          isConnector: row.isConnector,
+          priority: row.priority,
+          InputId: valueOf('InputId', entry),
+          OutputId: valueOf('OutputId', entry)
+        })
+      })
+      return entries
+    },
+    [] as IResultEntry[]
+  )
+  return dialogRows
 }
 
 const titleValueStartsWith = (search: string, item: TWithFields): boolean => {
@@ -163,7 +214,7 @@ const titleValueEndsWith = (search: string, item: TWithFields): boolean => {
 const isATask = (item: TWithFields): boolean => !!valueOf('task_reward', item)
 
 const hasASubtask = (item: TWithFields): boolean =>
-  !!titleIs('subtask_title_01', item)
+  !!valueOf('subtask_title_01', item)
 
 const isADoor = (item: TWithFields): boolean =>
   valueExistsInKey(`\/ DOOR \/`, 'Title', item)
@@ -174,6 +225,11 @@ const isAnOrb = (item: TWithFields): boolean =>
 const isAHub = (item: TWithFields): boolean => {
   return !!valueOf('Title', item)?.match(/HUB/i)
 }
+
+const isACheck = (item: TWithFields): boolean => {
+  return !!valueOf('Title', item).match(/Variable\[\"([A-Za-z]+.\w+)\"\]/)
+}
+
 export {
   conversations,
   getSubtaskCount,
@@ -185,8 +241,10 @@ export {
   isADoor,
   isAnOrb,
   isAHub,
+  isACheck,
   jumpsToHub,
-  isTerminalDialog
+  isTerminalDialog,
+  getDialogEntries
 }
 
 /*

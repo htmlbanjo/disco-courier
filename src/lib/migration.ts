@@ -46,9 +46,18 @@ const isSupportedVersion = (
   })
 }
 
+/* TODO - we should be able to GREATLY speed up paging
+ * for high --start values by moving it from index's entity parser
+ * to the data method here. It'll require a decent sized rewrite
+ * of paging however.
+ */
 const streamSource = (source: string, entity: string, defaults: string[]) => {
-  const [entityParent] = entity.split('.')
-  const ignoreExpression = buildIgnoreExpression(entityParent, defaults)
+  const [entityParent, entitySubProcess] = entity.split('.')
+  const ignoreExpression = buildIgnoreExpression(
+    entityParent,
+    entitySubProcess,
+    defaults
+  )
   return chain([
     fs.createReadStream(`./src/data/${source}.json`),
     parser(),
@@ -61,12 +70,13 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
 
 function buildIgnoreExpression (
   entityParent: string,
+  entitySubProcess: string,
   defaults: string[]
 ): RegExp {
   const indexOfEntityInEntities = defaults.findIndex(e => e === entityParent)
   const ignoreList = [...defaults]
   ignoreList.splice(indexOfEntityInEntities, 1)
-  if (entityParent !== 'dialogueEntries') {
+  if (entitySubProcess !== 'dialog') {
     ignoreList.push('dialogueEntries')
   }
   return new RegExp(`\\b${ignoreList.join('\\b|\\b')}\\b`)
@@ -105,7 +115,7 @@ function formatTableName (entity: string): string {
  *****************************************************************/
 function jsonFileName (entity: string, file: string): string {
   confirmOrCreateDirectory(entity)
-  return `./src/data/json/${entity}/${file}.json`
+  return `./src/data/json/${entity.split('.')[0]}/${file}.json`
 }
 
 function writeStream (
