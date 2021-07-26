@@ -1,4 +1,4 @@
-import { valueOf } from '../lib/inspection'
+import { valueOf } from '../search/index.search'
 
 export const LocationTemplate = item => {
   return {

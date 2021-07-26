@@ -12,9 +12,17 @@ import {
   SubstanceTemplate,
   ConsumableTemplate,
   GameTemplate,
-  BookTemplate
+  BookTemplate,
+  ClothingTemplate,
+  TareTemplate
 } from './items.template'
-import { ConversationTemplate } from './conversations.template'
+import {
+  ConversationTemplate,
+  TaskTemplate,
+  SubtaskTemplate,
+  OrbTemplate,
+  HubTemplate
+} from './conversations.template'
 
 const templatize = (entity, item) => {
   switch (entity) {
@@ -38,12 +46,24 @@ const templatize = (entity, item) => {
       return GameTemplate(item)
     case 'items.book':
       return BookTemplate(item)
+    case 'items.clothing':
+      return ClothingTemplate(item)
+    case 'items.tare':
+      return TareTemplate(item)
     case 'locations':
       return LocationTemplate(item)
     case 'variables':
       return VariableTemplate(item)
     case 'conversations':
       return ConversationTemplate(item)
+    case 'conversations.task':
+      return TaskTemplate(item)
+    case 'conversations.subtask':
+      return SubtaskTemplate(item)
+    case 'conversations.orb':
+      return OrbTemplate(item)
+    case 'conversations.hub':
+      return HubTemplate(item)
     default:
       return { item: item }
   }

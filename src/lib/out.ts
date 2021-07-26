@@ -96,6 +96,10 @@ function getMessageText () {
     )}\n
     ${chalk.blue(note)}`
 
+  this.streamEOL = () =>
+    chalk.red(
+      `Hit end of stream without getting what we need. Check your query?`
+    )
   this.applicationEOL = () => `Done!`
 
   return this

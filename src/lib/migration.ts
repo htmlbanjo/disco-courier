@@ -66,6 +66,9 @@ function buildIgnoreExpression (
   const indexOfEntityInEntities = defaults.findIndex(e => e === entityParent)
   const ignoreList = [...defaults]
   ignoreList.splice(indexOfEntityInEntities, 1)
+  if (entityParent !== 'dialogueEntries') {
+    ignoreList.push('dialogueEntries')
+  }
   return new RegExp(`\\b${ignoreList.join('\\b|\\b')}\\b`)
 }
 

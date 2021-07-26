@@ -33,15 +33,19 @@ const entityListAll = [
   'items.consumable',
   'items.game',
   'items.book',
+  'items.clothing',
+  'items.tare',
   'locations',
   'locations.exterior',
   'locations.interior',
   'variables',
   'conversations',
   'conversations.task',
+  'conversations.subtask',
+  'conversations.orb',
+  'conversations.hub',
   'conversations.check',
-  'conversations.dialog',
-  'conversations.hub'
+  'conversations.dialog'
 ]
 
 const setEntityList = (): string[] => {

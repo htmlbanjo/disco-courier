@@ -35,10 +35,15 @@ import {
     const activity = activityIndicatorList()
     let counter = 0
     let totalRows = 0
+    let totalFromStart = 0
 
     pipe.on('data', data => {
       ++totalRows
+
       if (data) {
+        if (totalRows >= options.paging[0]) {
+          ++totalFromStart
+        }
         // we return a falsey for data if the template returns null. This maintains totalRows count
         // against the entire array so we can run destroy() early for speed.
         advanceRowProgress(
@@ -58,9 +63,11 @@ import {
           // action(entity, data.id, data)
         }
       }
-      if (totalRows === getState('currentVersion')?.rowCounts[entityParent]) {
-        // readStream end event taking too long
-        // despite pick/once and the "on" event being complete.
+      if (
+        totalRows === getState('currentVersion')?.rowCounts[entityParent] ||
+        totalFromStart === options.paging[1]
+      ) {
+        // don't wait for readStream end event
         pipe.destroy()
       }
     })
@@ -76,6 +83,9 @@ import {
       if (options.merge === true) {
         action(entity, entity, all)
       }
+    })
+    pipe.on('end', data => {
+      console.log(getMessageText().streamEOL())
     })
   }
   /*

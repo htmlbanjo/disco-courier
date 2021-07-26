@@ -1,21 +1,29 @@
+import { TWithFields, IResultEntry } from '../defs/import'
 import {
   tableDates,
   valueOf,
-  shortDescription,
   description,
-  booleanValueOf,
+  isAnInventoryItem,
+  isAnEvidence
+} from '../search/index.search'
+
+import {
   items,
-  isAThought,
   isAKey,
   isADrug,
   isAConsumable,
   isAGame,
-  isABook
-} from '../lib/inspection'
+  isABook,
+  isATape,
+  isAMusic,
+  isAClothing,
+  isANote,
+  isATare,
+  isAStackable,
+  isADie
+} from '../search/items.search'
 
-import { outputMode } from '../lib/args'
-
-function BaseTemplate (item: any, extended: any) {
+function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
   return {
     id: item.id,
     name: valueOf('Name', item),
@@ -26,31 +34,55 @@ function BaseTemplate (item: any, extended: any) {
   }
 }
 
-function ExtendedTemplate (item: any) {
+function ExtendedTemplate (item: TWithFields): IResultEntry {
   return BaseTemplate(item, {
     ...items.itemType(item),
     ...items.itemGroup(item),
     ...items.itemValue(item),
-    ...items.isItem(item),
     ...items.conversation(item),
-
-    //stackname: applies to clothes (shoes_snakeskin_left and shoes_snakeskin_right to shoes_snakeskin), keys (to key_ring), bullets, tare (stacks to yellow_plastic_bag)
     ...items.stackName(item),
-
     ...items.isCursed(item),
-
     ...items.mediumTextValue(item),
     ...items.multipleAllowed(item),
     ...items.isAutoEquipable(item),
-
     ...items.isThought(item),
     ...items.isSubstance(item),
     ...items.isConsumable(item),
     ...items.isItem(item),
-    ...items.isCursed(item),
-
     ...items.equipOrb(item),
+    ...items.thoughtType(item),
+    ...items.bonus(item),
+    ...items.fixtureBonus(item),
+    ...items.fixtureDescription(item),
+    ...items.requirement(item),
+    ...items.timeLeft(item),
+    ...CourierExtrasTemplate(item)
+  })
+}
+function CourierExtrasTemplate (item: TWithFields): IResultEntry {
+  return {
+    isStackable: isAStackable(item),
+    isMusic: isAMusic(item),
+    isTape: isATape(item),
+    isEvidence: isAnEvidence(item),
+    isInventoryItem: isAnInventoryItem(item),
+    isClothing: isAClothing(item),
+    isANote: isANote(item),
+    isTare: isATare(item),
+    isDice: isADie(item)
+  }
+}
 
+export const ItemTemplate = (item: TWithFields): IResultEntry => {
+  return BaseTemplate(item, {
+    ...ExtendedTemplate(item)
+  })
+}
+
+export const ThoughtTemplate = (item: TWithFields): IResultEntry => {
+  return BaseTemplate(item, {
+    ...items.itemType(item),
+    ...items.itemGroup(item),
     ...items.thoughtType(item),
     ...items.bonus(item),
     ...items.fixtureBonus(item),
@@ -60,28 +92,7 @@ function ExtendedTemplate (item: any) {
   })
 }
 
-export const ItemTemplate = item => {
-  return BaseTemplate(item, {
-    ...ExtendedTemplate(item)
-  })
-}
-
-export const ThoughtTemplate = item => {
-  if (isAThought(item)) {
-    return BaseTemplate(item, {
-      ...items.itemType(item),
-      ...items.itemGroup(item),
-      ...items.thoughtType(item),
-      ...items.bonus(item),
-      ...items.fixtureBonus(item),
-      ...items.fixtureDescription(item),
-      ...items.requirement(item),
-      ...items.timeLeft(item)
-    })
-  }
-}
-
-export const KeyTemplate = item => {
+export const KeyTemplate = (item: TWithFields): IResultEntry => {
   if (isAKey(item)) {
     return BaseTemplate(item, {
       ...items.itemType(item),
@@ -91,7 +102,7 @@ export const KeyTemplate = item => {
   }
 }
 
-export const SubstanceTemplate = item => {
+export const SubstanceTemplate = (item: TWithFields): IResultEntry => {
   if (isADrug(item)) {
     return BaseTemplate(item, {
       ...items.itemType(item),
@@ -104,7 +115,7 @@ export const SubstanceTemplate = item => {
   }
 }
 
-export const ConsumableTemplate = item => {
+export const ConsumableTemplate = (item: TWithFields): IResultEntry => {
   if (isAConsumable(item)) {
     return BaseTemplate(item, {
       ...items.itemType(item),
@@ -117,28 +128,44 @@ export const ConsumableTemplate = item => {
   }
 }
 
-export const GameTemplate = item => {
+export const GameTemplate = (item: TWithFields): IResultEntry => {
   if (isAGame(item)) {
     return BaseTemplate(item, {
       ...items.itemType(item),
       ...items.itemGroup(item),
-      ...items.conversation(item),
-      ...items.isItem(item)
+      ...items.conversation(item)
     })
   }
 }
 
-export const BookTemplate = item => {
+export const BookTemplate = (item: TWithFields): IResultEntry => {
   if (isABook(item)) {
     return BaseTemplate(item, {
       ...items.itemType(item),
       ...items.itemGroup(item),
-      ...items.conversation(item),
-      ...items.isItem(item)
+      ...items.conversation(item)
     })
   }
 }
 
-export const NextTemplate = item => {
-  return ItemTemplate(item)
+export const ClothingTemplate = (item: TWithFields): IResultEntry => {
+  if (isAClothing(item)) {
+    return BaseTemplate(item, {
+      ...ExtendedTemplate(item),
+      ...items.itemType(item),
+      ...items.itemGroup(item),
+      ...items.conversation(item)
+    })
+  }
+}
+
+export const TareTemplate = (item: TWithFields): IResultEntry => {
+  if (isATare(item)) {
+    return BaseTemplate(item, {
+      ...ExtendedTemplate(item),
+      ...items.itemType(item),
+      ...items.itemGroup(item),
+      ...items.conversation(item)
+    })
+  }
 }

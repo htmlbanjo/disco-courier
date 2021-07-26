@@ -63,9 +63,14 @@ const advanceRowProgress = (
     if (data?.fields) {
       note += data.fields[0]?.value ? `(${data?.fields[0]?.value})` : '...'
     }
-    if (entity === 'conversations') {
+    // running all conversations? This is gonna take a sec.
+    if (
+      entity === 'conversations' &&
+      options.paging[0] === 0 &&
+      !!!options.paging[1]
+    ) {
       note +=
-        '(BUCKLE UP, this step can take upwards of 10 or 15 minutes depending on your machine)'
+        '(BUCKLE UP, this step can take upwards of 5 - 10 minutes depending on your machine)'
     }
     updateProgress(note)
   }

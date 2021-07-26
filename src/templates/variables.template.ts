@@ -1,19 +1,38 @@
-import { valueOf, description } from '../lib/inspection'
+import { TWithFields } from '../defs/import'
+import {
+  valueOf,
+  booleanValueOf,
+  description,
+  shortDescription,
+  longDescription,
+  tableDates
+} from '../search/index.search'
 
-export const VariableTemplate = item => {
-  const name = valueOf('Name', item)
-  const initValue = item?.fields.find(
-    a => a.title.toLowerCase() === 'initial value'
-  )
+function BaseTemplate (item: TWithFields, extended: any) {
   return {
     id: item.id,
-    name: name,
-    type: name.split('.')[0],
-    label: name.split('.')[1],
-    valueType: initValue.typeString.split('_')[1],
-    defaultValue: initValue.value,
+    name: valueOf('Name', item),
     description: description(item),
-    createdAt: new Date(),
-    updatedAt: new Date()
+    initialValue: booleanValueOf('Initial Value', item),
+    ...tableDates(item),
+    ...extended
   }
+}
+function ExtendedTemplate (item: TWithFields) {
+  return BaseTemplate(item, {})
+}
+
+function CourierExtendedTemplate (item: TWithFields) {
+  const name = valueOf('Name', item)
+  return {
+    type: name.split('.')[0],
+    label: name.split('.')[1]
+  }
+}
+
+export const VariableTemplate = item => {
+  return BaseTemplate(item, {
+    ...ExtendedTemplate(item),
+    ...CourierExtendedTemplate(item)
+  })
 }

@@ -19,15 +19,6 @@ import { ISupportedVersion } from '../defs/import'
  * sourceJSON: hardcoded for now, needs a ./src/data/dialog.json file.
  * supportedVersions: list of versions to support along with array lengths for optimization.
  *
- * UNUSED / future: if different versions require template adjustments, can extend supportedVersions with:
- *  selectors: {
- *    "actors.skill": [389,416],
- *    "actors.attribute": [417, ],
- *    "items.thought": [53, ],
- *  }
- *
- * This could also include basic selector functions.
- *
  */
 const options = {
   debug: <boolean>false,
