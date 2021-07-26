@@ -25,7 +25,7 @@ You need a purchased copy of the game and access to its data.
 - place a copy of your exported data in /data/dialog.json
 - run a health check: `npm run courier:health`
 
-If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me neither_).
+If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me either_).
 
 ### Usage
 
