@@ -1,6 +1,17 @@
 # Disco-Courier
 
 _A data-mover-and-shaker for Disco Elysium._
+The goal of Disco-Courier is to normalize and compress data for easy reading.
+
+Some things you could use it for:
+
+- export only Garte dialog and train an AI model on it
+- use it to plan a walkthrough
+- normalize data into a SQL or noSQL db for use in your personal project.
+
+## Requirements
+
+You need a purchased copy of the game and access to its data.
 
 ## Setup
 
