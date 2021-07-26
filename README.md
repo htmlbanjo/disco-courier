@@ -3,7 +3,7 @@
 _A data-mover-and-shaker for Disco Elysium._
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice.
 
-It drives data around in a SSSSOUPED UP MOTOR CARRIAGE!
+It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
 Some things you could use it for:
 
