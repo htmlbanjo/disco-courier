@@ -66,6 +66,9 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - if stuck, refer to /lib/migration.ts for details on how entities and groups are managed.
 - if using the group with the `--output=db` flag, you'll need to generate a new schema using the sequelize-cli.
 
+#### Live / Exporation Option
+- use `npm run dev -- --output=read <rest-of-options>` if you want to use nodemon. Useful when making edits to the template system.
+
 #### Sequelize Option
 
 - after you've generated some seed files, you can do `npm run db:up` to populate the database of your choice.
