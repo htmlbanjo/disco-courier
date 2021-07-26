@@ -37,4 +37,7 @@ src/app/.notes
 
 # App Specific #
 ####################
-/src/data
+/src/data/json
+/src/data/seeders
+/src/data/dialog.json
+/src/data/storage.sqlite3
