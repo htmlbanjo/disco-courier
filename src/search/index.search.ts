@@ -11,7 +11,7 @@ import { outputMode } from '../lib/args'
 // TODO: a search factory or state item or some other method
 // to avoid passing item to every call.
 
-const whereKeyMatches = (
+const whereKeyIs = (
   key: string,
   match: string,
   item: TWithFields,
@@ -34,39 +34,44 @@ const whereKeyContains = (
     : item?.fields?.find((a: Field): Field => a[key].includes(search))
 }
 
-const tableDates = item => {
-  if (outputMode === 'seed') {
-    return {
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  }
-}
+const whereKeysMatch = (
+  key: string,
+  search: RegExp,
+  item: TWithFields
+): Field[] => item?.fields?.filter((a: Field): Field[] => a[key].match(search))
+
+const whereTitlesHaveValuesAndMatch = (
+  search: RegExp,
+  item: TWithFields
+): Field[] =>
+  item?.fields?.filter((a: Field) => a.title?.match(search) && !!a.value)
+
+const tableDates = (item: TWithFields) =>
+  outputMode === 'seed'
+    ? {
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    : undefined
 
 /**** CONVENIENCE / TEMPLATE SUGAR ****/
-const titleIs = (
-  title: string,
-  item: TWithFields,
-  lowercase = false
-): Field => {
-  return whereKeyMatches('title', title, item, lowercase)
-}
+const titleIs = (title: string, item: TWithFields, lowercase = false): Field =>
+  whereKeyIs('title', title, item, lowercase)
 
 const titleContains = (
   titleSearch: string,
   item: TWithFields,
   lowercase = false
-): Field => {
-  return whereKeyContains('title', titleSearch, item, lowercase)
-}
+): Field => whereKeyContains('title', titleSearch, item, lowercase)
+
+const filterTitlesByPattern = (search: RegExp, item: TWithFields): Field[] =>
+  whereKeysMatch('title', search, item)
 
 const valueContains = (
   valueSearch: string,
   item: TWithFields,
   lowercase = false
-): Field => {
-  return whereKeyContains('value', valueSearch, item, lowercase)
-}
+): Field => whereKeyContains('value', valueSearch, item, lowercase)
 
 const valueOf = (key: string, item: TWithFields, lowercase = false): string => {
   return !!lowercase
@@ -208,11 +213,14 @@ const isAnEvidence = (item: TWithFields): boolean =>
   valueExistsInKey(`\(Evidence\)`, 'displayname', item)
 
 export {
-  whereKeyMatches,
+  whereKeyIs,
   whereKeyContains,
+  whereKeysMatch,
   tableDates,
   titleIs,
   titleContains,
+  filterTitlesByPattern,
+  whereTitlesHaveValuesAndMatch,
   keyValueStartsWith,
   keyValueEndsWith,
   valueExistsInKey,

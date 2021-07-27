@@ -70,7 +70,6 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
     ignore({ filter: ignoreExpression, once: true }),
     streamArray(),
     data => {
-      ++streamcount
       updateProgress(
         `${getMessageText().processingLoop(
           entity,
@@ -79,6 +78,7 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
           data?.value?.fields[0]?.value
         )}`
       )
+      ++streamcount
       return templatize(entity, data.value) || false
     }
   ])

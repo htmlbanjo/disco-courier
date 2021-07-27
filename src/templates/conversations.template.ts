@@ -14,12 +14,18 @@ import {
   isADoor,
   isAnOrb,
   isAHub,
-  isACheck,
   jumpsToHub,
   isTerminalDialog
 } from '../search/conversations.search'
 import { getSubtasks } from '../search/conversations.subtask.search'
-import { getDialogEntries } from '../search/conversations.dialog.search'
+import {
+  getDialogEntries,
+  isAPassiveCheck,
+  getWhiteChecks,
+  getRedChecks,
+  getWhiteAndRedChecks,
+  getPassiveChecks
+} from '../search/conversations.dialog.search'
 
 function BaseTemplate (item: TWithFields, extended: any): TConversationEntry {
   return {
@@ -131,9 +137,28 @@ export const HubTemplate = (item: TWithFields): TConversationEntry => {
 }
 
 export const CheckTemplate = (item: TWithFields): TConversationEntry => {
-  if (isACheck(item)) {
+  if (item?.dialogueEntries?.length > 0) {
     return BaseTemplate(item, {
-      ...ExtendedTemplate
+      red: getRedChecks(item),
+      white: getWhiteChecks(item),
+      passive: getPassiveChecks(item)
+    })
+  }
+}
+
+export const WhiteCheckTemplate = (item: TWithFields) =>
+  getWhiteChecks(item) || undefined
+
+export const RedAndWhiteCheckTemplate = (item: TWithFields) =>
+  getWhiteAndRedChecks(item) || undefined
+
+export const RedCheckTemplate = (item: TWithFields) =>
+  getRedChecks(item) || undefined
+
+export const PassiveCheckTemplate = (item: TWithFields) => {
+  if (item?.dialogueEntries?.length > 0) {
+    return BaseTemplate(item, {
+      checks: getPassiveChecks(item)
     })
   }
 }

@@ -23,7 +23,10 @@ import {
   DialogTemplate,
   OrbTemplate,
   HubTemplate,
-  CheckTemplate
+  CheckTemplate,
+  WhiteCheckTemplate,
+  RedCheckTemplate,
+  PassiveCheckTemplate
 } from './conversations.template'
 
 const templatize = (entity, item) => {
@@ -70,6 +73,12 @@ const templatize = (entity, item) => {
       return HubTemplate(item)
     case 'conversations.check':
       return CheckTemplate(item)
+    case 'conversations.whitecheck':
+      return WhiteCheckTemplate(item)
+    case 'conversations.redcheck':
+      return RedCheckTemplate(item)
+    case 'conversations.passivecheck':
+      return PassiveCheckTemplate(item)
     default:
       return { item: item }
   }

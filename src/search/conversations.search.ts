@@ -146,10 +146,6 @@ const isAHub = (item: TWithFields): boolean => {
   return !!valueOf('Title', item)?.match(/HUB/i)
 }
 
-const isACheck = (item: TWithFields): boolean => {
-  return !!valueOf('Title', item).match(/Variable\[\"([A-Za-z]+.\w+)\"\]/)
-}
-
 export {
   conversations,
   getSubtaskCount,
@@ -160,7 +156,6 @@ export {
   isADoor,
   isAnOrb,
   isAHub,
-  isACheck,
   jumpsToHub,
   isTerminalDialog
 }

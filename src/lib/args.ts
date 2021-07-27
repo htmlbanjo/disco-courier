@@ -43,7 +43,10 @@ const entityListAll = [
   'conversations.dialog',
   'conversations.orb',
   'conversations.hub',
-  'conversations.check'
+  'conversations.check',
+  'conversations.whitecheck',
+  'conversations.redcheck',
+  'conversations.passivecheck'
 ]
 
 const setEntityList = (): string[] => {
