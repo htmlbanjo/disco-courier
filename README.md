@@ -54,7 +54,7 @@ Note this is not raw output: each command passes through an extensive templating
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--start=<#>`             | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
 | `--results=<#>`           | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
-| `--output=<read|json|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
+| `--output=<read\|json\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 
 #### Entities and groups
 
