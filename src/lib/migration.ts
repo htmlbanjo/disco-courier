@@ -130,8 +130,9 @@ function formatTableName (entity: string): string {
  * AS JSON
  *****************************************************************/
 function jsonFileName (entity: string, file: string): string {
-  confirmOrCreateDirectory(entity)
-  return `./src/data/json/${entity.split('.')[0]}/${file}.json`
+  const directory = entity.split('.')[0]
+  confirmOrCreateDirectory(directory)
+  return `./src/data/json/${directory}/${file}.json`
 }
 
 function writeStream (
