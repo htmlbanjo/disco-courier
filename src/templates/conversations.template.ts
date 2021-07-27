@@ -1,9 +1,5 @@
-import { TWithFields, Field, DialogueEntry } from '../defs/import'
-import {
-  ITmplDialogEntry,
-  ITmplDialogEntryField,
-  TConversationEntry
-} from '../defs/templates'
+import { TWithFields } from '../defs/import'
+import { TConversationEntry } from '../defs/templates'
 import {
   valueOf,
   booleanValueOf,
@@ -13,8 +9,6 @@ import {
 import {
   conversations,
   getSubtaskCount,
-  getSubtasks,
-  getNormalizedDialogEntries,
   isATask,
   hasASubtask,
   isADoor,
@@ -23,7 +17,9 @@ import {
   isACheck,
   jumpsToHub,
   isTerminalDialog
-} from '../search/conversation.search'
+} from '../search/conversations.search'
+import { getSubtasks } from '../search/conversations.subtask.search'
+import { getDialogEntries } from '../search/conversations.dialog.search'
 
 function BaseTemplate (item: TWithFields, extended: any): TConversationEntry {
   return {
@@ -101,7 +97,9 @@ export const SubtaskTemplate = (item: TWithFields) => {
 
 export const DialogTemplate = (item: TWithFields) => {
   if (item?.dialogueEntries?.length > 0) {
-    return getNormalizedDialogEntries(item)
+    return BaseTemplate(item, {
+      ...getDialogEntries(item)
+    })
   }
 }
 

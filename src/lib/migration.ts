@@ -12,6 +12,9 @@ import { templatize } from '../templates'
 import { ISupportedVersion } from '../defs/import'
 import { getMessageText } from '../lib/out'
 import { updateProgress } from '../lib/progress'
+import { getOptions } from '../lib/shared'
+
+const options = getOptions()
 
 function versionList (supportedVersions: ISupportedVersion[]): string {
   return supportedVersions
@@ -59,7 +62,7 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
     entitySubProcess,
     defaults
   )
-  let streamcount = 0
+  let streamcount = 1
   return chain([
     fs.createReadStream(`./src/data/${source}.json`),
     parser(),
@@ -67,11 +70,12 @@ const streamSource = (source: string, entity: string, defaults: string[]) => {
     ignore({ filter: ignoreExpression, once: true }),
     streamArray(),
     data => {
+      ++streamcount
       updateProgress(
         `${getMessageText().processingLoop(
           entity,
           streamcount
-        )} >> ${chalk.yellowBright(++streamcount)} ${chalk.yellow(
+        )} >> ${chalk.yellowBright(streamcount)} ${chalk.yellow(
           data?.value?.fields[0]?.value
         )}`
       )

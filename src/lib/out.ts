@@ -70,7 +70,7 @@ function getMessageText () {
 
   /* wrapping up */
   this.completedWithTime = (totalTime: number) =>
-    `  ✓ Setup Completed in ${totalTime} seconds. Sorry it wasn't sooner. (+1 Sorry app)`
+    `✓ Setup Completed in ${totalTime} seconds. Sorry it wasn't sooner. (+1 Sorry app)`
 
   this.completedEntityNote = () => 'Entity Complete'
 

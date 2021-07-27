@@ -6,11 +6,10 @@ The goal of Disco-Courier is to normalize and condense data for easy reading or 
 
 Some things you could use it for:
 
-- export only Garte dialog and train an AI model on it.*
+- export only Garte dialog and train an AI model on it.\*
 - use it to plan a walkthrough.
 - normalize data into a SQL db for use in your personal project.
 - slice-and-dice results as pre-prep for putting into noSQL docs.
-
 
 \*please, please let me know if you do this.
 
@@ -71,6 +70,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - if using the group with the `--output=db` flag, you'll need to generate a new schema using the sequelize-cli.
 
 #### Live / Exporation Option
+
 - use `npm run dev -- --output=read <rest-of-options>` if you want to use nodemon. Useful when making edits to the template system.
 
 #### Sequelize Option
@@ -89,7 +89,8 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 ### Roadmap, barring time/interest/help
 
 - Finish up dialogueEntry formatting.
-- Finish up checks and modifiers.
+- Finish up checks and modifiers (see above).
 - Add support for foreign key relationships for sequelize.
 - While you can do a lot with the json export option for getting items into noSQL databases, better support.
 - CSV and spreadsheets would be nice (for easy dumps for things like checks).
+- Currently supports the version released 6th April 2021. Build on initial work to support additional versions.
