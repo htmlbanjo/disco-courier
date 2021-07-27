@@ -36,14 +36,12 @@ export const ActorTemplate = (item: TWithFields) => {
   })
 }
 
-// TODO: normalize actors 389-416
 export const SkillTemplate = (item: TWithFields) => {
   if (item.id > 388 && item.id < 417) {
     return BaseTemplate(item, {})
   }
 }
 
-// TODO: normalize actors 416-end
 export const AttributeTemplate = (item: TWithFields) => {
   if (item.id > 416) {
     return BaseTemplate(item, {})

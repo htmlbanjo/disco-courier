@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import { getMessageText, activityIndicatorList } from './lib/out'
 import { getOptions, getState, setState } from './lib/shared'
 import { paging } from './lib/paging'
@@ -55,8 +54,7 @@ import {
           getState('messages')
         )
         if (options.merge === true) {
-          // TODO - performance: push directly to file during stream,
-          // add header/footer in parent method.
+          // TODO - performance/memory: refactor to push directly to writeStream.
           all[entity].push(data)
         } else {
           // TODO - row-by-row support, e.g. a noSQL doc or json file per row.
@@ -114,10 +112,11 @@ import {
     options.entityList.map((entity, i) => {
       updateProgress(getMessageText().openingProcess(entity))
       parseEntity(source, entity, (entityname, entityId, entityData) => {
-        // TODO: consider moving these into case to improve on hooks.
+        // TODO: consider moving these into switch statement to improve on hooks.
         updateProgress(getMessageText().writingToFile())
         fileStream = writeStream(options.outputMode, entity, entity)
 
+        // TODO: break each case into a hooks directory for pluggable output support.
         switch (options.outputMode) {
           case 'read':
             setState('output', [
@@ -186,7 +185,7 @@ import {
     options.sourceJSON,
     options.supportedVersions,
     versionResult => {
-      // TODO: addtl. versions
+      // TODO: addtl. versions support
       setState('currentVersion', versionResult)
       addProgressStep(
         getMessageText().foundSupportedVersion(
