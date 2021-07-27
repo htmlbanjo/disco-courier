@@ -20,6 +20,9 @@ module.exports = {
       checkDifficulty: {
         type: Sequelize.NUMBER
       },
+      checkGameDifficulty: {
+        type: Sequelize.NUMBER
+      },
       isRoot: {
         type: Sequelize.NUMBER
       },
@@ -32,8 +35,14 @@ module.exports = {
       actorId: {
         type: Sequelize.NUMBER
       },
+      actorName: {
+        type: Sequelize.STRING
+      },
       conversantId: {
         type: Sequelize.NUMBER
+      },
+      conversantName: {
+        type: Sequelize.STRING
       },
       shortDescription: {
         type: Sequelize.STRING
