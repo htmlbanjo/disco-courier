@@ -4,13 +4,14 @@ import {
   booleanValueOf,
   shortDescription,
   longDescription,
-  tableDates
+  tableDates,
+  refId
 } from '../search/index.search'
 
 function BaseTemplate (item: TWithFields, extended: any) {
   return {
-    internalID: item.id,
-    gameID: valueOf('Articy Id', item),
+    actorId: item.id,
+    refId: refId(item),
     name: valueOf('Name', item),
     shortDescription: shortDescription(item),
     longDescription: longDescription(item),
@@ -45,5 +46,13 @@ export const SkillTemplate = (item: TWithFields) => {
 export const AttributeTemplate = (item: TWithFields) => {
   if (item.id > 416) {
     return BaseTemplate(item, {})
+  }
+}
+
+export const LookupTemplate = (item: TWithFields) => {
+  return {
+    actorId: item.id,
+    name: valueOf('Name', item),
+    refId: refId(item)
   }
 }

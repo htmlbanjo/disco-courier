@@ -1,33 +1,30 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Items_books', {
+    await queryInterface.createTable('Conversations_links', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      itemId: {
+      originConversationId: {
         type: Sequelize.NUMBER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      displayName: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.TEXT
-      },
-      itemType: {
+      originDialogId: {
         type: Sequelize.NUMBER
       },
-      itemGroup: {
+      destinationConversationId: {
         type: Sequelize.NUMBER
       },
-      conversation: {
-        type: Sequelize.STRING
+      destinationDialogId: {
+        type: Sequelize.NUMBER
+      },
+      isConnector: {
+        type: Sequelize.NUMBER
+      },
+      priority: {
+        type: Sequelize.NUMBER
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +37,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Items_books');
+    await queryInterface.dropTable('Conversations_links');
   }
 };

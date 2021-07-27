@@ -2,7 +2,7 @@ import { valueOf, tableDates } from '../search/index.search'
 
 export const LocationTemplate = item => {
   return {
-    internalID: item.id,
+    locationId: item.id,
     name: valueOf('Name', item),
     ...tableDates(item)
   }

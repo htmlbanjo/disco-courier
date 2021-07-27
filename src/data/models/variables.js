@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Variables.init({
-    internalID: DataTypes.NUMBER,
+    variableId: DataTypes.NUMBER,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     initialValue: DataTypes.STRING,

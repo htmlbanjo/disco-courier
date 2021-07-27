@@ -42,7 +42,7 @@ Here's a whole bunch of sample commands you can try (skip to next section if you
 | `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
 | `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
 | `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json      |
-| `courier -- --output=seed conversations.redcheck`                      | generates a seed file for all red checks in the game.                                                        |
+| `courier -- --output=db conversations.link`                            | generates a seed file for a cross-reference table containing the entire dialog graph for a relational db.    |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
@@ -50,10 +50,10 @@ Note this is not raw output: each command passes through an extensive templating
 
 #### Paging
 
-| flag                      | result                                                                                                                                                                                                                            |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--start=<#>`             | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
-| `--results=<#>`           | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
+| flag                        | result                                                                                                                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--start=<#>`               | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
+| `--results=<#>`             | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
 | `--output=<read\|json\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 
 #### Entities and groups

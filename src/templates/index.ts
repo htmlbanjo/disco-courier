@@ -3,7 +3,8 @@ import { VariableTemplate } from './variables.template'
 import {
   ActorTemplate,
   SkillTemplate,
-  AttributeTemplate
+  AttributeTemplate,
+  LookupTemplate
 } from './actors.template'
 import {
   ItemTemplate,
@@ -26,7 +27,8 @@ import {
   CheckTemplate,
   WhiteCheckTemplate,
   RedCheckTemplate,
-  PassiveCheckTemplate
+  PassiveCheckTemplate,
+  GraphLinksTemplate
 } from './conversations.template'
 
 const templatize = (entity, item) => {
@@ -37,6 +39,8 @@ const templatize = (entity, item) => {
       return SkillTemplate(item)
     case 'actors.attribute':
       return AttributeTemplate(item)
+    case 'actors.lookup':
+      return LookupTemplate(item)
     case 'items':
       return ItemTemplate(item)
     case 'items.thought':
@@ -79,6 +83,8 @@ const templatize = (entity, item) => {
       return RedCheckTemplate(item)
     case 'conversations.passivecheck':
       return PassiveCheckTemplate(item)
+    case 'conversations.link':
+      return GraphLinksTemplate(item)
     default:
       return { item: item }
   }

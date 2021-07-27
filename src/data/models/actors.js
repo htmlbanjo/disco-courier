@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Actors.init({
-    internalID: DataTypes.NUMBER,
-    gameID: DataTypes.STRING,
+    actorId: DataTypes.NUMBER,
+    refId: DataTypes.STRING,
     name: DataTypes.STRING,
     shortDescription: DataTypes.STRING,
     longDescription: DataTypes.TEXT,

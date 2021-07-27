@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Items_thought.init({
-    internalID: DataTypes.NUMBER,
+    itemId: DataTypes.NUMBER,
     name: DataTypes.STRING,
     displayName: DataTypes.STRING,
     description: DataTypes.TEXT,

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Location.init({
-    internalID: DataTypes.NUMBER,
+    locationId: DataTypes.NUMBER,
     name: DataTypes.STRING
   }, {
     sequelize,

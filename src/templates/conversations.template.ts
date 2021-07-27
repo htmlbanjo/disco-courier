@@ -24,141 +24,137 @@ import {
   getWhiteChecks,
   getRedChecks,
   getWhiteAndRedChecks,
-  getPassiveChecks
+  getPassiveChecks,
+  getAllChecks,
+  getOutgoingLinks
 } from '../search/conversations.dialog.search'
 
-function BaseTemplate (item: TWithFields, extended: any): TConversationEntry {
+function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
   return {
-    internalID: item.id,
-    name: valueOf('Title', item),
-    description: description(item),
-    ...tableDates(item),
+    conversationId: convo.id,
+    name: valueOf('Title', convo),
+    description: description(convo),
+    ...tableDates(convo),
     ...extended
   }
 }
-function ExtendedTemplate (item: TWithFields): TConversationEntry {
-  return BaseTemplate(item, {
-    ...conversations.taskActive(item),
-    ...conversations.taskCompleted(item),
-    ...conversations.taskCancelled(item),
-    ...conversations.taskReward(item),
-    ...conversations.taskIsTimed(item),
+function ExtendedTemplate (convo: TWithFields): TConversationEntry {
+  return BaseTemplate(convo, {
+    ...conversations.taskActive(convo),
+    ...conversations.taskCompleted(convo),
+    ...conversations.taskCancelled(convo),
+    ...conversations.taskReward(convo),
+    ...conversations.taskIsTimed(convo),
 
-    ...conversations.getCheckType(item),
-    ...conversations.getCondition(item),
-    ...conversations.getInstruction(item),
-    ...conversations.getPlacement(item),
-    ...conversations.getActor(item),
-    ...conversations.getConversant(item),
-    ...conversations.getAltOrbText(item),
-    ...conversations.getOnUse(item),
-    ...conversations.getDialogOverride(item),
-    subTasks: getSubtasks(item)
+    ...conversations.getCheckType(convo),
+    ...conversations.getCondition(convo),
+    ...conversations.getInstruction(convo),
+    ...conversations.getPlacement(convo),
+    ...conversations.getActor(convo),
+    ...conversations.getConversant(convo),
+    ...conversations.getAltOrbText(convo),
+    ...conversations.getOnUse(convo),
+    ...conversations.getDialogOverride(convo),
+    subTasks: getSubtasks(convo)
   })
 }
 
-function CourierExtendedTemplate (item: TWithFields) {
+function CourierExtendedTemplate (convo: TWithFields) {
   return {
-    numSubtasks: getSubtaskCount(item),
-    isTask: isATask(item),
-    isOrb: isAnOrb(item),
-    hasSubtask: hasASubtask(item),
-    isHub: isAHub(item),
-    isDoor: isADoor(item),
-    dialogLength: item?.dialogueEntries?.length
+    numSubtasks: getSubtaskCount(convo),
+    isTask: isATask(convo),
+    isOrb: isAnOrb(convo),
+    hasSubtask: hasASubtask(convo),
+    isHub: isAHub(convo),
+    isDoor: isADoor(convo),
+    dialogLength: convo?.dialogueEntries?.length
   }
 }
 
-export const ConversationTemplate = (item: TWithFields): TConversationEntry => {
-  return BaseTemplate(item, {
-    ...ExtendedTemplate(item),
-    ...CourierExtendedTemplate(item)
+export const ConversationTemplate = (
+  convo: TWithFields
+): TConversationEntry => {
+  return BaseTemplate(convo, {
+    ...ExtendedTemplate(convo),
+    ...CourierExtendedTemplate(convo)
   })
 }
 
-export const TaskTemplate = (item: TWithFields) => {
-  if (isATask(item)) {
-    return BaseTemplate(item, {
-      ...conversations.taskActive(item),
-      ...conversations.taskCompleted(item),
-      ...conversations.taskCancelled(item),
-      ...conversations.taskReward(item),
-      ...conversations.taskIsTimed(item),
-      ...conversations.getCheckType(item),
-      ...conversations.getCondition(item),
-      ...conversations.getInstruction(item),
-      ...conversations.getPlacement(item),
-      ...conversations.getActor(item),
-      ...conversations.getConversant(item),
-      subtasks: getSubtaskCount(item)
+export const TaskTemplate = (convo: TWithFields) => {
+  if (isATask(convo)) {
+    return BaseTemplate(convo, {
+      ...conversations.taskActive(convo),
+      ...conversations.taskCompleted(convo),
+      ...conversations.taskCancelled(convo),
+      ...conversations.taskReward(convo),
+      ...conversations.taskIsTimed(convo),
+      ...conversations.getCheckType(convo),
+      ...conversations.getCondition(convo),
+      ...conversations.getInstruction(convo),
+      ...conversations.getPlacement(convo),
+      ...conversations.getActor(convo),
+      ...conversations.getConversant(convo),
+      subtasks: getSubtaskCount(convo)
     })
   }
 }
 
-export const SubtaskTemplate = (item: TWithFields) => {
-  if (hasASubtask(item)) {
-    return getSubtasks(item)
+export const SubtaskTemplate = (convo: TWithFields) => {
+  if (hasASubtask(convo)) {
+    return getSubtasks(convo)
   }
 }
 
-export const DialogTemplate = (item: TWithFields) => {
-  if (item?.dialogueEntries?.length > 0) {
-    return BaseTemplate(item, {
-      ...getDialogEntries(item)
+export const DialogTemplate = (convo: TWithFields) => {
+  if (convo?.dialogueEntries?.length > 0) {
+    return BaseTemplate(convo, {
+      ...getDialogEntries(convo)
     })
   }
 }
 
-export const OrbTemplate = (item: TWithFields): TConversationEntry => {
-  if (isAnOrb(item)) {
-    return BaseTemplate(item, {
-      ...conversations.getCheckType(item),
-      ...conversations.getCondition(item),
-      ...conversations.getInstruction(item),
-      ...conversations.getDifficulty(item),
-      ...conversations.getPlacement(item),
-      ...conversations.getActor(item),
-      ...conversations.getConversant(item),
+export const OrbTemplate = (convo: TWithFields): TConversationEntry => {
+  if (isAnOrb(convo)) {
+    return BaseTemplate(convo, {
+      ...conversations.getCheckType(convo),
+      ...conversations.getCondition(convo),
+      ...conversations.getInstruction(convo),
+      ...conversations.getDifficulty(convo),
+      ...conversations.getPlacement(convo),
+      ...conversations.getActor(convo),
+      ...conversations.getConversant(convo),
 
-      ...conversations.getActor(item),
-      ...conversations.getConversant(item),
-      ...conversations.getAltOrbText(item),
-      ...conversations.getOnUse(item),
-      ...conversations.getDialogOverride(item)
+      ...conversations.getActor(convo),
+      ...conversations.getConversant(convo),
+      ...conversations.getAltOrbText(convo),
+      ...conversations.getOnUse(convo),
+      ...conversations.getDialogOverride(convo)
     })
   }
 }
 
 // Note: Joyce seems to be the only top-level hub there is.
-export const HubTemplate = (item: TWithFields): TConversationEntry => {
-  if (isAHub(item)) {
-    return BaseTemplate(item, {})
+export const HubTemplate = (convo: TWithFields): TConversationEntry => {
+  if (isAHub(convo)) {
+    return BaseTemplate(convo, {})
   }
 }
 
-export const CheckTemplate = (item: TWithFields): TConversationEntry => {
-  if (item?.dialogueEntries?.length > 0) {
-    return BaseTemplate(item, {
-      red: getRedChecks(item),
-      white: getWhiteChecks(item),
-      passive: getPassiveChecks(item)
-    })
-  }
+export const CheckTemplate = (convo: TWithFields): TConversationEntry => {
+  return getAllChecks(convo) || undefined
 }
 
-export const WhiteCheckTemplate = (item: TWithFields) =>
-  getWhiteChecks(item) || undefined
+export const WhiteCheckTemplate = (convo: TWithFields) =>
+  getWhiteChecks(convo) || undefined
 
-export const RedAndWhiteCheckTemplate = (item: TWithFields) =>
-  getWhiteAndRedChecks(item) || undefined
+export const RedAndWhiteCheckTemplate = (convo: TWithFields) =>
+  getWhiteAndRedChecks(convo) || undefined
 
-export const RedCheckTemplate = (item: TWithFields) =>
-  getRedChecks(item) || undefined
+export const RedCheckTemplate = (convo: TWithFields) =>
+  getRedChecks(convo) || undefined
 
-export const PassiveCheckTemplate = (item: TWithFields) => {
-  if (item?.dialogueEntries?.length > 0) {
-    return BaseTemplate(item, {
-      checks: getPassiveChecks(item)
-    })
-  }
-}
+export const PassiveCheckTemplate = (convo: TWithFields) =>
+  getPassiveChecks(convo) || undefined
+
+export const GraphLinksTemplate = (convo: TWithFields) =>
+  getOutgoingLinks(convo)

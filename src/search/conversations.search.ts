@@ -7,77 +7,77 @@ import {
 } from './index.search'
 
 const conversations = {
-  taskActive (item: TWithFields): IResultEntry {
-    return keyFunction('display_condition_main', 'string', item, {
+  taskActive (convo: TWithFields): IResultEntry {
+    return keyFunction('display_condition_main', 'string', convo, {
       returnKey: 'taskActive',
       returnValueFn: cleanVariableName
     })
   },
-  taskCompleted (item: TWithFields): IResultEntry {
-    return keyFunction('done_condition_main', 'string', item, {
+  taskCompleted (convo: TWithFields): IResultEntry {
+    return keyFunction('done_condition_main', 'string', convo, {
       returnKey: 'taskComplete',
       returnValueFn: cleanVariableName
     })
   },
-  taskCancelled (item: TWithFields): IResultEntry {
-    return keyFunction('cancelConditionMain', 'string', item, {
+  taskCancelled (convo: TWithFields): IResultEntry {
+    return keyFunction('cancelConditionMain', 'string', convo, {
       returnKey: 'taskCanceled',
       returnValueFn: cleanVariableName
     })
   },
-  taskReward (item: TWithFields): IResultEntry {
-    return keyFunction('taskReward', 'number', item)
+  taskReward (convo: TWithFields): IResultEntry {
+    return keyFunction('taskReward', 'number', convo)
   },
-  taskIsTimed (item: TWithFields): IResultEntry {
-    return keyFunction('taskTimed', 'boolean', item)
+  taskIsTimed (convo: TWithFields): IResultEntry {
+    return keyFunction('taskTimed', 'boolean', convo)
   },
-  getCheckType (item: TWithFields): IResultEntry {
-    return keyFunction('CheckType', 'string', item, {
+  getCheckType (convo: TWithFields): IResultEntry {
+    return keyFunction('CheckType', 'string', convo, {
       returnKey: 'checkType'
     })
   },
-  getCondition (item: TWithFields): IResultEntry {
-    return keyFunction('Condition', 'string', item, {
+  getCondition (convo: TWithFields): IResultEntry {
+    return keyFunction('Condition', 'string', convo, {
       returnKey: 'condition',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getInstruction (item: TWithFields): IResultEntry {
-    return keyFunction('Instruction', 'string', item, {
+  getInstruction (convo: TWithFields): IResultEntry {
+    return keyFunction('Instruction', 'string', convo, {
       returnKey: 'instruction',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getDifficulty (item: TWithFields): IResultEntry {
-    return keyFunction('Difficulty', 'number', item, {
+  getDifficulty (convo: TWithFields): IResultEntry {
+    return keyFunction('Difficulty', 'number', convo, {
       returnKey: 'difficulty'
     })
   },
-  getPlacement (item: TWithFields): IResultEntry {
-    return keyFunction('Placement', 'string', item, {
+  getPlacement (convo: TWithFields): IResultEntry {
+    return keyFunction('Placement', 'string', convo, {
       returnKey: 'placement'
     })
   },
-  getActor (item: TWithFields): IResultEntry {
-    return keyFunction('Actor', 'number', item, {
+  getActor (convo: TWithFields): IResultEntry {
+    return keyFunction('Actor', 'number', convo, {
       returnKey: 'actorId'
     })
   },
-  getConversant (item: TWithFields): IResultEntry {
-    return keyFunction('Conversant', 'number', item, {
+  getConversant (convo: TWithFields): IResultEntry {
+    return keyFunction('Conversant', 'number', convo, {
       returnKey: 'conversantId'
     })
   },
-  getAltOrbText (item: TWithFields): IResultEntry {
-    return keyFunction('AlternateOrbText', 'string', item, {
+  getAltOrbText (convo: TWithFields): IResultEntry {
+    return keyFunction('AlternateOrbText', 'string', convo, {
       returnKey: 'altOrbText'
     })
   },
-  getOnUse (item: TWithFields): IResultEntry {
-    return keyFunction('OnUse', 'string', item)
+  getOnUse (convo: TWithFields): IResultEntry {
+    return keyFunction('OnUse', 'string', convo)
   },
-  getDialogOverride (item: TWithFields): IResultEntry {
-    return keyFunction('OverrideDialogueCondition', 'string', item, {
+  getDialogOverride (convo: TWithFields): IResultEntry {
+    return keyFunction('OverrideDialogueCondition', 'string', convo, {
       returnKey: 'dialogOverrideCondition'
     })
   }
@@ -102,19 +102,19 @@ const cleanedConditionListAsArray = <TKeyOutputFunction>(
     : undefined
 }
 
-const jumpsToHub = (item: TWithFields): string => {
-  const currTitle = valueOf('Title', item)
+const jumpsToHub = (convo: TWithFields): string => {
+  const currTitle = valueOf('Title', convo)
   return currTitle
     ? currTitle.match(/^(Jump to: )\[(?<dest>\w+\s?\w+)\]/)?.groups?.dest
     : undefined
 }
-const isTerminalDialog = (item: TWithFields): boolean => {
-  return !!jumpsToHub(item)
+const isTerminalDialog = (convo: TWithFields): boolean => {
+  return !!jumpsToHub(convo)
 }
 
-function getSubtaskCount (item: TWithFields): number {
+function getSubtaskCount (convo: TWithFields): number {
   let subtaskCount = 1
-  item?.fields?.map(field => {
+  convo?.fields?.map(field => {
     if (field.title.includes('subtask_title') && field.value) {
       ++subtaskCount
     }
@@ -122,28 +122,28 @@ function getSubtaskCount (item: TWithFields): number {
   return subtaskCount
 }
 
-const titleValueStartsWith = (search: string, item: TWithFields): boolean => {
+const titleValueStartsWith = (search: string, convo: TWithFields): boolean => {
   const searchStr = new RegExp(`^${search}`)
-  return !!valueOf('Title', item)?.match(searchStr)
+  return !!valueOf('Title', convo)?.match(searchStr)
 }
-const titleValueEndsWith = (search: string, item: TWithFields): boolean => {
+const titleValueEndsWith = (search: string, convo: TWithFields): boolean => {
   const searchStr = new RegExp(`${search}$`)
-  return !!valueOf('Title', item)?.match(searchStr)
+  return !!valueOf('Title', convo)?.match(searchStr)
 }
 
-const isATask = (item: TWithFields): boolean => !!valueOf('task_reward', item)
+const isATask = (convo: TWithFields): boolean => !!valueOf('task_reward', convo)
 
-const hasASubtask = (item: TWithFields): boolean =>
-  !!valueOf('subtask_title_01', item)
+const hasASubtask = (convo: TWithFields): boolean =>
+  !!valueOf('subtask_title_01', convo)
 
-const isADoor = (item: TWithFields): boolean =>
-  valueExistsInKey(`\/ DOOR \/`, 'Title', item)
+const isADoor = (convo: TWithFields): boolean =>
+  valueExistsInKey(`\/ DOOR \/`, 'Title', convo)
 
-const isAnOrb = (item: TWithFields): boolean =>
-  !!valueOf('Title', item)?.match(/\bORB\b/)
+const isAnOrb = (convo: TWithFields): boolean =>
+  !!valueOf('Title', convo)?.match(/\bORB\b/)
 
-const isAHub = (item: TWithFields): boolean => {
-  return !!valueOf('Title', item)?.match(/HUB/i)
+const isAHub = (convo: TWithFields): boolean => {
+  return !!valueOf('Title', convo)?.match(/HUB/i)
 }
 
 export {
@@ -161,5 +161,5 @@ export {
 }
 
 /*
-const isTask = (item: TWithFields) => getSearchString('subtask_title', item)
+const isTask = (convo: TWithFields) => getSearchString('subtask_title', convo)
 */

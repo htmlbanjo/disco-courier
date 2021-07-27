@@ -25,7 +25,7 @@ import {
 
 function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
   return {
-    internalID: item.id,
+    itemId: item.id,
     name: valueOf('Name', item),
     displayName: valueOf('displayname', item),
     description: description(item),

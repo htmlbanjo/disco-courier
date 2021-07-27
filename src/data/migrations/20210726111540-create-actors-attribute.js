@@ -8,10 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      internalID: {
+      actorId: {
         type: Sequelize.NUMBER
       },
-      gameID: {
+      refId: {
         type: Sequelize.STRING
       },
       name: {

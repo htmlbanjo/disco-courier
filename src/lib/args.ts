@@ -25,6 +25,7 @@ const entityListAll = [
   'actors',
   'actors.npc',
   'actors.skill',
+  'actors.lookup',
   'actors.attribute',
   'items',
   'items.thought',
@@ -44,9 +45,10 @@ const entityListAll = [
   'conversations.orb',
   'conversations.hub',
   'conversations.check',
+  'conversations.passivecheck',
   'conversations.whitecheck',
   'conversations.redcheck',
-  'conversations.passivecheck'
+  'conversations.link'
 ]
 
 const setEntityList = (): string[] => {
@@ -56,17 +58,22 @@ const setEntityList = (): string[] => {
     return entityListDefaults
   }
   const userEntityList = args['_'].reduce((list: string[], arg: string) => {
-    // longest entity is currently 13 (conversations), not concerned w/ exactness here.
     const str = arg
     const cleaned = str
       .trim()
       .toLowerCase()
-      .substring(0, 25)
+      .substring(0, 30)
+    // note on "30" above: longest entity is currently 13 (conversations), not concerned w/ exactness here.
     if (entityListAll.includes(cleaned)) {
       list.push(cleaned)
       return list
     } else {
-      console.log(chalk.red(`\n\n\nUnrecognized field: ${arg}.`))
+      console.log(
+        `${chalk.bgRed(
+          chalk.bold(`\n\n\n Unrecognized field: `)
+        )} ${chalk.redBright(arg)}`
+      )
+
       process.exit(1)
     }
     return list

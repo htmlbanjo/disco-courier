@@ -195,7 +195,7 @@ const getName = (item: TWithFields): string => valueOf('name', item)
 
 const techName = (item: TWithFields): string => valueOf('technical name', item)
 
-const gameId = (item: TWithFields): string => valueOf('Articy Id', item)
+const refId = (item: TWithFields): string => valueOf('Articy Id', item)
 
 const shortDescription = (item: TWithFields): string =>
   valueOf('short_description', item)
@@ -234,7 +234,7 @@ export {
   valueOf,
   getSearchString,
   findInField,
-  gameId,
+  refId,
   keyFunction,
   cleanVariableName,
   cleanVariableNameNoPrefix,

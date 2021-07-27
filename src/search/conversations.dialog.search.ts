@@ -1,22 +1,71 @@
 import { Field, TWithFields, IResultEntry } from '../defs/import'
-import {
-  titleIs,
-  filterTitlesByPattern,
-  whereTitlesHaveValuesAndMatch,
-  valueOf,
-  booleanValueOf,
-  gameId,
-  keyFunction
-} from './index.search'
+import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
 import { conversations, isAHub } from './conversations.search'
 
-//TODO: move templating-style fns into the proper template file.
+function isAWhiteCheck (entry: TWithFields): boolean {
+  return !!titleIs('DifficultyWhite', entry)
+}
+function isARedCheck (entry: TWithFields): boolean {
+  return !!titleIs('DifficultyRed', entry)
+}
+/* function isAPassiveCheck (entry: TWithFields): boolean {
+  return !!valueOf('Title', entry).match(/Variable\[\"([A-Za-z]+.\w+)\"\]/)
+} */
+function isAPassiveCheck (entry: TWithFields): boolean {
+  return !!titleIs('DifficultyPass', entry)
+}
+function isARedOrWhiteCheck (entry: TWithFields): boolean {
+  return isAWhiteCheck(entry) || isARedCheck(entry)
+}
+function isACheck (entry: TWithFields): boolean {
+  return isAWhiteCheck(entry) || isARedCheck(entry) || isAPassiveCheck(entry)
+}
 
-function getCheckAspectList (item: TWithFields) {
+type TCheckType = 'red' | 'white' | 'passive' | 'all' | 'both'
+
+//TODO: move templating-style fns into the proper template file.
+function CheckTemplate (entry: TWithFields, type: TCheckType) {
+  //parentId: item.id,
+
+  /* TODO: performance: consider converting "is functions
+   * to just return the field instead of boolean so the match
+   * is readily available here.
+   */
+  const checkDetail =
+    titleIs('DifficultyPass', entry) ||
+    titleIs('DifficultyRed', entry) ||
+    titleIs('DifficultyWhite', entry)
+  return {
+    dialogId: entry.id,
+    conversationId: entry.conversationID,
+    checkType: checkDetail.title.slice(10),
+    checkDifficulty: parseInt(checkDetail.value),
+    isRoot: entry.isRoot,
+    isGroup: entry.isGroup,
+    isHub: isAHub(entry),
+    ...conversations.getActor(entry),
+    ...conversations.getConversant(entry),
+    shortDescription: valueOf('Title', entry),
+    longDescription: valueOf('Dialogue Text', entry),
+    refId: refId(entry),
+    forced: booleanValueOf('Forced', entry),
+    flag: valueOf('FlagName', entry),
+    skillRefId: valueOf('SkillType', entry),
+    modifiers: getCheckAspectList(entry),
+    inputId: valueOf('InputId', entry),
+    outputId: valueOf('OutputId', entry),
+    sequence: valueOf('Sequence', entry),
+    conditionPriority: entry.conditionPriority,
+    conditionString: entry.conditionString,
+    userScript: entry.userScript
+  }
+}
+
+function getCheckAspectList (entry: TWithFields) {
   const checks = []
-  // if there's a check that has more than 21 modifiers, uh...it loses at blackjack?
+  // if there's a skill check that has more than 21 modifiers, uh...it loses at blackjack?
   for (let i = 0; i < 20; i++) {
-    const checkEntry = item?.fields?.map((f: Field) => {
+    const checkEntry = entry?.fields?.map((f: Field) => {
       const foundCheckDetail = f?.title?.match(
         new RegExp(`^(?<type>tooltip|variable|modifier)(?<pos>${i + 1})`)
       )?.groups.type
@@ -32,104 +81,86 @@ function getCheckAspectList (item: TWithFields) {
   return checks
 }
 
-function isAWhiteCheck (item: TWithFields) {
-  return !!titleIs('DifficultyWhite', item)
-}
-function isARedCheck (item: TWithFields) {
-  return !!titleIs('DifficultyRed', item)
-}
-const isAPassiveCheck = (item: TWithFields): boolean => {
-  return !!valueOf('Title', item).match(/Variable\[\"([A-Za-z]+.\w+)\"\]/)
-}
-
-function isARedOrWhiteCheck (item: TWithFields) {
-  return isAWhiteCheck(item) || isARedCheck(item)
-}
-
-function isACheck (item: TWithFields) {
-  return isAWhiteCheck(item) || isARedCheck(item) || isAPassiveCheck(item)
-}
-
-function CheckTemplate (entry: TWithFields) {
-  return {
-    shortDescription: valueOf('Title', entry),
-    longDescription: valueOf('Dialogue Text', entry),
-    gameId: gameId(entry),
-    difficulty: valueOf('DifficultyWhite', entry),
-    forced: booleanValueOf('Forced', entry),
-    flag: valueOf('FlagName', entry),
-    skillGameId: valueOf('SkillType', entry),
-    modifiers: getCheckAspectList(entry)
+/* TODO: Look, I get it. We could do a lot with variable function names.
+ * Favoring explicit/SOLID over clever/DRY.
+ */
+function getTypeVerifier (type: TCheckType): (entry: TWithFields) => boolean {
+  switch (type) {
+    case 'both':
+      return isARedOrWhiteCheck
+    case 'passive':
+      return isAPassiveCheck
+    case 'white':
+      return isAWhiteCheck
+    case 'red':
+      return isARedCheck
+    case 'all':
+      return isACheck
+    default:
+      throw new Error(`Couln't find a function to handle type ${type}`)
   }
 }
 
-//TODO: complete
-function getPassiveChecks (item: TWithFields) {
-  if (isAPassiveCheck(item)) {
-    return CheckTemplate(item)
-  }
-}
-
-function getChecksByColorType (
-  color: 'red' | 'white' | 'both',
-  item: TWithFields
-) {
-  if (!color) {
-    throw new Error('no color for check specified.')
-    process.exit(1)
-  }
-  const verifier =
-    color === 'both'
-      ? isARedOrWhiteCheck
-      : color === 'red'
-      ? isARedCheck
-      : isAWhiteCheck
-  if (item?.dialogueEntries?.length < 1) {
+function getChecksByType (type: TCheckType, convo: TWithFields) {
+  const verifier = getTypeVerifier(type)
+  if (convo?.dialogueEntries?.length < 1) {
     return undefined
   }
-  const results = item?.dialogueEntries?.reduce((cChecks, entry) => {
+  const results = convo?.dialogueEntries?.reduce((cChecks, entry) => {
     if (verifier(entry)) {
-      cChecks.push(CheckTemplate(entry))
+      cChecks.push(CheckTemplate(entry, type))
     }
     return cChecks
   }, [])
   return results?.length > 0 ? results : undefined
 }
 
-function getWhiteChecks (item: TWithFields) {
-  return getChecksByColorType('white', item)
+function getWhiteChecks (entry: TWithFields) {
+  return getChecksByType('white', entry)
 }
 
-function getRedChecks (item: TWithFields) {
-  return getChecksByColorType('red', item)
+function getRedChecks (entry: TWithFields) {
+  return getChecksByType('red', entry)
 }
 
-function getWhiteAndRedChecks (item: TWithFields) {
-  return getChecksByColorType('both', item)
+function getWhiteAndRedChecks (entry: TWithFields) {
+  return getChecksByType('both', entry)
+}
+
+function getAllChecks (entry: TWithFields) {
+  return getChecksByType('all', entry)
+}
+
+function getPassiveChecks (entry: TWithFields) {
+  return getChecksByType('passive', entry)
 }
 
 /* TODO: offer a rollup version that preserves the graph,
  * for use with noSQL or de-normalized projects
  * Also, move template portions into conversations template.
+ * Lastly, need a model/migration for Conversations without group.
  */
-function getDialogEntries (item: TWithFields) {
-  const dialogRows = item?.dialogueEntries?.reduce(
+function getDialogEntries (convo: TWithFields) {
+  const dialogRows = convo?.dialogueEntries?.reduce(
     (entries: IResultEntry[], entry: TWithFields) => {
       entries.push({
-        parentId: item.id,
-        internalId: entry.id,
+        parentId: convo.id,
+        dialogId: entry.id,
         isRoot: entry.isRoot,
         isGroup: entry.isGroup,
-        gameId: gameId(item),
-        isHub: isAHub(item),
+        refId: refId(convo),
+        isHub: isAHub(convo),
         dialogShort: valueOf('Title', entry),
         dialogLong: valueOf('Dialogue Text', entry),
-        ...conversations.getActor(item),
-        ...conversations.getConversant(item),
+        ...conversations.getActor(convo),
+        ...conversations.getConversant(convo),
         sequence: valueOf('Sequence', entry),
         conditionPriority: entry.conditionPriority,
         conditionString: entry.conditionString,
-        checkDifficulty: valueOf('DifficultyPass', entry),
+        checkDifficulty:
+          valueOf('DifficultyPass', entry) ||
+          valueOf('DifficultyWhite', entry) ||
+          valueOf('DifficultyRed', entry),
         userScript: entry.userScript,
         inputId: valueOf('InputId', entry),
         outputId: valueOf('OutputId', entry)
@@ -143,27 +174,30 @@ function getDialogEntries (item: TWithFields) {
 }
 
 //TODO: complete outgoinglinks xref
-function getOutgoingLinks (item: TWithFields) {
-  item?.dialogueEntries?.reduce((entries, entry) => {
+function getOutgoingLinks (convo: TWithFields) {
+  return convo?.dialogueEntries?.reduce((entries, entry) => {
     entry.outgoingLinks.map(row => {
       entries.push({
         originConversationId: row.originConversationID,
         originDialogId: row.originDialogueID,
         destinationConversationId: row.destinationConversationID,
-        destinationDialogId: row.destinationDialogID,
+        destinationDialogId: row.destinationDialogueID,
         isConnector: row.isConnector,
         priority: row.priority
       })
     })
+    return entries
   }, [])
 }
 
 export {
+  getOutgoingLinks,
   getDialogEntries,
   getWhiteChecks,
   getRedChecks,
   getWhiteAndRedChecks,
   getPassiveChecks,
+  getAllChecks,
   isAWhiteCheck,
   isARedCheck,
   isAPassiveCheck,

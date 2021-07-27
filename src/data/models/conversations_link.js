@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Items_book extends Model {
+  class Conversations_link extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,17 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  Items_book.init({
-    itemId: DataTypes.NUMBER,
-    name: DataTypes.STRING,
-    displayName: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    itemType: DataTypes.NUMBER,
-    itemGroup: DataTypes.NUMBER,
-    conversation: DataTypes.STRING
+  Conversations_link.init({
+    originConversationId: DataTypes.NUMBER,
+    originDialogId: DataTypes.NUMBER,
+    destinationConversationId: DataTypes.NUMBER,
+    destinationDialogId: DataTypes.NUMBER,
+    isConnector: DataTypes.NUMBER,
+    priority: DataTypes.NUMBER
   }, {
     sequelize,
-    modelName: 'Items_book',
+    modelName: 'Conversations_link',
   });
-  return Items_book;
+  return Conversations_link;
 };
