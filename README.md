@@ -42,7 +42,7 @@ Here's a whole bunch of sample commands you can try (skip to next section if you
 | `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
 | `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
 | `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json      |
-| `courier -- --output=db conversations.link`                            | generates a seed file for a cross-reference table containing the entire dialog graph for a relational db.    |
+| `courier -- --output=db conversations.link`                            | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db    |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
