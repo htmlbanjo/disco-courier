@@ -1,10 +1,10 @@
 # Disco-Courier
 
-_A data-mover-and-shaker for Disco Elysium._
+_**A data-mover-and-shaker for Disco Elysium.**_
 
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice. It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
-Some things you could use it for:
+_Some things you could use it for:_
 
 - export only Garte dialog and train an AI model on it.\*
 - use it to plan a walkthrough.
@@ -24,25 +24,37 @@ You need a purchased copy of the game and access to its data.
 - place a copy of your exported data in /data/dialog.json
 - run a health check: `npm run courier:health`
 
-If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!? Yeah me either_).
+If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!?_ Yeah me either).
 
 ### Usage
 
-Some sample commands you can try:
+Here's a whole bunch of sample commands you can try (skip to next section if you just want an arguments list):
 
 `npm run...`
 
-| Command                                                             | Result                                                                                                       |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `courier -- --output=read locations`                                | prints locations in json format to the screen.                                                               |
-| `courier -- --output=json items`                                    | writes all items to a json file in /data/items.json                                                          |
-| `courier -- --output=db actors`                                     | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                  |
-| `courier -- --output=read --start=100 variables`                    | displays all variables, starting at entry 100 to finish.                                                     |
-| `courier --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                 |
-| `courier --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
-| `courier --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
+| Command                                                                | Result                                                                                                       |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `courier -- --output=read locations`                                   | prints locations in json format to the screen.                                                               |
+| `courier -- --output=json items`                                       | writes all items to a json file in /data/items.json                                                          |
+| `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                  |
+| `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                     |
+| `courier -- --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                 |
+| `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
+| `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
+| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json      |
+| `courier -- --output=seed conversations.redcheck`                      | generates a seed file for all red checks in the game.                                                        |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
+
+###Arguments
+
+#### Paging
+
+| flag                      | result                                                                                                                                                                                                                            |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--start=<#>`             | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
+| `--results=<#>`           | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
+| `--output=<read|json|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 
 #### Entities and groups
 
@@ -54,7 +66,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 |**actors**|`actors:skill`, `actors:attribute`
 |**variables**| (none)
 |**items**| `items.thought`, `items.key`, `items.substance`, `items.consumable`, `items.game`, `items.book`, `items.clothing`, `items.tare`
-|**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.orb`, `conversations.check`
+|**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.orb`, `conversations.check` `conversations.whitecheck`, `conversations.redcheck` `conversations.passivecheck`
 
 #### Customizing output
 
@@ -69,12 +81,18 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - if stuck, refer to /lib/migration.ts for details on how entities and groups are managed.
 - if using the group with the `--output=db` flag, you'll need to generate a new schema using the sequelize-cli.
 
-#### Live / Exporation Option
+#### Live / Exploration Option
 
 - use `npm run dev -- --output=read <rest-of-options>` if you want to use nodemon. Useful when making edits to the template system.
 
 #### Sequelize Option
 
+- If unfamiliar with SQL databases or the Sequelize ORM, this section probably isn't for you.
+- The output of the `db` flag will place a seed in `/data/seeders/<timestamp-entity-group.js>`.
+  - The resulting seed will reference Entity and Group names for the table name, with the first letter Capitalized, followed by an underscore and group name (if a group was specified):
+    <br>
+    _**Example:**_ `--output=db actors.skill` will generate **File:** `/data/seeders/202107271226-add-actors.skill.js` targeting **Table:** `Actors_skill`. See above section for more on Entities and groups.
+    <br>
 - after you've generated some seed files, you can do `npm run db:up` to populate the database of your choice.
 - SQLite should be ready out-of-the-box, you'll need to follow the standard Sequelize setup for Postgres, etc.
 
@@ -89,8 +107,8 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 ### Roadmap, barring time/interest/help
 
 - Finish up dialogueEntry formatting.
-- Finish up checks and modifiers (see above).
+- ~~Finish up checks and modifiers (see above)~~ (Done).
 - Add support for foreign key relationships for sequelize.
-- While you can do a lot with the json export option for getting items into noSQL databases, better support.
+- While you can do a lot with the json export option for getting items into noSQL databases, it could use some better convenience options.
 - CSV and spreadsheets would be nice (for easy dumps for things like checks).
 - Currently supports the version released 6th April 2021. Build on initial work to support additional versions.
