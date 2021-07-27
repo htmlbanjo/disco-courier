@@ -13,20 +13,19 @@ import { conversations, isAHub } from './conversations.search'
 //TODO: move templating-style fns into the proper template file.
 
 function getCheckAspectList (item: TWithFields) {
-  const checks = {}
-  for (let i = 1; i < 20; i++) {
-    const checkEntry = item?.fields?.reduce((check, f) => {
-      if (
-        f?.title?.match(new RegExp(`^(tooltip|variable|modifier)(${i})`)) &&
-        !!f?.value
-      ) {
-        check.push(f.value)
+  const checks = []
+  // if there's a check that has more than 21 modifiers, uh...it loses at blackjack?
+  for (let i = 0; i < 20; i++) {
+    const checkEntry = item?.fields?.map((f: Field) => {
+      const foundCheckDetail = f?.title?.match(
+        new RegExp(`^(?<type>tooltip|variable|modifier)(?<pos>${i + 1})`)
+      )?.groups.type
+      if (!!foundCheckDetail && !!f?.value) {
+        //checks[i] = checks[i] || {}
+        checks[i] = { ...checks[i], [foundCheckDetail]: f?.value }
       }
-      return check
-    }, [])
-    if (checkEntry.length > 0) {
-      checks[i] = checkEntry
-    } else {
+    })
+    if (checkEntry.length < 1) {
       i = 20
     }
   }
