@@ -28,7 +28,7 @@ If everything is setup correctly, you'll get a json response with summary detail
 
 ### Usage
 
-Here's a whole bunch of sample commands you can try (skip to next section if you just want an arguments list):
+Here's a bunch of sample commands you can try to give you an idea of what's possibe (skip to next section for the full options/arguments reference):
 
 `npm run...`
 
@@ -106,9 +106,10 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 
 ### Roadmap, barring time/interest/help
 
-- Finish up dialogueEntry formatting.
+- Tidy up dialogueEntry formatting and make the generic model for it.
 - ~~Finish up checks and modifiers (see above)~~ (Done).
 - Add support for foreign key relationships for sequelize.
 - While you can do a lot with the json export option for getting items into noSQL databases, it could use some better convenience options.
 - CSV and spreadsheets would be nice (for easy dumps for things like checks).
+- Markdown tables? If there's something easy, why not.
 - Currently supports the version released 6th April 2021. Build on initial work to support additional versions.
