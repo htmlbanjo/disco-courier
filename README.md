@@ -6,7 +6,7 @@ The goal of Disco-Courier is to normalize and condense data for easy reading or 
 
 It is the first of three services in a larger project.
 
-_Things you can use Disco-Courier for:_
+_**Things you can use Disco-Courier for:**_
 
 - quickly look up game elements to plan a walkthrough.
 - generate a markdown-friendly table of some interesting dialog.
