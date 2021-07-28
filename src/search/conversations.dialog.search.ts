@@ -47,7 +47,7 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
 
   let modifiers: any = getCheckAspectList(entry)
   if (options.outputMode === 'mark' || options.outputMode === 'seed') {
-    modifiers = JSON.stringify(modifiers, null, 2)
+    modifiers = JSON.stringify(modifiers)
   }
 
   return {
@@ -74,7 +74,8 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     sequence: valueOf('Sequence', entry),
     conditionPriority: entry.conditionPriority,
     conditionString: entry.conditionString,
-    userScript: entry.userScript.replace(/(\n)+/, '')
+    userScript: entry.userScript.replace(/(\n)+/, ''),
+    ...tableDates()
   }
 }
 
@@ -165,6 +166,14 @@ function getDialogEntries (convo: TWithFields) {
         titleIs('DifficultyRed', entry) ||
         titleIs('DifficultyWhite', entry)
 
+      const checkType = checkDetail?.title?.slice(10)
+      const checkDifficulty = !!checkType
+        ? parseInt(checkDetail?.value)
+        : undefined
+      const checkGameDifficulty = !!checkType
+        ? convertToInGameDifficulty(parseInt(checkDetail?.value))
+        : undefined
+
       const actorId = conversations.getActor(entry).actorId
       const conversantId = conversations.getConversant(entry).conversantId
       const actorName = skillNameFromId(actorId)
@@ -174,11 +183,9 @@ function getDialogEntries (convo: TWithFields) {
       entries.push({
         parentId: convo.id,
         dialogId: entry.id,
-        checkType: checkDetail.title.slice(10),
-        checkDifficulty: parseInt(checkDetail.value),
-        checkGameDifficulty: convertToInGameDifficulty(
-          parseInt(checkDetail.value)
-        ),
+        checkType,
+        checkDifficulty,
+        checkGameDifficulty,
         isRoot: entry.isRoot,
         isGroup: entry.isGroup,
         refId: refId(convo),
