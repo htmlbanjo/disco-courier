@@ -26,7 +26,7 @@ const options = {
   entityList: <string[]>setEntityList(),
   paging: <[number, number?]>setPaging(),
   merge: <boolean>true,
-  outputMode: <'read' | 'seed' | 'write'>outputMode,
+  outputMode: <'read' | 'seed' | 'write' | 'mark'>outputMode,
   sourceJSON: <string>'dialog',
   supportedVersions: <ISupportedVersion[]>[
     {

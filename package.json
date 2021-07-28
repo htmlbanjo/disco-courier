@@ -44,6 +44,7 @@
     "sequelize": "^6.6.5",
     "sqlite3": "^5.0.2",
     "stream-json": "^1.7.2",
+    "tablemark": "^2.0.0",
     "yargs": "^17.0.1"
   }
 }

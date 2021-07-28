@@ -1,6 +1,6 @@
 import fs from 'fs'
 import chalk from 'chalk'
-
+import tablemark from 'tablemark'
 import { parser } from 'stream-json'
 import { chain } from 'stream-chain'
 import { pick } from 'stream-json/filters/Pick'
@@ -105,14 +105,13 @@ function sourceFileExists (value: string): boolean {
     : true
 }
 
-function confirmOrCreateDirectory (dirName: string): void {
+function confirmOrCreateDirectory (section: string, dirName: string): void {
   try {
-    if (!fs.existsSync(`./src/data/json/${dirName}`)) {
-      fs.mkdirSync(`./src/data/json/${dirName}`)
+    if (!fs.existsSync(`./src/data/${section}/${dirName}`)) {
+      fs.mkdirSync(`./src/data/${section}/${dirName}`)
     }
   } catch (err) {
-    console.log(getMessageText().failedToCreateDirectory(dirName, err))
-    process.exit(1)
+    throw new Error(getMessageText().failedToCreateDirectory(dirName, err))
   }
 }
 function zeroPadded (value: number): string {
@@ -131,12 +130,12 @@ function formatTableName (entity: string): string {
  *****************************************************************/
 function jsonFileName (entity: string, file: string): string {
   const directory = entity.split('.')[0]
-  confirmOrCreateDirectory(directory)
+  confirmOrCreateDirectory('json', directory)
   return `./src/data/json/${directory}/${file}.json`
 }
 
 function writeStream (
-  mode: 'write' | 'seed' | 'read',
+  mode: 'write' | 'seed' | 'read' | 'mark',
   entity: string,
   file: string
 ): NodeJS.WritableStream {
@@ -148,6 +147,8 @@ function writeStream (
     pathAndFilename =
       mode === 'seed'
         ? (pathAndFilename = seedFileName(entity))
+        : mode === 'mark'
+        ? (pathAndFilename = mdFileName(entity, file))
         : jsonFileName(entity, file)
     return fs.createWriteStream(pathAndFilename)
   } catch (err) {
@@ -185,6 +186,24 @@ module.exports = {
 }
 `
 }
+/*****************************************************************
+ * AS A MARKDOWN TABLE
+ *****************************************************************/
+function mdFileName (entity: string, file: string): string {
+  const directory = entity.split('.')[0]
+  confirmOrCreateDirectory('markdown', directory)
+  return `./src/data/markdown/${directory}/${file}.md`
+}
+function mark (entity: string, data): string {
+  return `
+  #Data for ${entity}.
+  _${data.length} entries pulled out of the SSSSOUPED UP MOTOR CARRIAGE._
+
+  ${tablemark(data)}
+
+  * _driven steadily through the pale by [Disco-Courier](https://github.com/htmlbanjo/disco-courier)
+  `
+}
 
 /*****************************************************************
  * AS TERMINAL OUTPUT
@@ -207,7 +226,9 @@ export {
   streamSource,
   sourceFileExists,
   seedFileName,
+  mdFileName,
   writeStream,
   read,
-  seed
+  seed,
+  mark
 }
