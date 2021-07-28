@@ -20,7 +20,7 @@ const conversations = {
     })
   },
   taskCancelled (convo: TWithFields): IResultEntry {
-    return keyFunction('cancelConditionMain', 'string', convo, {
+    return keyFunction('cancel_condition_main', 'string', convo, {
       returnKey: 'taskCanceled',
       returnValueFn: cleanVariableName
     })
@@ -32,7 +32,7 @@ const conversations = {
     return keyFunction('taskTimed', 'boolean', convo)
   },
   getCheckType (convo: TWithFields): IResultEntry {
-    return keyFunction('CheckType', 'string', convo, {
+    return keyFunction('CheckType', 'number', convo, {
       returnKey: 'checkType'
     })
   },
@@ -74,7 +74,9 @@ const conversations = {
     })
   },
   getOnUse (convo: TWithFields): IResultEntry {
-    return keyFunction('OnUse', 'string', convo)
+    return keyFunction('OnUse', 'string', convo, {
+      returnKey: 'onUse'
+    })
   },
   getDialogOverride (convo: TWithFields): IResultEntry {
     return keyFunction('OverrideDialogueCondition', 'string', convo, {

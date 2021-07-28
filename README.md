@@ -36,17 +36,19 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 
 `npm run...`
 
-| Command                                                                | Result                                                                                                                |
-| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `courier -- --output=read locations`                                   | prints a list of locations in json format to the screen.                                                                        |
-| `courier -- --output=json items`                                       | writes a list of all in-game items to a json file in `/data/json/items.json`                                                                   |
-| `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                           |
-| `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                              |
-| `courier -- --output=md --start=4 --results=1 conversations`         | writes entry #4 in conversations as a table to `/data/markdown/conversations.md`                                                          |
-| `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.          |
-| `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.                |
-| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to `/data/json/conversations.whitecheck.json`               |
-| `courier -- --output=db conversations.link`                            | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db |
+| Command                                                                                                              | Result                                                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `courier -- --output=read locations`                                                                                 | prints a list of locations in json format to the screen.                                                                                                                     |
+| `courier -- --output=json items`                                                                                     | writes a list of all in-game items to a json file in `/data/json/items.json`                                                                                                 |
+| `courier -- --output=db actors`                                                                                      | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                                                                                  |
+| `courier -- --output=read --start=100 variables`                                                                     | displays all variables, starting at entry 100 to finish.                                                                                                                     |
+| `courier -- --output=md --start=4 --results=1 conversations`                                                         | writes entry #4 in conversations as a table to `/data/markdown/conversations.md`                                                                                             |
+| `courier -- --output=db --results=2 items.consumable`                                                                | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.                                                                 |
+| `courier -- --output=read --results=4 actors.skill conversations.task`                                               | prints the first four results for both actors that are a skill, and conversations representing a task.                                                                       |
+| `courier -- --output=md conversations.whitecheck conversations.redcheck`                                             | writes all white checks as a markdown-friendly table to `/data/markdown/conversations.whitecheck.md` and likewise all redchecks to `data/markdown/conversations.redcheck.md` |
+| `courier -- --output=db conversations.link`                                                                          | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db                                                        |
+| `courier -- --output=json --start=188 conversations.dialog`                                                          | writes all dialog entries starting at the 188th result to `data/json/conversations.dialog.json`                                                                              |
+| `courier -- --output=db --start=1 conversations.link conversations.subtask conversations.check conversations.dialog` | generates seed files for the dialog graph, a list of all subtasks, all checks, and all dialogs for their respective tables and populates with the first entry of each.       |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
@@ -56,10 +58,10 @@ Arguments take the form of options for paging and output, and a list of entities
 
 #### Options
 
-| flag                        | result                                                                                                                                                                                                                            |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--start=<#>`               | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
-| `--results=<#>`             | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
+| flag                            | result                                                                                                                                                                                                                                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--start=<#>`                   | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                                                                                                           |
+| `--results=<#>`                 | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                                                                                                      |
 | `--output=<read\|json\|md\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `md` option attempts to format the result in a markdown-friendly table. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 
 #### Entities and groups
@@ -103,7 +105,9 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - SQLite should be ready out-of-the-box, you'll need to follow the standard Sequelize setup for Postgres, etc.
 
 #### Generating Models
+
 Sample models and migration scripts have been provided for nearly every sample template in the app. To import:
+
 - Have a database that Sequelize supports, and make sure to install the proper Sequelize items so you can talk to it.
 - Run at least one --output=db command on an entity you wish to transfer to a db.
 - Run `npm run db:up` to create your tables and run the seeders.

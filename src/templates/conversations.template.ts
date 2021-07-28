@@ -123,9 +123,6 @@ export const OrbTemplate = (convo: TWithFields): TConversationEntry => {
       ...conversations.getPlacement(convo),
       ...conversations.getActor(convo),
       ...conversations.getConversant(convo),
-
-      ...conversations.getActor(convo),
-      ...conversations.getConversant(convo),
       ...conversations.getAltOrbText(convo),
       ...conversations.getOnUse(convo),
       ...conversations.getDialogOverride(convo)

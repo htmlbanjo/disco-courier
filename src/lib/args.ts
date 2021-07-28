@@ -45,7 +45,6 @@ const entityListAll = [
   'conversations.subtask',
   'conversations.dialog',
   'conversations.orb',
-  'conversations.hub',
   'conversations.check',
   'conversations.passivecheck',
   'conversations.whitecheck',
