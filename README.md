@@ -43,7 +43,7 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 | `courier -- --output=md --start=4 --results=1 conversations`         | writes entry #4 in conversations as a table to /data/markdown/conversations.md                                                          |
 | `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.          |
 | `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.                |
-| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json               |
+| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/json/conversations.whitecheck.json               |
 | `courier -- --output=db conversations.link`                            | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
