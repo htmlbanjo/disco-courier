@@ -40,7 +40,7 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 | `courier -- --output=json items`                                       | writes all items to a json file in /data/items.json                                                                   |
 | `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                           |
 | `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                              |
-| `courier -- --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                          |
+| `courier -- --output=md --start=4 --results=1 conversations`         | writes entry #4 in conversations as a table to /data/markdown/conversations.md                                                          |
 | `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.          |
 | `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.                |
 | `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json               |
@@ -56,7 +56,7 @@ Note this is not raw output: each command passes through an extensive templating
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--start=<#>`               | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                               |
 | `--results=<#>`             | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                          |
-| `--output=<read\|json\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
+| `--output=<read\|json\|md\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `md` option attempts to format the result in a markdown-friendly table. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 
 #### Entities and groups
 
