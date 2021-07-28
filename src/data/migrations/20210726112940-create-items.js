@@ -38,7 +38,7 @@ module.exports = {
       isCursed: {
         type: Sequelize.BOOLEAN
       },
-      mediumTextValue: {
+      mediumText: {
         type: Sequelize.STRING
       },
       multipleAllowed: {

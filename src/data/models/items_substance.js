@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     itemType: DataTypes.NUMBER,
     itemGroup: DataTypes.NUMBER,
     itemValue: DataTypes.NUMBER,
-    mediumTextValue: DataTypes.STRING,
+    mediumText: DataTypes.STRING,
     multipleAllowed: DataTypes.BOOLEAN,
     equipOrb: DataTypes.STRING
   }, {

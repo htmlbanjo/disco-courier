@@ -29,7 +29,7 @@ module.exports = {
       itemValue: {
         type: Sequelize.NUMBER
       },
-      mediumTextValue: {
+      mediumText: {
         type: Sequelize.STRING
       },
       multipleAllowed: {

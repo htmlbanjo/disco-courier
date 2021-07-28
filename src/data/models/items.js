@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     conversation: DataTypes.STRING,
     stackName: DataTypes.STRING,
     isCursed: DataTypes.BOOLEAN,
-    mediumTextValue: DataTypes.STRING,
+    mediumText: DataTypes.STRING,
     multipleAllowed: DataTypes.BOOLEAN,
     isAutoEquipable: DataTypes.BOOLEAN,
     isThought: DataTypes.BOOLEAN,

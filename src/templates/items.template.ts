@@ -151,7 +151,6 @@ export const BookTemplate = (item: TWithFields): IResultEntry => {
 export const ClothingTemplate = (item: TWithFields): IResultEntry => {
   if (isAClothing(item)) {
     return BaseTemplate(item, {
-      ...ExtendedTemplate(item),
       ...items.itemType(item),
       ...items.itemGroup(item),
       ...items.conversation(item)
@@ -162,7 +161,6 @@ export const ClothingTemplate = (item: TWithFields): IResultEntry => {
 export const TareTemplate = (item: TWithFields): IResultEntry => {
   if (isATare(item)) {
     return BaseTemplate(item, {
-      ...ExtendedTemplate(item),
       ...items.itemType(item),
       ...items.itemGroup(item),
       ...items.conversation(item)
