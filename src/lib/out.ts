@@ -52,6 +52,9 @@ function getMessageText () {
   this.writeProgressStep = (entity: string, dataLength: number) =>
     `Exporting ${entity} data (${dataLength} rows) to ${entity}.json )......Success!`
 
+  this.mdProgressStep = (entity: string, dataLength: number) =>
+    `Exporting ${entity} data (${dataLength} rows) to ${entity}.md )......Success!`
+
   this.seedProgressStep = (
     entity: string,
     dataLength: number,

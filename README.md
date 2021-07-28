@@ -4,14 +4,16 @@ _**A data-mover-and-shaker for Disco Elysium.**_
 
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice. It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
-_Some things you could use it for:_
+_Some things you can use it for:_
 
-- export only Garte dialog and train an AI model on it.\*
-- use it to plan a walkthrough.
+- quickly look up game elements to plan a walkthrough.
+- generate a markdown-friendly table of some interesting dialog.
+- quickly format your own custom views of the data for display.
 - normalize data into a SQL db for use in your personal project.
 - slice-and-dice results as pre-prep for putting into noSQL docs.
+- isolate Garte-only dialog and train an AI model on it.\*
 
-\*please, please let me know if you do this.
+\*(please, please let me know if you do this).
 
 ## Requirements
 
@@ -32,17 +34,17 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 
 `npm run...`
 
-| Command                                                                | Result                                                                                                       |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `courier -- --output=read locations`                                   | prints locations in json format to the screen.                                                               |
-| `courier -- --output=json items`                                       | writes all items to a json file in /data/items.json                                                          |
-| `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                  |
-| `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                     |
-| `courier -- --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                 |
-| `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items. |
-| `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.       |
-| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json      |
-| `courier -- --output=db conversations.link`                            | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db    |
+| Command                                                                | Result                                                                                                                |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `courier -- --output=read locations`                                   | prints locations in json format to the screen.                                                                        |
+| `courier -- --output=json items`                                       | writes all items to a json file in /data/items.json                                                                   |
+| `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                           |
+| `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                              |
+| `courier -- --output=json --start=4 --results=1 conversations`         | writes entry #4 in conversations to /data/conversations.json                                                          |
+| `courier -- --output=db --results=2 items.consumable`                  | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.          |
+| `courier -- --output=read --results=4 actors.skill conversations.task` | prints the first four results for both actors that are a skill, and conversations representing a task.                |
+| `courier -- --output=json --results=6 conversations.whitecheck`        | writes the first six white checks found across all conversations to /data/conversations.whitecheck.json               |
+| `courier -- --output=db conversations.link`                            | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 

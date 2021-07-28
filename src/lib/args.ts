@@ -12,6 +12,8 @@ const outputMode =
     ? 'seed'
     : args['export'] === 'json'
     ? 'write'
+    : args['export'] === 'md'
+    ? 'mark'
     : 'read'
 
 const entityListDefaults = [

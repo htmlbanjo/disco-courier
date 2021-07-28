@@ -12,7 +12,9 @@ import {
   streamSource,
   sourceFileExists,
   seedFileName,
+  mdFileName,
   writeStream,
+  mark,
   read,
   seed
 } from './lib/migration'
@@ -147,6 +149,19 @@ import {
                   entityname,
                   entityData[entityname].length,
                   seedFileName(entityname)
+                )
+              )
+              end(++entityCount)
+            })
+            break
+
+          case 'mark':
+            fileStream.write(mark(entityname, entityData[entity]), () => {
+              addProgressStep(
+                getMessageText().mdProgressStep(
+                  entityname,
+                  entityData[entityname].length,
+                  mdFileName(entityname, entityData[entityname].length)
                 )
               )
               end(++entityCount)

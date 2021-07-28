@@ -38,6 +38,7 @@ src/app/.notes
 # App Specific #
 ####################
 /src/data/json
+/src/data/markdown
 /src/data/seeders
 /src/data/dialog.json
 /src/data/storage.sqlite3
