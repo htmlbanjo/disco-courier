@@ -38,8 +38,8 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 
 | Command                                                                | Result                                                                                                                |
 | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `courier -- --output=read locations`                                   | prints locations in json format to the screen.                                                                        |
-| `courier -- --output=json items`                                       | writes all items to a json file in /data/items.json                                                                   |
+| `courier -- --output=read locations`                                   | prints a list of locations in json format to the screen.                                                                        |
+| `courier -- --output=json items`                                       | writes a list of all in-game items to a json file in /data/items.json                                                                   |
 | `courier -- --output=db actors`                                        | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                           |
 | `courier -- --output=read --start=100 variables`                       | displays all variables, starting at entry 100 to finish.                                                              |
 | `courier -- --output=md --start=4 --results=1 conversations`         | writes entry #4 in conversations as a table to /data/markdown/conversations.md                                                          |
