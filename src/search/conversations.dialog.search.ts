@@ -3,7 +3,7 @@ import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
 import { conversations, isAHub } from './conversations.search'
 import { skillNameFromId, convertToInGameDifficulty } from './actors.search'
-
+import { tableDates } from '../search/index.search'
 const options = getOptions()
 
 function isAWhiteCheck (entry: TWithFields): boolean {
@@ -214,7 +214,8 @@ function getOutgoingLinks (convo: TWithFields) {
         destinationConversationId: row.destinationConversationID,
         destinationDialogId: row.destinationDialogueID,
         isConnector: row.isConnector,
-        priority: row.priority
+        priority: row.priority,
+        ...tableDates()
       })
     })
     return entries

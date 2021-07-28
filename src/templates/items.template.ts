@@ -30,7 +30,7 @@ function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
     displayName: valueOf('displayname', item),
     description: description(item),
     ...extended,
-    ...tableDates(item)
+    ...tableDates()
   }
 }
 

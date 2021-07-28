@@ -1,6 +1,14 @@
 import { TWithFields } from '../defs/import'
+import { getOptions } from '../lib/shared'
+import { tableDates } from '../search/index.search'
 
-function getSubtasks (item: TWithFields) {
+const options = getOptions()
+
+function getSubtasks (item: TWithFields, returnType: 'string' | 'obj') {
+  const stringify =
+    !!(options.outputMode === 'mark' || options.outputMode === 'seed') &&
+    returnType === 'string'
+
   //TODO: DRY up with existing search functions
   const st = {}
 
@@ -36,7 +44,11 @@ function getSubtasks (item: TWithFields) {
       }
     }
   })
-  return Object.values(st)
+  Object.keys(st).map(sNum => {
+    st[sNum] = { ...st[sNum], ...tableDates() }
+  })
+
+  return stringify ? JSON.stringify(Object.values(st)) : Object.values(st)
 }
 
 export { getSubtasks }
