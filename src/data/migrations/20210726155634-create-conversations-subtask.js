@@ -11,13 +11,13 @@ module.exports = {
       parentTaskId: {
         type: Sequelize.NUMBER
       },
-      name: {
-        type: Sequelize.STRING
-      },
       active: {
         type: Sequelize.STRING
       },
       done: {
+        type: Sequelize.STRING
+      },
+      name: {
         type: Sequelize.STRING
       },
       cancel: {

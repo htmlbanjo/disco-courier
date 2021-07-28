@@ -15,7 +15,7 @@ function BaseTemplate (item: TWithFields, extended: any) {
     name: valueOf('Name', item),
     shortDescription: shortDescription(item),
     longDescription: longDescription(item),
-    ...tableDates(item),
+    ...tableDates(),
     ...extended
   }
 }

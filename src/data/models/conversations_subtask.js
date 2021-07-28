@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   };
   Conversations_subtask.init({
     parentTaskId: DataTypes.NUMBER,
-    name: DataTypes.STRING,
     active: DataTypes.STRING,
     done: DataTypes.STRING,
+    name: DataTypes.STRING,
     cancel: DataTypes.STRING,
     isTimed: DataTypes.BOOLEAN
   }, {

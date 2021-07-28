@@ -46,7 +46,7 @@ const whereTitlesHaveValuesAndMatch = (
 ): Field[] =>
   item?.fields?.filter((a: Field) => a.title?.match(search) && !!a.value)
 
-const tableDates = (item: TWithFields) =>
+const tableDates = () =>
   outputMode === 'seed'
     ? {
         createdAt: new Date(),

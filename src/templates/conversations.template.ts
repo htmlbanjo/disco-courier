@@ -34,7 +34,7 @@ function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
     conversationId: convo.id,
     name: valueOf('Title', convo),
     description: description(convo),
-    ...tableDates(convo),
+    ...tableDates(),
     ...extended
   }
 }
@@ -55,7 +55,7 @@ function ExtendedTemplate (convo: TWithFields): TConversationEntry {
     ...conversations.getAltOrbText(convo),
     ...conversations.getOnUse(convo),
     ...conversations.getDialogOverride(convo),
-    subTasks: getSubtasks(convo)
+    subTasks: getSubtasks(convo, 'string')
   })
 }
 
@@ -101,7 +101,7 @@ export const TaskTemplate = (convo: TWithFields) => {
 
 export const SubtaskTemplate = (convo: TWithFields) => {
   if (hasASubtask(convo)) {
-    return getSubtasks(convo)
+    return getSubtasks(convo, 'obj')
   }
 }
 

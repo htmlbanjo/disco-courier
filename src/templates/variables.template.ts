@@ -14,7 +14,7 @@ function BaseTemplate (item: TWithFields, extended: any) {
     name: valueOf('Name', item),
     description: description(item),
     initialValue: booleanValueOf('Initial Value', item),
-    ...tableDates(item),
+    ...tableDates(),
     ...extended
   }
 }
