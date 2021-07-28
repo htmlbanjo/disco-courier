@@ -1,7 +1,10 @@
 import { Field, TWithFields, IResultEntry } from '../defs/import'
+import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
 import { conversations, isAHub } from './conversations.search'
 import { skillNameFromId, convertToInGameDifficulty } from './actors.search'
+
+const options = getOptions()
 
 function isAWhiteCheck (entry: TWithFields): boolean {
   return !!titleIs('DifficultyWhite', entry)
@@ -35,10 +38,17 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     titleIs('DifficultyRed', entry) ||
     titleIs('DifficultyWhite', entry)
 
-  const actorId = conversations.getActor(entry).value
-  const conversantId = conversations.getConversant(entry).value
+  const actorId = conversations.getActor(entry).actorId
+  const conversantId = conversations.getConversant(entry).conversantId
   const actorName = skillNameFromId(actorId)
-  const conversantName = skillNameFromId(conversantId)
+  // TODO: mmm, maybe let's not hard-code ID #387 here.
+  const conversantName =
+    conversantId === 387 ? 'You' : skillNameFromId(conversantId)
+
+  let modifiers: any = getCheckAspectList(entry)
+  if (options.outputMode === 'mark' || options.outputMode === 'seed') {
+    modifiers = JSON.stringify(modifiers, null, 2)
+  }
 
   return {
     dialogId: entry.id,
@@ -48,7 +58,6 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     checkGameDifficulty: convertToInGameDifficulty(parseInt(checkDetail.value)),
     isRoot: entry.isRoot,
     isGroup: entry.isGroup,
-    isHub: isAHub(entry),
     actorId,
     actorName,
     conversantId,
@@ -59,13 +68,13 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     forced: booleanValueOf('Forced', entry),
     flag: valueOf('FlagName', entry),
     skillRefId: valueOf('SkillType', entry),
-    modifiers: getCheckAspectList(entry),
+    modifiers,
     inputId: valueOf('InputId', entry),
     outputId: valueOf('OutputId', entry),
     sequence: valueOf('Sequence', entry),
     conditionPriority: entry.conditionPriority,
     conditionString: entry.conditionString,
-    userScript: entry.userScript
+    userScript: entry.userScript.replace(/(\n)+/, '')
   }
 }
 
@@ -156,10 +165,11 @@ function getDialogEntries (convo: TWithFields) {
         titleIs('DifficultyRed', entry) ||
         titleIs('DifficultyWhite', entry)
 
-      const actorId = conversations.getActor(entry).value
-      const conversantId = conversations.getConversant(entry).value
+      const actorId = conversations.getActor(entry).actorId
+      const conversantId = conversations.getConversant(entry).conversantId
       const actorName = skillNameFromId(actorId)
-      const conversantName = skillNameFromId(conversantId)
+      const conversantName =
+        conversantId === 387 ? 'You' : skillNameFromId(conversantId)
 
       entries.push({
         parentId: convo.id,

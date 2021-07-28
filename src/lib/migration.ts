@@ -189,19 +189,24 @@ module.exports = {
 /*****************************************************************
  * AS A MARKDOWN TABLE
  *****************************************************************/
+
 function mdFileName (entity: string, file: string): string {
   const directory = entity.split('.')[0]
   confirmOrCreateDirectory('markdown', directory)
   return `./src/data/markdown/${directory}/${file}.md`
 }
 function mark (entity: string, data): string {
+  const [entityName, groupName] = entity.split('.')
   return `
-  #Data for ${entity}.
+  Results for ${entityName} 
+  ==
+  (filtered by: ${groupName})
+  ---
   _${data.length} entries pulled out of the SSSSOUPED UP MOTOR CARRIAGE._
 
   ${tablemark(data)}
 
-  * _driven steadily through the pale by [Disco-Courier](https://github.com/htmlbanjo/disco-courier)
+  * _driven steadily through the pale by [Disco-Courier](https://github.com/htmlbanjo/disco-courier)_
   `
 }
 
