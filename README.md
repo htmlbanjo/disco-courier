@@ -102,6 +102,13 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 - after you've generated some seed files, you can do `npm run db:up` to populate the database of your choice.
 - SQLite should be ready out-of-the-box, you'll need to follow the standard Sequelize setup for Postgres, etc.
 
+#### Generating Models
+Sample models and migration scripts have been provided for nearly every sample template in the app. To import:
+- Have a database that Sequelize supports, and make sure to install the proper Sequelize items so you can talk to it.
+- Run at least one --output=db command on an entity you wish to transfer to a db.
+- Run `npm run db:up` to create your tables and run the seeders.
+- Run `npm run db:down` to roll back.
+
 ### Notes
 
 - Sample sequelize models and migrations can be found in /data/models and /data/migrations respectively.
