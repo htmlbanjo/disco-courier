@@ -52,7 +52,9 @@ Note this is not raw output: each command passes through an extensive templating
 
 ###Arguments
 
-#### Paging
+Arguments take the form of options for paging and output, and a list of entities and sub-groups you want to export.
+
+#### Options
 
 | flag                        | result                                                                                                                                                                                                                            |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
