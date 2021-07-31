@@ -63,6 +63,7 @@ import {
           // action(entity, data.id, data)
         }
       }
+      /* HOTFIX FOR #27
       if (
         totalRows === getState('currentVersion')?.rowCounts[entityParent] ||
         totalFromStart === options.paging[1]
@@ -70,6 +71,7 @@ import {
         // don't wait for readStream end event
         pipe.destroy()
       }
+      */
     })
     pipe.on('close', data => {
       if (all[entity].length < 1) {
