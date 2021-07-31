@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
     forced: DataTypes.BOOLEAN,
     flag: DataTypes.STRING,
     skillRefId: DataTypes.STRING,
+    skillId: DataTypes.NUMBER,
+    skillName: DataTypes.STRING,
     modifiers: DataTypes.TEXT,
     inputId: DataTypes.STRING,
     outputId: DataTypes.STRING,

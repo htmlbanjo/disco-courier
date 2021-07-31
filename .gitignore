@@ -40,5 +40,6 @@ src/app/.notes
 /src/data/json
 /src/data/markdown
 /src/data/seeders
+/src/data/cache
 /src/data/dialog.json
 /src/data/storage.sqlite3

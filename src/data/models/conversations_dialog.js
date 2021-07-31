@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Conversations_passivecheck extends Model {
+  class Conversations_dialog extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,33 +13,36 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  Conversations_passivecheck.init({
+  Conversations_dialog.init({
+    parentId: DataTypes.NUMBER,
     dialogId: DataTypes.NUMBER,
-    conversationid: DataTypes.NUMBER,
     checkType: DataTypes.STRING,
     checkDifficulty: DataTypes.NUMBER,
     checkGameDifficulty: DataTypes.NUMBER,
     isRoot: DataTypes.NUMBER,
     isGroup: DataTypes.NUMBER,
-    isHub: DataTypes.BOOLEAN,
+    refId: DataTypes.STRING,
+    isHub: DataTypes.NUMBER,
+    dialogShort: DataTypes.STRING,
+    dialogLong: DataTypes.TEXT,
     actorId: DataTypes.NUMBER,
     actorName: DataTypes.STRING,
     conversantId: DataTypes.NUMBER,
     conversantName: DataTypes.STRING,
-    shortDescription: DataTypes.STRING,
-    longDescription: DataTypes.TEXT,
-    refId: DataTypes.STRING,
-    forced: DataTypes.BOOLEAN,
-    modifiers: DataTypes.TEXT,
-    inputId: DataTypes.STRING,
-    outputId: DataTypes.STRING,
+    skillRefId: DataTypes.STRING,
+    skillId: DataTypes.NUMBER,
+    skillName: DataTypes.STRING,
+    modifiers: DataTypes.STRING,
     sequence: DataTypes.STRING,
     conditionPriority: DataTypes.NUMBER,
     conditionString: DataTypes.STRING,
-    userScript: DataTypes.STRING
+    userScript: DataTypes.STRING,
+    inputId: DataTypes.STRING,
+    outputId: DataTypes.STRING,
+    flag: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Conversations_passivecheck',
+    modelName: 'Conversations_dialog',
   });
-  return Conversations_passivecheck;
+  return Conversations_dialog;
 };

@@ -39,7 +39,7 @@ const templatize = (entity, item) => {
       return SkillTemplate(item)
     case 'actors.attribute':
       return AttributeTemplate(item)
-    case 'actors.lookup':
+    case 'actors.cache':
       return LookupTemplate(item)
     case 'items':
       return ItemTemplate(item)

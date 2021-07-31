@@ -1,16 +1,14 @@
 #!/usr/bin/env node
-import { getMessageText, activityIndicatorList } from './lib/out'
+import { messageText } from './lib/out'
 import { getOptions, getState, setState } from './lib/shared'
 import { paging } from './lib/paging'
+import { addProgressStep, updateProgress } from './lib/progress'
 import {
-  addProgressStep,
-  updateProgress,
-  advanceRowProgress
-} from './lib/progress'
-import {
-  isSupportedVersion,
   streamSource,
   sourceFileExists,
+  isSupportedVersion,
+  getOrCreateLookup,
+  actorConversantArgsSanityCheck,
   seedFileName,
   mdFileName,
   writeStream,
@@ -20,7 +18,6 @@ import {
 } from './lib/migration'
 ;(async () => {
   const options = getOptions()
-
   /*
    * Operates on single key (actors, locations, etc) through template and send result to callback
    */
@@ -32,10 +29,10 @@ import {
     let all = {}
     all[entity] = []
     const [entityParent, entitySubprocess] = entity.split('.')
-    const pipe = streamSource(source, entity, options.entityListDefaults)
-    const activity = activityIndicatorList()
-    let counter = 0
+    const pipe = streamSource(source, entity)
+    // total in stream
     let totalRows = 0
+    // total compiled from offset (--start) flag.
     let totalFromStart = 0
 
     pipe.on('data', data => {
@@ -45,16 +42,7 @@ import {
         if (totalRows >= options.paging[0]) {
           ++totalFromStart
         }
-        // we return a falsey for data if the template returns null. This maintains totalRows count
-        // against the entire array so we can run destroy() early for speed.
-        advanceRowProgress(
-          data,
-          activity,
-          counter,
-          entity,
-          totalRows,
-          getState('messages')
-        )
+
         if (options.merge === true) {
           // TODO - performance/memory: refactor to push directly to writeStream.
           all[entity].push(data)
@@ -73,19 +61,33 @@ import {
     })
     pipe.on('close', data => {
       if (all[entity].length < 1) {
-        console.log(getMessageText().noResults())
+        console.log(messageText.noResults())
         process.exit(0)
       }
       // TODO: Performance - assess paging during compilation rather than on whole result.
-      all[entity] = paging(all[entity], options)
+      const prePaging = all[entity].length
+      all[entity] = paging(all[entity], options) // directly mutating all to avoid a "Next" in mem.
+      // If offset was past the total number of results, indicate this.
+      if (all[entity].length < 1) {
+        setState(
+          'mixedOutput',
+          `${getState('mixedOutput') || ''}
+           ${messageText.pagingPastTotalResults(
+             entity,
+             prePaging,
+             options.paging[0]
+           )}`
+        )
+      }
+
       addProgressStep(`Stream processed: ${entity} (read ${totalRows} rows)`)
-      updateProgress(getMessageText().generatingEntity(entity))
+      updateProgress(messageText.generatingEntity(entity))
       if (options.merge === true) {
         action(entity, entity, all)
       }
     })
     pipe.on('end', data => {
-      console.log(getMessageText().streamEOL())
+      console.log(messageText.streamEOL())
     })
   }
   /*
@@ -95,11 +97,16 @@ import {
     entityCount: number,
     totalEntities: number = options.entityList.length
   ) => {
-    updateProgress(getMessageText().completedEntityNote())
-    const casualPerfTime = ((Date.now() - getState('start')) / 1000).toFixed(2)
+    updateProgress(messageText.completedEntityNote())
+    const casualPerfTime = parseInt(
+      ((Date.now() - getState('start')) / 1000).toFixed(2)
+    )
     if (entityCount === totalEntities) {
-      addProgressStep(getMessageText().applicationEOL())
-      updateProgress(getMessageText().completedWithTime(casualPerfTime))
+      addProgressStep(messageText.applicationEOL())
+      updateProgress(
+        `${messageText.completedWithTime(casualPerfTime)}
+         ${getState('mixedOutput') || ''}`
+      )
       if (options.outputMode === 'read') {
         getState('output').map(result => result())
       }
@@ -112,10 +119,10 @@ import {
     let fileStream
     let entityCount: number = 0
     options.entityList.map((entity, i) => {
-      updateProgress(getMessageText().openingProcess(entity))
+      updateProgress(messageText.openingProcess(entity))
       parseEntity(source, entity, (entityname, entityId, entityData) => {
         // TODO: consider moving these into switch statement to improve on hooks.
-        updateProgress(getMessageText().writingToFile())
+        updateProgress(messageText.writingToFile())
         fileStream = writeStream(options.outputMode, entity, entity)
 
         // TODO: break each case into a hooks directory for pluggable output support.
@@ -125,7 +132,7 @@ import {
               ...getState('output'),
               read(entityname, entityId, entityData)
             ])
-            addProgressStep(getMessageText().readProgressStep(entityname))
+            addProgressStep(messageText.readProgressStep(entityname))
             end(++entityCount)
             break
 
@@ -133,7 +140,7 @@ import {
             fileStream.write(JSON.stringify(entityData, null, 2), () => {
               // TODO - need callback from fileStream so we know we're *actually* done with the write portion
               addProgressStep(
-                getMessageText().writeProgressStep(
+                messageText.writeProgressStep(
                   entityname,
                   entityData[entityname].length
                 )
@@ -145,7 +152,7 @@ import {
           case 'seed':
             fileStream.write(seed(entityname, entityData[entity]), () => {
               addProgressStep(
-                getMessageText().seedProgressStep(
+                messageText.seedProgressStep(
                   entityname,
                   entityData[entityname].length,
                   seedFileName(entityname)
@@ -158,10 +165,10 @@ import {
           case 'mark':
             fileStream.write(mark(entityname, entityData[entity]), () => {
               addProgressStep(
-                getMessageText().mdProgressStep(
+                messageText.mdProgressStep(
                   entityname,
                   entityData[entityname].length,
-                  mdFileName(entityname, entityData[entityname].length)
+                  mdFileName(entityname)
                 )
               )
               end(++entityCount)
@@ -180,7 +187,7 @@ import {
               ...getState('output'),
               read(entityname, entityId, entityData)
             ])
-            addProgressStep(getMessageText().readProgressStep(entityname))
+            addProgressStep(messageText.readProgressStep(entityname))
             end(++entityCount)
             break
         }
@@ -189,25 +196,28 @@ import {
   }
 
   // init
-  updateProgress(getMessageText().checkingForSourceFile())
+  updateProgress(messageText.checkingForSourceFile())
   if (!sourceFileExists(options.sourceJSON)) {
-    console.log(getMessageText().noSourceFileFound(options.sourceJSON))
+    console.log(messageText.noSourceFileFound(options.sourceJSON))
     process.exit(0)
   }
-  addProgressStep(getMessageText().sourceFileFound(options.sourceJSON))
-  updateProgress(getMessageText().checkingForSupportedVersion())
+  addProgressStep(messageText.sourceFileFound(options.sourceJSON))
+  updateProgress(messageText.checkingForSupportedVersion())
   isSupportedVersion(
     options.sourceJSON,
     options.supportedVersions,
     versionResult => {
       // TODO: addtl. versions support
       setState('currentVersion', versionResult)
+
       addProgressStep(
-        getMessageText().foundSupportedVersion(
-          getState('currentVersion').version
-        )
+        messageText.foundSupportedVersion(getState('currentVersion').version)
       )
-      updateProgress(getMessageText().openingSourceFile())
+      updateProgress(messageText.openingSourceFile())
+
+      getOrCreateLookup()
+      actorConversantArgsSanityCheck()
+
       processEntities(options.sourceJSON)
     }
   )

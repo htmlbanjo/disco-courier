@@ -62,6 +62,12 @@ module.exports = {
       skillRefId: {
         type: Sequelize.STRING
       },
+      skillId: {
+        type:Sequelize.NUMBER
+      },
+      skillName: {
+        type:Sequelize.STRING
+      },
       modifiers: {
         type: Sequelize.TEXT
       },

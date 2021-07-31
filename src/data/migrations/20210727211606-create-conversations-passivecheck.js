@@ -56,12 +56,6 @@ module.exports = {
       forced: {
         type: Sequelize.BOOLEAN
       },
-      flag: {
-        type: Sequelize.STRING
-      },
-      skillRefId: {
-        type: Sequelize.STRING
-      },
       modifiers: {
         type: Sequelize.TEXT
       },

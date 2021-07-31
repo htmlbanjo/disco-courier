@@ -20,7 +20,6 @@ import {
 import { getSubtasks } from '../search/conversations.subtask.search'
 import {
   getDialogEntries,
-  isAPassiveCheck,
   getWhiteChecks,
   getRedChecks,
   getWhiteAndRedChecks,
@@ -106,11 +105,9 @@ export const SubtaskTemplate = (convo: TWithFields) => {
 }
 
 export const DialogTemplate = (convo: TWithFields) => {
-  if (convo?.dialogueEntries?.length > 0) {
-    return BaseTemplate(convo, {
-      ...getDialogEntries(convo)
-    })
-  }
+  //if (!!!isATask(convo)) {
+  return getDialogEntries(convo) || undefined
+  //}
 }
 
 export const OrbTemplate = (convo: TWithFields): TConversationEntry => {

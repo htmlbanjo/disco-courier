@@ -3,6 +3,12 @@ import {
   Field,
   TItem,
   IResultEntry,
+  IResultEntryString,
+  IResultEntryNumber,
+  IResultEntryBoolean,
+  IKeyStringFunctionOption,
+  IKeyNumberFunctionOption,
+  IKeyBooleanFunctionOption,
   TKeyOutputFunction,
   IKeyFunctionOption
 } from '../defs/import.d'
@@ -168,6 +174,41 @@ const keyFunction = (
         : { [returnKey || key]: parseInt(valueOf(key, item)) }
   }
 }
+const getStringEntry = (
+  key: string,
+  item: TWithFields,
+  { returnKey = null, returnValueFn = null }: IKeyStringFunctionOption = {}
+): IResultEntryString => {
+  return returnValueFn
+    ? { [returnKey || key]: returnValueFn(valueOf(key, item)) }
+    : { [returnKey || key]: valueOf(key, item) }
+}
+
+const getNumberEntry = (
+  key: string,
+  item: TWithFields,
+  { returnKey = null, returnValueFn = null }: IKeyNumberFunctionOption = {}
+): IResultEntryNumber => {
+  const value = parseInt(valueOf(key, item))
+  if (isNaN(value)) {
+    return { [returnKey || key]: undefined }
+  }
+  return returnValueFn
+    ? {
+        [returnKey || key]: returnValueFn(parseInt(valueOf(key, item)))
+      }
+    : { [returnKey || key]: parseInt(valueOf(key, item)) }
+}
+
+const getBooleanEntry = (
+  key: string,
+  item: TWithFields,
+  { returnKey = null, returnValueFn = null }: IKeyBooleanFunctionOption = {}
+): IResultEntryBoolean => {
+  return returnValueFn
+    ? { [returnKey || key]: returnValueFn(booleanValueOf(key, item)) }
+    : { [returnKey || key]: booleanValueOf(key, item) }
+}
 
 /* value mutations:
  * TKeyOutputFunction types that can be used with
@@ -236,6 +277,9 @@ export {
   findInField,
   refId,
   keyFunction,
+  getStringEntry,
+  getNumberEntry,
+  getBooleanEntry,
   cleanVariableName,
   cleanVariableNameNoPrefix,
   isAnInventoryItem,

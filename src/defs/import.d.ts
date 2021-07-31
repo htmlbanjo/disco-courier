@@ -99,6 +99,18 @@ interface IKeyFunctionOption {
   returnValueFn?: TKeyOutputFunction
 }
 
+interface IKeyStringFunctionOption {
+  returnKey?: string
+  returnValueFn?: (value: string) => string
+}
+interface IKeyNumberFunctionOption {
+  returnKey?: string
+  returnValueFn?: (value: number) => number
+}
+interface IKeyBooleanFunctionOption {
+  returnKey?: string
+  returnValueFn?: (value: boolean) => boolean
+}
 interface ISupportedVersion {
   version: string
   rowCounts?: {
@@ -118,6 +130,16 @@ interface IResultEntry {
   [index: string]: string | boolean | number
 }
 
+interface IResultEntryNumber {
+  [index: string]: number
+}
+interface IResultEntryString {
+  [index: string]: string
+}
+interface IResultEntryBoolean {
+  [index: string]: boolean
+}
+
 type TItem = BaseItem | ActorItem | ConversationItem
 type TSearchableItem = Item | DialogueEntry | Field
 type TWithFields = Item | DialogueEntry
@@ -127,6 +149,12 @@ export {
   TSearchableItem,
   TWithFields,
   IResultEntry,
+  IResultEntryString,
+  IResultEntryNumber,
+  IResultEntryBoolean,
+  IKeyStringFunctionOption,
+  IKeyNumberFunctionOption,
+  IKeyBooleanFunctionOption,
   ISupportedVersion,
   ICurrentVersion,
   TKeyOutputFunction,

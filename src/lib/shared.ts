@@ -49,6 +49,13 @@ const initialState = {
   output: [],
   currentVersion: {
     version: false
+  },
+  actor: undefined,
+  conversant: undefined,
+  hasConversations: undefined,
+  hasNonConversations: undefined,
+  cache: {
+    actors: undefined
   }
 }
 

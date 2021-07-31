@@ -1,17 +1,17 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Conversations_redcheck', {
+    await queryInterface.createTable('Conversations_dialogs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      dialogId: {
+      parentId: {
         type: Sequelize.NUMBER
       },
-      conversationid: {
+      dialogId: {
         type: Sequelize.NUMBER
       },
       checkType: {
@@ -29,8 +29,17 @@ module.exports = {
       isGroup: {
         type: Sequelize.NUMBER
       },
+      refId: {
+        type: Sequelize.STRING
+      },
       isHub: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.NUMBER
+      },
+      dialogShort: {
+        type: Sequelize.STRING
+      },
+      dialogLong: {
+        type: Sequelize.TEXT
       },
       actorId: {
         type: Sequelize.NUMBER
@@ -44,37 +53,16 @@ module.exports = {
       conversantName: {
         type: Sequelize.STRING
       },
-      shortDescription: {
-        type: Sequelize.STRING
-      },
-      longDescription: {
-        type: Sequelize.TEXT
-      },
-      refId: {
-        type: Sequelize.STRING
-      },
-      forced: {
-        type: Sequelize.BOOLEAN
-      },
-      flag: {
-        type: Sequelize.STRING
-      },
       skillRefId: {
         type: Sequelize.STRING
       },
       skillId: {
-        type:Sequelize.NUMBER
+        type: Sequelize.NUMBER
       },
       skillName: {
-        type:Sequelize.STRING
-      },
-      modifiers: {
-        type: Sequelize.TEXT
-      },
-      inputId: {
         type: Sequelize.STRING
       },
-      outputId: {
+      modifiers: {
         type: Sequelize.STRING
       },
       sequence: {
@@ -89,6 +77,15 @@ module.exports = {
       userScript: {
         type: Sequelize.STRING
       },
+      inputId: {
+        type: Sequelize.STRING
+      },
+      outputId: {
+        type: Sequelize.STRING
+      },
+      flag: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -100,6 +97,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Conversations_redcheck');
+    await queryInterface.dropTable('Conversations_dialogs');
   }
 };
