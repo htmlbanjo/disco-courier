@@ -1,33 +1,4 @@
-const skills = {
-  389: 'Conceptualization',
-  390: 'Logic',
-  391: 'Encyclopedia',
-  392: 'Rhetoric',
-  393: 'Drama',
-  394: 'Visual Calculus',
-  395: 'Empathy',
-  396: 'Inland Empire',
-  397: 'Volition',
-  398: 'Authority',
-  399: 'Suggestion',
-  400: 'Esprit de Corps',
-  401: 'Endurance',
-  402: 'Physical Instrument',
-  403: 'Shivers',
-  404: 'Pain Threshold',
-  405: 'Electro-Chemistry',
-  406: 'Half Light',
-  407: 'Hand-Eye Coordination',
-  408: 'Reaction Speed',
-  409: 'Savoir Faire',
-  410: 'Interfacing',
-  411: 'Composure',
-  412: 'Perception',
-  413: 'Perception (smell)',
-  414: 'Perception (hearing)',
-  415: 'Perception (taste)',
-  416: 'Perception (sight)'
-}
+import { getState } from '../lib/shared'
 
 const skillConversion = {
   0: 6,
@@ -46,8 +17,18 @@ const skillConversion = {
   13: 17,
   14: 19
 }
-export function skillNameFromId (id): string {
-  return skills[id]
+
+export function skillNameFromId (id: number | string): string {
+  const key: string = typeof id === 'string' ? 'refId' : 'actorId'
+  return id === 387
+    ? 'You'
+    : getState('cache')?.actors.find(actor => actor[key] === id)?.name
+}
+
+export function skillIdFromRefId (refId: string): number {
+  return !!refId
+    ? getState('cache')?.actors.find(actor => actor?.refId === refId).actorId
+    : undefined
 }
 
 export function convertToInGameDifficulty (difficulty: number): number {

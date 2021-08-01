@@ -2,13 +2,12 @@ import minimist from 'minimist2'
 import chalk from 'chalk'
 
 // TODO: switch to yargs or prompts and fix bug in option parsing.
-//import Yargs from 'yargs'
-//import { hideBin } from 'yargs/helpers'
-
 const args = minimist(process.argv.slice(2))
 
+const output = args['output'] ? args['output'] : args['export']
+
 const outputMode =
-  args['export'] === 'db'
+  output === 'db'
     ? 'seed'
     : args['export'] === 'json'
     ? 'write'
@@ -27,7 +26,6 @@ const entityListAll = [
   'actors',
   'actors.npc',
   'actors.skill',
-  'actors.lookup',
   'actors.attribute',
   'items',
   'items.thought',
@@ -74,13 +72,32 @@ const setEntityList = (): string[] => {
           chalk.bold(`\n\n\n Unrecognized field: `)
         )} ${chalk.redBright(arg)}`
       )
-
       process.exit(1)
     }
     return list
   }, [] as string[])
   return userEntityList
 }
+
+const getParentEntity = (entity: string) => {
+  return entity.split('.')[0]
+}
+const getEntityGroup = (entity: string) => {
+  return entity.split('.')[1]
+}
+
+const entityArgsContainConvo = (entityList: string[]): boolean =>
+  !!entityList.find(
+    (entity: string) => entity.split('.')[0] === 'conversations'
+  )
+
+const entityArgsContainNonConvo = (entityList: string[]): boolean =>
+  !!entityList.find(
+    (entity: string) => entity.split('.')[0] !== 'conversations'
+  )
+
+const getActorConversantFilter = (target: string): number =>
+  !!!isNaN(parseInt(args[target])) ? parseInt(args[target]) : undefined
 
 const setPaging = (): [number, number?] => {
   let paging: [number, number?] = [
@@ -94,6 +111,11 @@ const setPaging = (): [number, number?] => {
 
 export {
   outputMode,
+  getParentEntity,
+  getEntityGroup,
+  entityArgsContainConvo,
+  entityArgsContainNonConvo,
+  getActorConversantFilter,
   entityListDefaults,
   entityListAll,
   setEntityList,

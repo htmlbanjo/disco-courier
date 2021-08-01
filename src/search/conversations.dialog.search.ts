@@ -1,8 +1,12 @@
 import { Field, TWithFields, IResultEntry } from '../defs/import'
 import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
-import { conversations, isAHub } from './conversations.search'
-import { skillNameFromId, convertToInGameDifficulty } from './actors.search'
+import { conversations, isAHub, isATask } from './conversations.search'
+import {
+  skillNameFromId,
+  skillIdFromRefId,
+  convertToInGameDifficulty
+} from './actors.search'
 import { tableDates } from '../search/index.search'
 const options = getOptions()
 
@@ -38,12 +42,9 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     titleIs('DifficultyRed', entry) ||
     titleIs('DifficultyWhite', entry)
 
-  const actorId = conversations.getActor(entry).actorId
-  const conversantId = conversations.getConversant(entry).conversantId
-  const actorName = skillNameFromId(actorId)
-  // TODO: mmm, maybe let's not hard-code ID #387 here.
-  const conversantName =
-    conversantId === 387 ? 'You' : skillNameFromId(conversantId)
+  const actorId: number = conversations.getActor(entry).actorId
+  const conversantId: number = conversations.getConversant(entry).conversantId
+  const skillRefId = valueOf('SkillType', entry)
 
   let modifiers: any = getCheckAspectList(entry)
   if (options.outputMode === 'mark' || options.outputMode === 'seed') {
@@ -59,15 +60,17 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
     isRoot: entry.isRoot,
     isGroup: entry.isGroup,
     actorId,
-    actorName,
+    actorName: skillNameFromId(actorId),
     conversantId,
-    conversantName,
+    conversantName: skillNameFromId(conversantId),
     shortDescription: valueOf('Title', entry),
     longDescription: valueOf('Dialogue Text', entry),
     refId: refId(entry),
     forced: booleanValueOf('Forced', entry),
     flag: valueOf('FlagName', entry),
-    skillRefId: valueOf('SkillType', entry),
+    skillRefId,
+    skillId: skillIdFromRefId(skillRefId),
+    skillName: skillNameFromId(skillRefId),
     modifiers,
     inputId: valueOf('InputId', entry),
     outputId: valueOf('OutputId', entry),
@@ -161,6 +164,9 @@ function getPassiveChecks (entry: TWithFields) {
 function getDialogEntries (convo: TWithFields) {
   const dialogRows = convo?.dialogueEntries?.reduce(
     (entries: IResultEntry[], entry: TWithFields) => {
+      const isCheck = isACheck(entry)
+
+      // CHECK
       const checkDetail =
         titleIs('DifficultyPass', entry) ||
         titleIs('DifficultyRed', entry) ||
@@ -174,11 +180,16 @@ function getDialogEntries (convo: TWithFields) {
         ? convertToInGameDifficulty(parseInt(checkDetail?.value))
         : undefined
 
+      const skillRefId = valueOf('SkillType', entry)
+
+      let modifiers: any = getCheckAspectList(entry)
+      if (options.outputMode === 'mark' || options.outputMode === 'seed') {
+        modifiers = JSON.stringify(modifiers)
+      }
+
+      // END CHECK
       const actorId = conversations.getActor(entry).actorId
       const conversantId = conversations.getConversant(entry).conversantId
-      const actorName = skillNameFromId(actorId)
-      const conversantName =
-        conversantId === 387 ? 'You' : skillNameFromId(conversantId)
 
       entries.push({
         parentId: convo.id,
@@ -193,9 +204,13 @@ function getDialogEntries (convo: TWithFields) {
         dialogShort: valueOf('Title', entry),
         dialogLong: valueOf('Dialogue Text', entry),
         actorId,
-        actorName,
+        actorName: skillNameFromId(actorId),
         conversantId,
-        conversantName,
+        conversantName: skillNameFromId(conversantId),
+        skillRefId,
+        skillId: skillIdFromRefId(skillRefId),
+        skillName: skillNameFromId(skillRefId),
+        modifiers,
         sequence: valueOf('Sequence', entry),
         conditionPriority: entry.conditionPriority,
         conditionString: entry.conditionString,

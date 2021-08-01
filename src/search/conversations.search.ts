@@ -1,85 +1,94 @@
-import { TWithFields, IResultEntry } from '../defs/import'
+import {
+  TWithFields,
+  IResultEntry,
+  IResultEntryString,
+  IResultEntryNumber,
+  IResultEntryBoolean
+} from '../defs/import'
 import {
   keyFunction,
+  getStringEntry,
+  getNumberEntry,
+  getBooleanEntry,
   valueOf,
   valueExistsInKey,
   cleanVariableName
 } from './index.search'
 
 const conversations = {
-  taskActive (convo: TWithFields): IResultEntry {
-    return keyFunction('display_condition_main', 'string', convo, {
+  taskActive (convo: TWithFields): IResultEntryString {
+    return getStringEntry('display_condition_main', convo, {
       returnKey: 'taskActive',
       returnValueFn: cleanVariableName
     })
   },
-  taskCompleted (convo: TWithFields): IResultEntry {
-    return keyFunction('done_condition_main', 'string', convo, {
+  taskCompleted (convo: TWithFields): IResultEntryString {
+    return getStringEntry('done_condition_main', convo, {
       returnKey: 'taskComplete',
       returnValueFn: cleanVariableName
     })
   },
-  taskCancelled (convo: TWithFields): IResultEntry {
-    return keyFunction('cancel_condition_main', 'string', convo, {
+  taskCancelled (convo: TWithFields): IResultEntryString {
+    return getStringEntry('cancel_condition_main', convo, {
       returnKey: 'taskCanceled',
       returnValueFn: cleanVariableName
     })
   },
-  taskReward (convo: TWithFields): IResultEntry {
-    return keyFunction('taskReward', 'number', convo)
+  taskReward (convo: TWithFields): IResultEntryNumber {
+    return getNumberEntry('taskReward', convo)
   },
-  taskIsTimed (convo: TWithFields): IResultEntry {
-    return keyFunction('taskTimed', 'boolean', convo)
+  taskIsTimed (convo: TWithFields): IResultEntryBoolean {
+    return getBooleanEntry('taskTimed', convo)
   },
-  getCheckType (convo: TWithFields): IResultEntry {
-    return keyFunction('CheckType', 'number', convo, {
+  getCheckType (convo: TWithFields): IResultEntryNumber {
+    return getNumberEntry('CheckType', convo, {
       returnKey: 'checkType'
     })
   },
-  getCondition (convo: TWithFields): IResultEntry {
-    return keyFunction('Condition', 'string', convo, {
+  getCondition (convo: TWithFields): IResultEntryString {
+    return getStringEntry('Condition', convo, {
       returnKey: 'condition',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getInstruction (convo: TWithFields): IResultEntry {
-    return keyFunction('Instruction', 'string', convo, {
+  getInstruction (convo: TWithFields): IResultEntryString {
+    return getStringEntry('Instruction', convo, {
       returnKey: 'instruction',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getDifficulty (convo: TWithFields): IResultEntry {
-    return keyFunction('Difficulty', 'number', convo, {
+  getDifficulty (convo: TWithFields): IResultEntryNumber {
+    return getNumberEntry('Difficulty', convo, {
       returnKey: 'difficulty'
     })
   },
-  getPlacement (convo: TWithFields): IResultEntry {
-    return keyFunction('Placement', 'string', convo, {
+  getPlacement (convo: TWithFields): IResultEntryString {
+    return getStringEntry('Placement', convo, {
       returnKey: 'placement'
     })
   },
-  getActor (convo: TWithFields): IResultEntry {
-    return keyFunction('Actor', 'number', convo, {
+  getActor (convo: TWithFields): IResultEntryNumber {
+    return getNumberEntry('Actor', convo, {
       returnKey: 'actorId'
     })
   },
-  getConversant (convo: TWithFields): IResultEntry {
-    return keyFunction('Conversant', 'number', convo, {
+  getConversant (convo: TWithFields): IResultEntryNumber {
+    return getNumberEntry('Conversant', convo, {
       returnKey: 'conversantId'
     })
   },
-  getAltOrbText (convo: TWithFields): IResultEntry {
-    return keyFunction('AlternateOrbText', 'string', convo, {
+  getAltOrbText (convo: TWithFields): IResultEntryString {
+    return getStringEntry('AlternateOrbText', convo, {
       returnKey: 'altOrbText'
     })
   },
-  getOnUse (convo: TWithFields): IResultEntry {
-    return keyFunction('OnUse', 'string', convo, {
+  getOnUse (convo: TWithFields): IResultEntryString {
+    return getStringEntry('OnUse', convo, {
       returnKey: 'onUse'
     })
   },
-  getDialogOverride (convo: TWithFields): IResultEntry {
-    return keyFunction('OverrideDialogueCondition', 'string', convo, {
+  getDialogOverride (convo: TWithFields): IResultEntryString {
+    return getStringEntry('OverrideDialogueCondition', convo, {
       returnKey: 'dialogOverrideCondition'
     })
   }
