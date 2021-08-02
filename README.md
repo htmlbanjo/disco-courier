@@ -137,5 +137,5 @@ Sample models and migration scripts have been provided for nearly every sample t
 - Add support for foreign key relationships for sequelize.
 - While you can do a lot with the json export option for getting items into noSQL databases, it could use some better convenience options.
 - CSV and spreadsheets would be nice (for easy dumps for things like checks).
-- Markdown tables? If there's something easy, why not.
+- ~~Markdown tables? If there's something easy, why not.~~
 - Currently supports the version released 6th April 2021. Build on initial work to support additional versions.
