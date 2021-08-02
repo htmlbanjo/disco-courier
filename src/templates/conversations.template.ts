@@ -1,11 +1,15 @@
 import { TWithFields } from '../defs/import'
 import { TConversationEntry } from '../defs/templates'
+import { getState, getOptions } from '../lib/shared'
 import {
   valueOf,
   booleanValueOf,
   description,
-  tableDates
+  tableDates,
+  titleIs,
+  refId
 } from '../search/index.search'
+import { applyActorFilters } from '../search/filters.search'
 import {
   conversations,
   getSubtaskCount,
@@ -19,14 +23,23 @@ import {
 } from '../search/conversations.search'
 import { getSubtasks } from '../search/conversations.subtask.search'
 import {
-  getDialogEntries,
   getWhiteChecks,
   getRedChecks,
   getWhiteAndRedChecks,
   getPassiveChecks,
   getAllChecks,
-  getOutgoingLinks
+  getOutgoingLinks,
+  isACheck,
+  getCheckAspectList
 } from '../search/conversations.dialog.search'
+
+import {
+  skillNameFromId,
+  skillIdFromRefId,
+  convertToInGameDifficulty
+} from '../search/actors.search'
+
+const options = getOptions()
 
 function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
   return {
@@ -44,13 +57,14 @@ function ExtendedTemplate (convo: TWithFields): TConversationEntry {
     ...conversations.taskCancelled(convo),
     ...conversations.taskReward(convo),
     ...conversations.taskIsTimed(convo),
-
     ...conversations.getCheckType(convo),
     ...conversations.getCondition(convo),
     ...conversations.getInstruction(convo),
     ...conversations.getPlacement(convo),
     ...conversations.getActor(convo),
+    ...conversations.getActorNameFromId(convo),
     ...conversations.getConversant(convo),
+    ...conversations.getConversantNameFromId(convo),
     ...conversations.getAltOrbText(convo),
     ...conversations.getOnUse(convo),
     ...conversations.getDialogOverride(convo),
@@ -73,14 +87,16 @@ function CourierExtendedTemplate (convo: TWithFields) {
 export const ConversationTemplate = (
   convo: TWithFields
 ): TConversationEntry => {
-  return BaseTemplate(convo, {
-    ...ExtendedTemplate(convo),
-    ...CourierExtendedTemplate(convo)
-  })
+  if (applyActorFilters(convo)) {
+    return BaseTemplate(convo, {
+      ...ExtendedTemplate(convo),
+      ...CourierExtendedTemplate(convo)
+    })
+  }
 }
 
 export const TaskTemplate = (convo: TWithFields) => {
-  if (isATask(convo)) {
+  if (isATask(convo) && applyActorFilters(convo)) {
     return BaseTemplate(convo, {
       ...conversations.taskActive(convo),
       ...conversations.taskCompleted(convo),
@@ -91,8 +107,6 @@ export const TaskTemplate = (convo: TWithFields) => {
       ...conversations.getCondition(convo),
       ...conversations.getInstruction(convo),
       ...conversations.getPlacement(convo),
-      ...conversations.getActor(convo),
-      ...conversations.getConversant(convo),
       subtasks: getSubtaskCount(convo)
     })
   }
@@ -104,14 +118,8 @@ export const SubtaskTemplate = (convo: TWithFields) => {
   }
 }
 
-export const DialogTemplate = (convo: TWithFields) => {
-  //if (!!!isATask(convo)) {
-  return getDialogEntries(convo) || undefined
-  //}
-}
-
 export const OrbTemplate = (convo: TWithFields): TConversationEntry => {
-  if (isAnOrb(convo)) {
+  if (isAnOrb(convo) && applyActorFilters(convo)) {
     return BaseTemplate(convo, {
       ...conversations.getCheckType(convo),
       ...conversations.getCondition(convo),
@@ -152,3 +160,105 @@ export const PassiveCheckTemplate = (convo: TWithFields) =>
 
 export const GraphLinksTemplate = (convo: TWithFields) =>
   getOutgoingLinks(convo)
+
+export const DialogTemplate = (convo: TWithFields) => {
+  /* TODO: offer a rollup version that preserves the graph,
+   * for use with noSQL or de-normalized projects
+   * Also, move template portions into conversations template.
+   * Lastly, need a model/migration for Conversations without group.
+   */
+
+  const dialogRows = convo?.dialogueEntries?.reduce(
+    (entries, entry: TWithFields) => {
+      const isCheck = isACheck(entry)
+
+      // CHECK
+      const checkDetail =
+        titleIs('DifficultyPass', entry) ||
+        titleIs('DifficultyRed', entry) ||
+        titleIs('DifficultyWhite', entry)
+
+      const checkType = checkDetail?.title?.slice(10)
+      const checkDifficulty = !!checkType
+        ? parseInt(checkDetail?.value)
+        : undefined
+      const checkGameDifficulty = !!checkType
+        ? convertToInGameDifficulty(parseInt(checkDetail?.value))
+        : undefined
+
+      const skillRefId = valueOf('SkillType', entry)
+
+      let modifiers: any = getCheckAspectList(entry)
+      if (options.outputMode === 'mark' || options.outputMode === 'seed') {
+        modifiers = JSON.stringify(modifiers)
+      }
+
+      // END CHECK
+      const actorId = conversations.getActor(entry).actorId
+      const conversantId = conversations.getConversant(entry).conversantId
+
+      if (applyActorFilters(entry)) {
+        entries.push({
+          parentId: convo.id,
+          dialogId: entry.id,
+          checkType,
+          checkDifficulty,
+          checkGameDifficulty,
+          isRoot: entry.isRoot,
+          isGroup: entry.isGroup,
+          refId: refId(convo),
+          isHub: isAHub(convo),
+          dialogShort: valueOf('Title', entry),
+          dialogLong: valueOf('Dialogue Text', entry),
+          actorId,
+          actorName: skillNameFromId(actorId),
+          conversantId,
+          conversantName: skillNameFromId(conversantId),
+          skillRefId,
+          skillId: skillIdFromRefId(skillRefId),
+          skillName: skillNameFromId(skillRefId),
+          modifiers,
+          sequence: valueOf('Sequence', entry),
+          conditionPriority: entry.conditionPriority,
+          conditionString: entry.conditionString,
+          userScript: entry.userScript,
+          inputId: valueOf('InputId', entry),
+          outputId: valueOf('OutputId', entry),
+          flag: valueOf('FlagName', entry),
+          ...tableDates()
+        })
+      }
+
+      return entries
+    },
+    []
+  )
+  return dialogRows ? Object.values(dialogRows) : undefined
+}
+
+export const DialogTextTemplate = (convo: TWithFields) => {
+  /* TODO: offer a rollup version that preserves the graph,
+   * for use with noSQL or de-normalized projects
+   * Also, move template portions into conversations template.
+   * Lastly, need a model/migration for Conversations without group.
+   */
+
+  const dialogRows = convo?.dialogueEntries?.reduce(
+    (entries, entry: TWithFields) => {
+      const actorId = conversations.getActor(entry).actorId
+      const conversantId = conversations.getConversant(entry).conversantId
+      if (applyActorFilters(entry)) {
+        entries.push({
+          parentId: convo.id,
+          dialogId: entry.id,
+          dialogLong: valueOf('Dialogue Text', entry),
+          actorName: skillNameFromId(actorId),
+          conversantName: skillNameFromId(conversantId)
+        })
+      }
+      return entries
+    },
+    []
+  )
+  return dialogRows ? Object.values(dialogRows) : undefined
+}

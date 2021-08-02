@@ -19,7 +19,7 @@ import {
   getEntityGroup,
   entityArgsContainConvo,
   entityArgsContainNonConvo,
-  getActorConversantFilter
+  getActorConversantOrBothFilter
 } from '../lib/args'
 
 /* TODO: File needs some breaking up */
@@ -136,6 +136,8 @@ const findScopedItemInArgs = (scope: string, item: string, memo = {}) => {
     : (memo[item] = options.entityList.find(li => scopeFn(li) === item))
 }
 
+// The intent here is to favor actor over other options unless
+// --conversant is used explicitly.
 const getActorOrConversantFlag = (): string => {
   return getState('conversant')
     ? 'conversant'
@@ -171,8 +173,17 @@ const checkAndSetTepidOutcomeMsg = (flag: string): void => {
   }
 }
 
+const setActorFilters = () => {
+  setState('filters', {
+    actorFilters: {
+      actorId: getActorConversantOrBothFilter('actor'),
+      convId: getActorConversantOrBothFilter('conversant')
+    }
+  })
+}
+
 const actorConversantArgsSanityCheck = () => {
-  /* Set state for filters and (potentially) some messaging around the context of those filters,
+  /*  Potential messaging around some context for those filters, if they're used questionably:
    * e.g. if we're filtering for actors on a "conversation" search, but also requesting "items,"
    * where actors aren't applicable, we should note that in the results to manage expectations.
    *
@@ -182,8 +193,6 @@ const actorConversantArgsSanityCheck = () => {
    * TODO: this is shaping up to be a routing / switchboard for arg-related messages
    * should consider refactoring accordingly as it grows.
    */
-  setState('actor', getActorConversantFilter('actor'))
-  setState('conversant', getActorConversantFilter('conversant'))
   setState('hasConversations', entityArgsContainConvo(options.entityList))
   setState('hasNonConversations', entityArgsContainNonConvo(options.entityList))
 
@@ -222,13 +231,15 @@ const streamSource = (source: string, entity: string) => {
         entityParent === 'conversations'
       ) {
         counter = counter < activityIndicatorList.length - 1 ? ++counter : 0
-        if (entity === 'actors.cache') {
+
+        if (entitySubProcess === 'cache') {
           updateProgress(
             `${messageText.firstTimeSetup(counter)} >> ${chalk.yellowBright(
               streamcount
             )} ${chalk.yellow(data?.value?.fields[0]?.value)}`
           )
         }
+
         updateProgress(
           `${messageText.processingLoop(
             entity,
@@ -384,6 +395,7 @@ export {
   versionList,
   isSupportedVersion,
   getOrCreateLookup,
+  setActorFilters,
   actorConversantArgsSanityCheck,
   streamSource,
   sourceFileExists,

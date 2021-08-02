@@ -25,6 +25,10 @@ export function skillNameFromId (id: number | string): string {
     : getState('cache')?.actors.find(actor => actor[key] === id)?.name
 }
 
+export function IdFromActorName (name: number | string): string {
+  return getState('cache')?.actors.find(actor => actor[name] === name)?.actorId
+}
+
 export function skillIdFromRefId (refId: string): number {
   return !!refId
     ? getState('cache')?.actors.find(actor => actor?.refId === refId).actorId

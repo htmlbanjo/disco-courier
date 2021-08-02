@@ -4,16 +4,18 @@ import chalk from 'chalk'
 // TODO: switch to yargs or prompts and fix bug in option parsing.
 const args = minimist(process.argv.slice(2))
 
-const output = args['output'] ? args['output'] : args['export']
+const output = args['output'] || args['export'] || undefined
 
 const outputMode =
   output === 'db'
     ? 'seed'
-    : args['export'] === 'json'
+    : output === 'json'
     ? 'write'
-    : args['export'] === 'md'
+    : output === 'md'
     ? 'mark'
     : 'read'
+
+const filterVerb = args['OR'] === 'true' ? 'or' : 'and'
 
 const entityListDefaults = [
   'locations',
@@ -42,6 +44,7 @@ const entityListAll = [
   'conversations.task',
   'conversations.subtask',
   'conversations.dialog',
+  'conversations.dialogtext',
   'conversations.orb',
   'conversations.check',
   'conversations.passivecheck',
@@ -96,7 +99,7 @@ const entityArgsContainNonConvo = (entityList: string[]): boolean =>
     (entity: string) => entity.split('.')[0] !== 'conversations'
   )
 
-const getActorConversantFilter = (target: string): number =>
+const getActorConversantOrBothFilter = (target: string): number =>
   !!!isNaN(parseInt(args[target])) ? parseInt(args[target]) : undefined
 
 const setPaging = (): [number, number?] => {
@@ -111,11 +114,12 @@ const setPaging = (): [number, number?] => {
 
 export {
   outputMode,
+  filterVerb,
   getParentEntity,
   getEntityGroup,
   entityArgsContainConvo,
   entityArgsContainNonConvo,
-  getActorConversantFilter,
+  getActorConversantOrBothFilter,
   entityListDefaults,
   entityListAll,
   setEntityList,

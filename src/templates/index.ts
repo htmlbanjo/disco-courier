@@ -22,6 +22,7 @@ import {
   TaskTemplate,
   SubtaskTemplate,
   DialogTemplate,
+  DialogTextTemplate,
   OrbTemplate,
   HubTemplate,
   CheckTemplate,
@@ -71,6 +72,8 @@ const templatize = (entity, item) => {
       return SubtaskTemplate(item)
     case 'conversations.dialog':
       return DialogTemplate(item)
+    case 'conversations.dialogtext':
+      return DialogTextTemplate(item)
     case 'conversations.orb':
       return OrbTemplate(item)
     case 'conversations.hub':

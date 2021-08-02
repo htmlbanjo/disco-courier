@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { messageText } from './lib/out'
 import { getOptions, getState, setState } from './lib/shared'
+import { messageText } from './lib/out'
 import { paging } from './lib/paging'
 import { addProgressStep, updateProgress } from './lib/progress'
 import {
@@ -8,6 +8,7 @@ import {
   sourceFileExists,
   isSupportedVersion,
   getOrCreateLookup,
+  setActorFilters,
   actorConversantArgsSanityCheck,
   seedFileName,
   mdFileName,
@@ -51,7 +52,7 @@ import {
           // action(entity, data.id, data)
         }
       }
-      /* HOTFIX FOR #27
+
       if (
         totalRows === getState('currentVersion')?.rowCounts[entityParent] ||
         totalFromStart === options.paging[1]
@@ -63,6 +64,12 @@ import {
     })
     pipe.on('close', data => {
       if (all[entity].length < 1) {
+        if (
+          (getState('actor') || getState('conversant')) &&
+          getState('hasConversations')
+        ) {
+          console.log(messageText.noResultsActorAdvice())
+        }
         console.log(messageText.noResults())
         process.exit(0)
       }
@@ -89,7 +96,8 @@ import {
       }
     })
     pipe.on('end', data => {
-      console.log(messageText.streamEOL())
+      pipe.destroy()
+      // console.log(messageText.streamEOL())
     })
   }
   /*
@@ -205,6 +213,7 @@ import {
   }
   addProgressStep(messageText.sourceFileFound(options.sourceJSON))
   updateProgress(messageText.checkingForSupportedVersion())
+  // checks the version key in the JSON export to make sure it's something we can work with.
   isSupportedVersion(
     options.sourceJSON,
     options.supportedVersions,
@@ -217,10 +226,11 @@ import {
       )
       updateProgress(messageText.openingSourceFile())
 
-      getOrCreateLookup()
-      actorConversantArgsSanityCheck()
+      getOrCreateLookup() // caching
+      setActorFilters() //filters
+      actorConversantArgsSanityCheck() // convenience messaging ux
 
-      processEntities(options.sourceJSON)
+      processEntities(options.sourceJSON) // do-the-work
     }
   )
 })()
