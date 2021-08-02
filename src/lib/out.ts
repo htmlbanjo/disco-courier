@@ -78,6 +78,17 @@ const messageText = {
              Maybe try running a few errands first? That always seems to help.\n\n\n`)
   },
 
+  noResultsActorAdvice: function () {
+    return chalk.red(`\n\n
+             You feel as though you're searching for someone. Someone in your past. And yet you\n
+             can't seem to find them. \n
+             Sorry this didn't work out (+1 Sorry app).\n
+             ${chalk.yellow(`Try searching conversations.dialog`)} specifically 
+             if you're just looking for some quotes by a person,\n
+             ${chalk.yellow(
+               'try conversations.check'
+             )} if you want checks filtered by a skill. \n`)
+  },
   noConversationForActorOrConversant: function (flag: string) {
     return chalk.red(`\n
                ${this.courierCrashHeader()}\n
@@ -251,7 +262,9 @@ const messageText = {
 
   streamEOL: function () {
     return chalk.red(
-      `Hit end of stream without getting what we need. Check your query?`
+      `\n\n          [ ${chalk.yellow(
+        `Hit end of stream without getting anything we wanted. Check your query?`
+      )} ]`
     )
   },
   applicationEOL: function () {

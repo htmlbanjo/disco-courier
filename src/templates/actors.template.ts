@@ -2,6 +2,7 @@ import { TWithFields } from '../defs/import'
 import {
   valueOf,
   booleanValueOf,
+  numericValueOf,
   shortDescription,
   longDescription,
   tableDates,
@@ -24,10 +25,10 @@ function ExtendedTemplate (item: TWithFields) {
     isPlayer: booleanValueOf('IsPlayer', item),
     isNPC: booleanValueOf('IsNPC', item),
     isFemale: booleanValueOf('IsFemale', item),
-    PSY: parseInt(valueOf('PSY', item)),
-    COR: parseInt(valueOf('COR', item)),
-    ITL: parseInt(valueOf('ITL', item)),
-    MOT: parseInt(valueOf('MOT', item))
+    PSY: numericValueOf('PSY', item),
+    COR: numericValueOf('COR', item),
+    ITL: numericValueOf('ITL', item),
+    MOT: numericValueOf('MOT', item)
   })
 }
 

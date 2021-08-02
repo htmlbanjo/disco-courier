@@ -11,9 +11,12 @@ import {
   getNumberEntry,
   getBooleanEntry,
   valueOf,
+  numericValueOf,
   valueExistsInKey,
   cleanVariableName
 } from './index.search'
+import { skillNameFromId } from './actors.search'
+import { getState } from '../lib/shared'
 
 const conversations = {
   taskActive (convo: TWithFields): IResultEntryString {
@@ -72,10 +75,18 @@ const conversations = {
       returnKey: 'actorId'
     })
   },
+  getActorNameFromId (convo: TWithFields) {
+    return { actorName: skillNameFromId(this.getActor(convo).actorId) }
+  },
   getConversant (convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('Conversant', convo, {
       returnKey: 'conversantId'
     })
+  },
+  getConversantNameFromId (convo: TWithFields) {
+    return {
+      conversantName: skillNameFromId(this.getConversant(convo).conversantIdId)
+    }
   },
   getAltOrbText (convo: TWithFields): IResultEntryString {
     return getStringEntry('AlternateOrbText', convo, {
@@ -124,7 +135,7 @@ const isTerminalDialog = (convo: TWithFields): boolean => {
 }
 
 function getSubtaskCount (convo: TWithFields): number {
-  let subtaskCount = 1
+  let subtaskCount = 0
   convo?.fields?.map(field => {
     if (field.title.includes('subtask_title') && field.value) {
       ++subtaskCount

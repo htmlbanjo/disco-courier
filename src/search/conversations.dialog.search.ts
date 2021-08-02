@@ -1,7 +1,9 @@
 import { Field, TWithFields, IResultEntry } from '../defs/import'
 import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
+import { applyActorFilters } from './filters.search'
 import { conversations, isAHub, isATask } from './conversations.search'
+
 import {
   skillNameFromId,
   skillIdFromRefId,
@@ -33,6 +35,9 @@ type TCheckType = 'red' | 'white' | 'passive' | 'all' | 'both'
 
 //TODO: move templating-style fns into the proper template file.
 function CheckTemplate (entry: TWithFields, type: TCheckType) {
+  if (!!!applyActorFilters(entry)) {
+    return undefined
+  }
   /* TODO: performance: consider converting "is functions
    * to just return the field instead of boolean so the match
    * is readily available here.
@@ -127,6 +132,7 @@ function getChecksByType (type: TCheckType, convo: TWithFields) {
   if (convo?.dialogueEntries?.length < 1) {
     return undefined
   }
+  // TODO: refactor this to return bool so CheckTemplate can be moved into conversation.templates.
   const results = convo?.dialogueEntries?.reduce((cChecks, entry) => {
     if (verifier(entry)) {
       cChecks.push(CheckTemplate(entry, type))
@@ -156,76 +162,6 @@ function getPassiveChecks (entry: TWithFields) {
   return getChecksByType('passive', entry)
 }
 
-/* TODO: offer a rollup version that preserves the graph,
- * for use with noSQL or de-normalized projects
- * Also, move template portions into conversations template.
- * Lastly, need a model/migration for Conversations without group.
- */
-function getDialogEntries (convo: TWithFields) {
-  const dialogRows = convo?.dialogueEntries?.reduce(
-    (entries: IResultEntry[], entry: TWithFields) => {
-      const isCheck = isACheck(entry)
-
-      // CHECK
-      const checkDetail =
-        titleIs('DifficultyPass', entry) ||
-        titleIs('DifficultyRed', entry) ||
-        titleIs('DifficultyWhite', entry)
-
-      const checkType = checkDetail?.title?.slice(10)
-      const checkDifficulty = !!checkType
-        ? parseInt(checkDetail?.value)
-        : undefined
-      const checkGameDifficulty = !!checkType
-        ? convertToInGameDifficulty(parseInt(checkDetail?.value))
-        : undefined
-
-      const skillRefId = valueOf('SkillType', entry)
-
-      let modifiers: any = getCheckAspectList(entry)
-      if (options.outputMode === 'mark' || options.outputMode === 'seed') {
-        modifiers = JSON.stringify(modifiers)
-      }
-
-      // END CHECK
-      const actorId = conversations.getActor(entry).actorId
-      const conversantId = conversations.getConversant(entry).conversantId
-
-      entries.push({
-        parentId: convo.id,
-        dialogId: entry.id,
-        checkType,
-        checkDifficulty,
-        checkGameDifficulty,
-        isRoot: entry.isRoot,
-        isGroup: entry.isGroup,
-        refId: refId(convo),
-        isHub: isAHub(convo),
-        dialogShort: valueOf('Title', entry),
-        dialogLong: valueOf('Dialogue Text', entry),
-        actorId,
-        actorName: skillNameFromId(actorId),
-        conversantId,
-        conversantName: skillNameFromId(conversantId),
-        skillRefId,
-        skillId: skillIdFromRefId(skillRefId),
-        skillName: skillNameFromId(skillRefId),
-        modifiers,
-        sequence: valueOf('Sequence', entry),
-        conditionPriority: entry.conditionPriority,
-        conditionString: entry.conditionString,
-        userScript: entry.userScript,
-        inputId: valueOf('InputId', entry),
-        outputId: valueOf('OutputId', entry)
-      })
-
-      return entries
-    },
-    [] as IResultEntry[]
-  )
-  return Object.values(dialogRows)
-}
-
 //TODO: complete outgoinglinks xref
 function getOutgoingLinks (convo: TWithFields) {
   return convo?.dialogueEntries?.reduce((entries, entry) => {
@@ -246,7 +182,6 @@ function getOutgoingLinks (convo: TWithFields) {
 
 export {
   getOutgoingLinks,
-  getDialogEntries,
   getWhiteChecks,
   getRedChecks,
   getWhiteAndRedChecks,
@@ -256,5 +191,6 @@ export {
   isARedCheck,
   isAPassiveCheck,
   isARedOrWhiteCheck,
-  isACheck
+  isACheck,
+  getCheckAspectList
 }

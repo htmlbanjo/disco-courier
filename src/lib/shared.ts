@@ -18,7 +18,7 @@ import { ISupportedVersion } from '../defs/import'
  * outputMode: derived from args, how to output the result: as json data, as a sequelize seeder file, or just log to console.
  * sourceJSON: hardcoded for now, needs a ./src/data/dialog.json file.
  * supportedVersions: list of versions to support along with array lengths for optimization.
- *
+ * conversation includes sum of all dialogEntry counts as well (#27)
  */
 const options = {
   debug: <boolean>false,
@@ -36,7 +36,7 @@ const options = {
         actors: <number>420,
         items: <number>258,
         variables: <number>10510,
-        conversations: <number>1428
+        conversations: <number>111606
       }
     }
   ]
@@ -50,10 +50,9 @@ const initialState = {
   currentVersion: {
     version: false
   },
-  actor: undefined,
-  conversant: undefined,
   hasConversations: undefined,
   hasNonConversations: undefined,
+  filters: {},
   cache: {
     actors: undefined
   }

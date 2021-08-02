@@ -1,45 +1,48 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Conversations_dialog', {
+    await queryInterface.createTable('Conversations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      parentId: {
+      conversationId: {
         type: Sequelize.NUMBER
       },
-      dialogId: {
-        type: Sequelize.NUMBER
+      name: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.TEXT
+      },
+      taskActive: {
+        type: Sequelize.STRING
+      },
+      taskComplete: {
+        type: Sequelize.STRING
+      },
+      taskCanceled: {
+        type: Sequelize.STRING
+      },
+      taskReward: {
+        type: Sequelize.STRING
+      },
+      taskTimed: {
+        type: Sequelize.BOOLEAN
       },
       checkType: {
-        type: Sequelize.STRING
-      },
-      checkDifficulty: {
         type: Sequelize.NUMBER
       },
-      checkGameDifficulty: {
-        type: Sequelize.NUMBER
-      },
-      isRoot: {
-        type: Sequelize.NUMBER
-      },
-      isGroup: {
-        type: Sequelize.NUMBER
-      },
-      refId: {
-        type: Sequelize.STRING
-      },
-      isHub: {
-        type: Sequelize.NUMBER
-      },
-      dialogShort: {
-        type: Sequelize.STRING
-      },
-      dialogLong: {
+      condition: {
         type: Sequelize.TEXT
+      },
+      instruction: {
+        type: Sequelize.TEXT
+      },
+      placement: {
+        type: Sequelize.STRING
       },
       actorId: {
         type: Sequelize.NUMBER
@@ -53,38 +56,38 @@ module.exports = {
       conversantName: {
         type: Sequelize.STRING
       },
-      skillRefId: {
+      altOrbText: {
         type: Sequelize.STRING
       },
-      skillId: {
+      onUse: {
+        type: Sequelize.STRING
+      },
+      dialogOverrideCondition: {
+        type: Sequelize.STRING
+      },
+      subtasks: {
+        type: Sequelize.TEXT
+      },
+      numSubtasks: {
         type: Sequelize.NUMBER
       },
-      skillName: {
-        type: Sequelize.STRING
+      isTask: {
+        type: Sequelize.BOOLEAN
       },
-      modifiers: {
-        type: Sequelize.STRING
+      isOrb: {
+        type: Sequelize.BOOLEAN
       },
-      sequence: {
-        type: Sequelize.STRING
+      hasSubtask: {
+        type: Sequelize.BOOLEAN
       },
-      conditionPriority: {
+      isHub: {
+        type: Sequelize.BOOLEAN
+      },
+      isDoor: {
+        type: Sequelize.BOOLEAN
+      },
+      dialogLength: {
         type: Sequelize.NUMBER
-      },
-      conditionString: {
-        type: Sequelize.STRING
-      },
-      userScript: {
-        type: Sequelize.STRING
-      },
-      inputId: {
-        type: Sequelize.STRING
-      },
-      outputId: {
-        type: Sequelize.STRING
-      },
-      flag: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -97,6 +100,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Conversations_dialog');
+    await queryInterface.dropTable('Conversations');
   }
 };

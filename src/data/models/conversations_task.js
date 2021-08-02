@@ -22,8 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     taskCanceled: DataTypes.STRING,
     taskReward: DataTypes.STRING,
     taskTimed: DataTypes.BOOLEAN,
-    actorId: DataTypes.NUMBER,
-    conversantId: DataTypes.NUMBER,
     subtasks: DataTypes.NUMBER
   }, {
     sequelize,

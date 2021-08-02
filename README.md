@@ -51,6 +51,7 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 | `courier -- --output=db conversations.link`                                                                        | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db                                                                              |
 | `courier -- --output=json --start=188 conversations.dialog`                                                        | writes all dialog entries starting at the 188th result to `data/json/conversations.dialog.json`                                                                                                    |
 | `courier -- --output=db --start=1 conversations.link conversations.task conversations.subtask conversations.check` | generates seed files for the dialog graph, a list of all tasks, a list of all subtasks, and all checks (white/red/passive) for their respective tables and populates with the first entry of each. |
+| `courier -- --output=read --results=5 --actor=3 --conversant=8 conversations.dialog`                               | Creates a markdown-friendly table of the first five instances of Jean Viqmarc dialog.                                                                                                              |
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 

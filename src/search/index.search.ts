@@ -130,6 +130,11 @@ const valueExistsInKey = (
 const booleanValueOf = (key: string, item: TWithFields): boolean => {
   return valueOf(key, item, true) === 'true' ? true : false
 }
+const numericValueOf = (key: string, item: TWithFields): number => {
+  return !isNaN(parseInt(valueOf(key, item)))
+    ? parseInt(valueOf(key, item))
+    : undefined
+}
 
 const findInField = (data: TWithFields[], key: string, value: string) => {
   return data.reduce((matches, item: TWithFields) => {
@@ -163,15 +168,15 @@ const keyFunction = (
         ? { [returnKey || key]: returnValueFn(booleanValueOf(key, item)) }
         : { [returnKey || key]: booleanValueOf(key, item) }
     case 'number':
-      const value = parseInt(valueOf(key, item))
+      const value = numericValueOf(key, item)
       if (isNaN(value)) {
         return { [returnKey || key]: undefined }
       }
       return returnValueFn
         ? {
-            [returnKey || key]: returnValueFn(parseInt(valueOf(key, item)))
+            [returnKey || key]: returnValueFn(numericValueOf(key, item))
           }
-        : { [returnKey || key]: parseInt(valueOf(key, item)) }
+        : { [returnKey || key]: numericValueOf(key, item) }
   }
 }
 const getStringEntry = (
@@ -189,15 +194,15 @@ const getNumberEntry = (
   item: TWithFields,
   { returnKey = null, returnValueFn = null }: IKeyNumberFunctionOption = {}
 ): IResultEntryNumber => {
-  const value = parseInt(valueOf(key, item))
+  const value = numericValueOf(key, item)
   if (isNaN(value)) {
     return { [returnKey || key]: undefined }
   }
   return returnValueFn
     ? {
-        [returnKey || key]: returnValueFn(parseInt(valueOf(key, item)))
+        [returnKey || key]: returnValueFn(numericValueOf(key, item))
       }
-    : { [returnKey || key]: parseInt(valueOf(key, item)) }
+    : { [returnKey || key]: numericValueOf(key, item) }
 }
 
 const getBooleanEntry = (
@@ -267,6 +272,7 @@ export {
   valueExistsInKey,
   valueContains,
   booleanValueOf,
+  numericValueOf,
   getName,
   techName,
   shortDescription,

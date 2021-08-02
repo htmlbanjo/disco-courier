@@ -32,12 +32,6 @@ module.exports = {
       taskTimed: {
         type: Sequelize.BOOLEAN
       },
-      actorId: {
-        type: Sequelize.NUMBER
-      },
-      conversantId: {
-        type: Sequelize.NUMBER
-      },
       subtasks: {
         type: Sequelize.NUMBER
       },
