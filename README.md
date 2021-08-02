@@ -54,6 +54,7 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 | `courier -- --export=read --results=5 --actor=3 --conversant=8 conversations.dialogtext`                               | Creates a markdown-friendly table of the first five instances of Kim dialog where Jean Viqmarc is the conversant.                                                                                                              |
 | `courier -- --export=json --actor=3 --OR=true --conversant=6 conversations.dialog` | Creates a detailed json export where the speaker is Kim, OR the conversant is Garte. |
 
+***Important:*** Make sure you include the empty double-dash (--) between the courier command and the arguments.
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
