@@ -70,7 +70,7 @@ Arguments take the form of options for paging and output, and a list of entities
 | `--export=<read\|json\|md\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `md` option attempts to format the result in a markdown-friendly table. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
 | `--actor=<id#>` | filter results by actor ID (only applies to relevant conversation groups) |
 | `--conversant=<id#>` | filter results by conversant ID (only applies to relevant conversation groups) |
-| `OR=true` | used to apply filters conditionally (actor OR conversant are true) default is AND (both conditions must be met) |
+| `--OR=true` | used to apply filters conditionally (actor OR conversant are true) default is AND (both conditions must be met) |
 
 
 #### Entities and groups
