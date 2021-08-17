@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_dialog',
+    freezeTableName: true
   });
   return Conversations_dialog;
 };

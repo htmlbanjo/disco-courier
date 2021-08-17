@@ -61,10 +61,7 @@ const setEntityList = (): string[] => {
   }
   const userEntityList = args['_'].reduce((list: string[], arg: string) => {
     const str = arg
-    const cleaned = str
-      .trim()
-      .toLowerCase()
-      .substring(0, 30)
+    const cleaned = str.trim().toLowerCase().substring(0, 30)
     // note on "30" above: longest entity is currently 13 (conversations), not concerned w/ exactness here.
     if (entityListAll.includes(cleaned)) {
       list.push(cleaned)

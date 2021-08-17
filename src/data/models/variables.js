@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Variables',
+    freezeTableName: true
   });
   return Variables;
 };

@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_whitecheck',
+    freezeTableName: true
   });
   return Conversations_whitecheck;
 };

@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_orb',
+    freezeTableName: true
   });
   return Conversation_orb;
 };

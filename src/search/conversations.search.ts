@@ -16,89 +16,89 @@ import {
   cleanVariableName
 } from './index.search'
 import { skillNameFromId } from './actors.search'
-import { getState } from '../lib/shared'
+import { getState } from 'lib/shared'
 
 const conversations = {
-  taskActive (convo: TWithFields): IResultEntryString {
+  taskActive(convo: TWithFields): IResultEntryString {
     return getStringEntry('display_condition_main', convo, {
       returnKey: 'taskActive',
       returnValueFn: cleanVariableName
     })
   },
-  taskCompleted (convo: TWithFields): IResultEntryString {
+  taskCompleted(convo: TWithFields): IResultEntryString {
     return getStringEntry('done_condition_main', convo, {
       returnKey: 'taskComplete',
       returnValueFn: cleanVariableName
     })
   },
-  taskCancelled (convo: TWithFields): IResultEntryString {
+  taskCancelled(convo: TWithFields): IResultEntryString {
     return getStringEntry('cancel_condition_main', convo, {
       returnKey: 'taskCanceled',
       returnValueFn: cleanVariableName
     })
   },
-  taskReward (convo: TWithFields): IResultEntryNumber {
+  taskReward(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('taskReward', convo)
   },
-  taskIsTimed (convo: TWithFields): IResultEntryBoolean {
+  taskIsTimed(convo: TWithFields): IResultEntryBoolean {
     return getBooleanEntry('taskTimed', convo)
   },
-  getCheckType (convo: TWithFields): IResultEntryNumber {
+  getCheckType(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('CheckType', convo, {
       returnKey: 'checkType'
     })
   },
-  getCondition (convo: TWithFields): IResultEntryString {
+  getCondition(convo: TWithFields): IResultEntryString {
     return getStringEntry('Condition', convo, {
       returnKey: 'condition',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getInstruction (convo: TWithFields): IResultEntryString {
+  getInstruction(convo: TWithFields): IResultEntryString {
     return getStringEntry('Instruction', convo, {
       returnKey: 'instruction',
       returnValueFn: cleanVariablesInCondition
     })
   },
-  getDifficulty (convo: TWithFields): IResultEntryNumber {
+  getDifficulty(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('Difficulty', convo, {
       returnKey: 'difficulty'
     })
   },
-  getPlacement (convo: TWithFields): IResultEntryString {
+  getPlacement(convo: TWithFields): IResultEntryString {
     return getStringEntry('Placement', convo, {
       returnKey: 'placement'
     })
   },
-  getActor (convo: TWithFields): IResultEntryNumber {
+  getActor(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('Actor', convo, {
       returnKey: 'actorId'
     })
   },
-  getActorNameFromId (convo: TWithFields) {
+  getActorNameFromId(convo: TWithFields) {
     return { actorName: skillNameFromId(this.getActor(convo).actorId) }
   },
-  getConversant (convo: TWithFields): IResultEntryNumber {
+  getConversant(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('Conversant', convo, {
       returnKey: 'conversantId'
     })
   },
-  getConversantNameFromId (convo: TWithFields) {
+  getConversantNameFromId(convo: TWithFields) {
     return {
       conversantName: skillNameFromId(this.getConversant(convo).conversantIdId)
     }
   },
-  getAltOrbText (convo: TWithFields): IResultEntryString {
+  getAltOrbText(convo: TWithFields): IResultEntryString {
     return getStringEntry('AlternateOrbText', convo, {
       returnKey: 'altOrbText'
     })
   },
-  getOnUse (convo: TWithFields): IResultEntryString {
+  getOnUse(convo: TWithFields): IResultEntryString {
     return getStringEntry('OnUse', convo, {
       returnKey: 'onUse'
     })
   },
-  getDialogOverride (convo: TWithFields): IResultEntryString {
+  getDialogOverride(convo: TWithFields): IResultEntryString {
     return getStringEntry('OverrideDialogueCondition', convo, {
       returnKey: 'dialogOverrideCondition'
     })
@@ -134,7 +134,7 @@ const isTerminalDialog = (convo: TWithFields): boolean => {
   return !!jumpsToHub(convo)
 }
 
-function getSubtaskCount (convo: TWithFields): number {
+function getSubtaskCount(convo: TWithFields): number {
   let subtaskCount = 0
   convo?.fields?.map(field => {
     if (field.title.includes('subtask_title') && field.value) {

@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_passivecheck',
+    freezeTableName: true
   });
   return Conversations_passivecheck;
 };

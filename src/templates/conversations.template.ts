@@ -1,5 +1,5 @@
-import { TWithFields } from '../defs/import'
-import { TConversationEntry } from '../defs/templates'
+import { TWithFields } from 'defs/import'
+import { TConversationEntry } from 'defs/templates'
 import { getState, getOptions } from '../lib/shared'
 import {
   valueOf,
@@ -41,7 +41,7 @@ import {
 
 const options = getOptions()
 
-function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
+function BaseTemplate(convo: TWithFields, extended: any): TConversationEntry {
   return {
     conversationId: convo.id,
     name: valueOf('Title', convo),
@@ -50,7 +50,7 @@ function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
     ...extended
   }
 }
-function ExtendedTemplate (convo: TWithFields): TConversationEntry {
+function ExtendedTemplate(convo: TWithFields): TConversationEntry {
   return BaseTemplate(convo, {
     ...conversations.taskActive(convo),
     ...conversations.taskCompleted(convo),
@@ -72,7 +72,7 @@ function ExtendedTemplate (convo: TWithFields): TConversationEntry {
   })
 }
 
-function CourierExtendedTemplate (convo: TWithFields) {
+function CourierExtendedTemplate(convo: TWithFields) {
   return {
     numSubtasks: getSubtaskCount(convo),
     isTask: isATask(convo),
