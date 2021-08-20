@@ -8,6 +8,7 @@ import {
   IResultEntryBoolean,
   IKeyStringFunctionOption,
   IKeyNumberFunctionOption,
+  IKeyStringToNumberFunctionOption,
   IKeyBooleanFunctionOption,
   TKeyOutputFunction,
   IKeyFunctionOption
@@ -205,6 +206,19 @@ const getNumberEntry = (
     : { [returnKey || key]: numericValueOf(key, item) }
 }
 
+const getStringToNumberEntry = (
+  key: string,
+  item: TWithFields,
+  {
+    returnKey = null,
+    returnValueFn = null
+  }: IKeyStringToNumberFunctionOption = {}
+): IResultEntryNumber => {
+  return returnValueFn
+    ? { [returnKey || key]: returnValueFn(valueOf(key, item)) }
+    : { [returnKey || key]: numericValueOf(key, item) }
+}
+
 const getBooleanEntry = (
   key: string,
   item: TWithFields,
@@ -285,6 +299,7 @@ export {
   keyFunction,
   getStringEntry,
   getNumberEntry,
+  getStringToNumberEntry,
   getBooleanEntry,
   cleanVariableName,
   cleanVariableNameNoPrefix,

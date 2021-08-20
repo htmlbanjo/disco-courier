@@ -23,7 +23,7 @@ import {
   isADie
 } from '../search/items.search'
 
-function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
+function BaseTemplate(item: TWithFields, extended: TWithFields): IResultEntry {
   return {
     itemId: item.id,
     name: valueOf('Name', item),
@@ -34,7 +34,7 @@ function BaseTemplate (item: TWithFields, extended: TWithFields): IResultEntry {
   }
 }
 
-function ExtendedTemplate (item: TWithFields): IResultEntry {
+function ExtendedTemplate(item: TWithFields): IResultEntry {
   return BaseTemplate(item, {
     ...items.itemType(item),
     ...items.itemGroup(item),
@@ -59,7 +59,7 @@ function ExtendedTemplate (item: TWithFields): IResultEntry {
     ...CourierExtrasTemplate(item)
   })
 }
-function CourierExtrasTemplate (item: TWithFields): IResultEntry {
+function CourierExtrasTemplate(item: TWithFields): IResultEntry {
   return {
     isStackable: isAStackable(item),
     isMusic: isAMusic(item),
@@ -69,7 +69,8 @@ function CourierExtrasTemplate (item: TWithFields): IResultEntry {
     isClothing: isAClothing(item),
     isNote: isANote(item),
     isTare: isATare(item),
-    isDice: isADie(item)
+    isDice: isADie(item),
+    isKey: isAKey(item)
   }
 }
 
@@ -122,8 +123,7 @@ export const ConsumableTemplate = (item: TWithFields): IResultEntry => {
       ...items.itemGroup(item),
       ...items.itemValue(item),
       ...items.mediumTextValue(item),
-      ...items.multipleAllowed(item),
-      ...items.equipOrb(item)
+      ...items.multipleAllowed(item)
     })
   }
 }
@@ -153,7 +153,7 @@ export const ClothingTemplate = (item: TWithFields): IResultEntry => {
     return BaseTemplate(item, {
       ...items.itemType(item),
       ...items.itemGroup(item),
-      ...items.conversation(item)
+      ...items.equipOrb(item)
     })
   }
 }

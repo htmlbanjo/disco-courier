@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  Conversations.dialogtext.init({
+  Conversations_dialogtext.init({
     parentId: DataTypes.NUMBER,
     dialogId: DataTypes.NUMBER,
     dialogLong: DataTypes.TEXT,
@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_dialogtext',
+    freezeTableName: true
   });
   return Conversations_dialogtext;
 };

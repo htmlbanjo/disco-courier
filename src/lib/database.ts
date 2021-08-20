@@ -21,13 +21,3 @@ export const connect = async (type: string) => {
       process.exit(1)
     })
 }
-
-/*
-const insert = (entityname: string, data) => {
-  const sequelize = new Sequelize({
-    host: 'localhost',
-    dialect: 'sqlite',
-    storage: `src/data/${entityname}.sqlite`
-  })
-}
-*/

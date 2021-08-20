@@ -35,9 +35,6 @@ module.exports = {
       multipleAllowed: {
         type: Sequelize.BOOLEAN
       },
-      equipOrb: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

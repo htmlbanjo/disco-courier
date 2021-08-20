@@ -11,6 +11,12 @@ module.exports = {
       conversationId: {
         type: Sequelize.NUMBER
       },
+      conversationType: {
+        type: Sequelize.STRING
+      },
+      conversationSubType: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },
@@ -27,10 +33,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       taskReward: {
-        type: Sequelize.STRING
+        type: Sequelize.NUMBER
       },
-      taskTimed: {
-        type: Sequelize.BOOLEAN
+      numSubtasks: {
+        type: Sequelize.NUMBER
+      },
+      subtasks: {
+        type: Sequelize.TEXT
       },
       checkType: {
         type: Sequelize.NUMBER
@@ -56,7 +65,16 @@ module.exports = {
       conversantName: {
         type: Sequelize.STRING
       },
-      altOrbText: {
+      location: {
+        type: Sequelize.STRING
+      },
+      floor: {
+        type: Sequelize.STRING
+      },
+      floorNumber: {
+        type: Sequelize.NUMBER
+      },
+      subject: {
         type: Sequelize.STRING
       },
       onUse: {
@@ -64,27 +82,6 @@ module.exports = {
       },
       dialogOverrideCondition: {
         type: Sequelize.STRING
-      },
-      subtasks: {
-        type: Sequelize.TEXT
-      },
-      numSubtasks: {
-        type: Sequelize.NUMBER
-      },
-      isTask: {
-        type: Sequelize.BOOLEAN
-      },
-      isOrb: {
-        type: Sequelize.BOOLEAN
-      },
-      hasSubtask: {
-        type: Sequelize.BOOLEAN
-      },
-      isHub: {
-        type: Sequelize.BOOLEAN
-      },
-      isDoor: {
-        type: Sequelize.BOOLEAN
       },
       dialogLength: {
         type: Sequelize.NUMBER

@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Actors_attribute',
+    freezeTableName: true
   });
   return Actors_attribute;
 };

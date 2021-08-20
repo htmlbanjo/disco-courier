@@ -20,10 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     itemType: DataTypes.NUMBER,
     itemGroup: DataTypes.NUMBER,
-    conversation: DataTypes.STRING
+    equipOrb: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Items_clothing',
+    freezeTableName: true
   });
   return Items_clothing;
 };

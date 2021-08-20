@@ -44,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_check',
+    freezeTableName: true
+
   });
   return Conversations_check;
 };

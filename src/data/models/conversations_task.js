@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Conversations_task',
+    freezeTableName: true
   });
   return Conversations_task;
 };

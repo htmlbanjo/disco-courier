@@ -1,6 +1,6 @@
 import { TWithFields } from '../defs/import'
 import { getOptions } from '../lib/shared'
-import { tableDates } from '../search/index.search'
+import { tableDates } from './index.search'
 
 const options = getOptions()
 

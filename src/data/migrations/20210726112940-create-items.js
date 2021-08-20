@@ -107,6 +107,9 @@ module.exports = {
       isDice: {
         type: Sequelize.BOOLEAN
       },
+      isKey:{
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

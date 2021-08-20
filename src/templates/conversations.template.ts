@@ -1,5 +1,5 @@
-import { TWithFields } from '../defs/import'
-import { TConversationEntry } from '../defs/templates'
+import { TWithFields } from 'defs/import'
+import { TConversationEntry } from 'defs/templates'
 import { getState, getOptions } from '../lib/shared'
 import {
   valueOf,
@@ -12,15 +12,34 @@ import {
 import { applyActorFilters } from '../search/filters.search'
 import {
   conversations,
+  isTerminalDialog,
   getSubtaskCount,
   isATask,
   hasASubtask,
   isADoor,
   isAnOrb,
   isAHub,
+  isABedEvent,
+  isADream,
+  isAnInventoryItem,
+  isAKimSwitch,
+  isQuestInitiation,
+  isCommunistQuest,
+  isUltraliberalQuest,
+  isMoralistQuest,
+  isFaschistQuest,
+  isABark,
+  isALifeline,
+  isAnInitiation,
+  isAThought,
+  hasALocation,
   jumpsToHub,
-  isTerminalDialog
+  nameExtendedSplitColumns,
+  isValidEntry,
+  getConversationType,
+  getConversationSubType
 } from '../search/conversations.search'
+import { normalizedNames } from '../replace/conversations.replace'
 import { getSubtasks } from '../search/conversations.subtask.search'
 import {
   getWhiteChecks,
@@ -41,53 +60,58 @@ import {
 
 const options = getOptions()
 
-function BaseTemplate (convo: TWithFields, extended: any): TConversationEntry {
-  return {
-    conversationId: convo.id,
-    name: valueOf('Title', convo),
-    description: description(convo),
-    ...tableDates(),
-    ...extended
+function BaseTemplate(convo: TWithFields, extended: any): TConversationEntry {
+  if (isValidEntry(convo)) {
+    return {
+      conversationId: convo.id,
+      conversationType: getConversationType(convo),
+      conversationSubType: getConversationSubType(convo),
+      name: normalizedNames(valueOf('Title', convo)),
+      description: description(convo),
+      ...tableDates(),
+      ...extended
+    }
   }
 }
-function ExtendedTemplate (convo: TWithFields): TConversationEntry {
-  return BaseTemplate(convo, {
-    ...conversations.taskActive(convo),
-    ...conversations.taskCompleted(convo),
-    ...conversations.taskCancelled(convo),
-    ...conversations.taskReward(convo),
-    ...conversations.taskIsTimed(convo),
-    ...conversations.getCheckType(convo),
-    ...conversations.getCondition(convo),
-    ...conversations.getInstruction(convo),
-    ...conversations.getPlacement(convo),
-    ...conversations.getActor(convo),
-    ...conversations.getActorNameFromId(convo),
-    ...conversations.getConversant(convo),
-    ...conversations.getConversantNameFromId(convo),
-    ...conversations.getAltOrbText(convo),
-    ...conversations.getOnUse(convo),
-    ...conversations.getDialogOverride(convo),
-    subTasks: getSubtasks(convo, 'string')
-  })
+function ExtendedTemplate(convo: TWithFields): TConversationEntry {
+  if (isValidEntry(convo)) {
+    return BaseTemplate(convo, {
+      ...conversations.taskActive(convo),
+      ...conversations.taskCompleted(convo),
+      ...conversations.taskCancelled(convo),
+      ...conversations.taskReward(convo),
+      ...conversations.getCheckType(convo),
+      ...conversations.getCondition(convo),
+      ...conversations.getInstruction(convo),
+      ...conversations.getPlacement(convo),
+      ...conversations.getActor(convo),
+      ...conversations.getActorNameFromId(convo),
+      ...conversations.getConversant(convo),
+      ...conversations.getConversantNameFromId(convo),
+      ...conversations.getOnUse(convo),
+      ...conversations.getDialogOverride(convo),
+      subTasks: getSubtasks(convo, 'string')
+    })
+  }
 }
 
-function CourierExtendedTemplate (convo: TWithFields) {
-  return {
-    numSubtasks: getSubtaskCount(convo),
-    isTask: isATask(convo),
-    isOrb: isAnOrb(convo),
-    hasSubtask: hasASubtask(convo),
-    isHub: isAHub(convo),
-    isDoor: isADoor(convo),
-    dialogLength: convo?.dialogueEntries?.length
+function CourierExtendedTemplate(convo: TWithFields) {
+  //...conversations.getFloorNumber(convo),
+  // we shave about 4s on average from caching name here.
+  const nameLookup = normalizedNames(valueOf('Title', convo))
+  if (isValidEntry(convo)) {
+    return {
+      numSubtasks: getSubtaskCount(convo),
+      dialogLength: convo?.dialogueEntries?.length,
+      ...nameExtendedSplitColumns(convo)
+    }
   }
 }
 
 export const ConversationTemplate = (
   convo: TWithFields
 ): TConversationEntry => {
-  if (applyActorFilters(convo)) {
+  if (isValidEntry(convo) && applyActorFilters(convo)) {
     return BaseTemplate(convo, {
       ...ExtendedTemplate(convo),
       ...CourierExtendedTemplate(convo)

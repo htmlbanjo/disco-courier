@@ -15,13 +15,16 @@ module.exports = (sequelize, DataTypes) => {
   };
   Conversations.init({
     conversationId: DataTypes.NUMBER,
+    conversationType: DataTypes.STRING,
+    conversationSubType: DataTypes.STRING,
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
     taskActive: DataTypes.STRING,
     taskComplete: DataTypes.STRING,
     taskCanceled: DataTypes.STRING,
-    taskReward: DataTypes.STRING,
-    taskTimed: DataTypes.BOOLEAN,
+    taskReward: DataTypes.NUMBER,
+    numSubtasks: DataTypes.NUMBER,
+    subtasks: DataTypes.TEXT,
     checkType: DataTypes.NUMBER,
     condition: DataTypes.TEXT,
     instruction: DataTypes.TEXT,
@@ -30,20 +33,17 @@ module.exports = (sequelize, DataTypes) => {
     actorName: DataTypes.STRING,
     conversantId: DataTypes.NUMBER,
     conversantName: DataTypes.STRING,
-    altOrbText: DataTypes.STRING,
+    location: DataTypes.STRING,
+    floor: DataTypes.STRING,
+    floorNumber: DataTypes.NUMBER,
+    subject: DataTypes.STRING,
     onUse: DataTypes.STRING,
     dialogOverrideCondition: DataTypes.STRING,
-    subtasks: DataTypes.TEXT,
-    numSubtasks: DataTypes.NUMBER,
-    isTask: DataTypes.BOOLEAN,
-    isOrb: DataTypes.BOOLEAN,
-    hasSubtask: DataTypes.BOOLEAN,
-    isHub: DataTypes.BOOLEAN,
-    isDoor: DataTypes.BOOLEAN,
     dialogLength: DataTypes.NUMBER
   }, {
     sequelize,
     modelName: 'Conversations',
+    freezeTableName: true
   });
   return Conversations;
 };

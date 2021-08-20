@@ -28,14 +28,13 @@ function applyActorFilters (entry) {
   // TODO: AND.
   const fActions = {
     or: () => {
-      return Object.keys(filterFnList)
+      const resultsOneMatchesTrue = Object.keys(filterFnList)
         .reduce((results: boolean[], fName: string) => {
           results.push(filterFnList[fName]())
           return results
         }, [] as boolean[])
-        .find((res: boolean) => {
-          res === true
-        })
+        .some((res: boolean) => res === true)
+      return resultsOneMatchesTrue
     },
     one: () => this.or(),
     and: () => {

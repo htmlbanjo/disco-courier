@@ -90,28 +90,32 @@ export interface DialogueItem extends BaseItem {
   dialogueEntries: DialogueEntry[]
 }
 
-type TKeyOutputFunction = (
+export type TKeyOutputFunction = (
   value: string | boolean | number
 ) => string | boolean | number
 
-interface IKeyFunctionOption {
+export interface IKeyFunctionOption {
   returnKey?: string
   returnValueFn?: TKeyOutputFunction
 }
 
-interface IKeyStringFunctionOption {
+export interface IKeyStringFunctionOption {
   returnKey?: string
   returnValueFn?: (value: string) => string
 }
-interface IKeyNumberFunctionOption {
+export interface IKeyNumberFunctionOption {
   returnKey?: string
   returnValueFn?: (value: number) => number
 }
-interface IKeyBooleanFunctionOption {
+export interface IKeyStringToNumberFunctionOption {
+  returnKey?: string
+  returnValueFn?: (value: string) => number
+}
+export interface IKeyBooleanFunctionOption {
   returnKey?: string
   returnValueFn?: (value: boolean) => boolean
 }
-interface ISupportedVersion {
+export interface ISupportedVersion {
   version: string
   rowCounts?: {
     actors: number
@@ -122,41 +126,24 @@ interface ISupportedVersion {
   }
   selectors?: {}
 }
-interface ICurrentVersion extends ISupportedVersion {
+export interface ICurrentVersion extends ISupportedVersion {
   version: string | false
 }
 
-interface IResultEntry {
+export interface IResultEntry {
   [index: string]: string | boolean | number
 }
 
-interface IResultEntryNumber {
+export interface IResultEntryNumber {
   [index: string]: number
 }
-interface IResultEntryString {
+export interface IResultEntryString {
   [index: string]: string
 }
-interface IResultEntryBoolean {
+export interface IResultEntryBoolean {
   [index: string]: boolean
 }
 
-type TItem = BaseItem | ActorItem | ConversationItem
-type TSearchableItem = Item | DialogueEntry | Field
-type TWithFields = Item | DialogueEntry
-
-export {
-  TItem,
-  TSearchableItem,
-  TWithFields,
-  IResultEntry,
-  IResultEntryString,
-  IResultEntryNumber,
-  IResultEntryBoolean,
-  IKeyStringFunctionOption,
-  IKeyNumberFunctionOption,
-  IKeyBooleanFunctionOption,
-  ISupportedVersion,
-  ICurrentVersion,
-  TKeyOutputFunction,
-  IKeyFunctionOption
-}
+export type TItem = BaseItem | ActorItem | ConversationItem
+export type TSearchableItem = Item | DialogueEntry | Field
+export type TWithFields = Item | DialogueEntry
