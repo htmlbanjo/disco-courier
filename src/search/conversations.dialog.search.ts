@@ -2,7 +2,7 @@ import { Field, TWithFields, IResultEntry } from '../defs/import'
 import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
 import { applyActorFilters } from './filters.search'
-import { conversations, isAHub, isATask } from './conversations.search'
+import { conversations } from './conversations.search'
 
 import {
   skillNameFromId,
@@ -12,29 +12,29 @@ import {
 import { tableDates } from '../search/index.search'
 const options = getOptions()
 
-function isAWhiteCheck (entry: TWithFields): boolean {
+function isAWhiteCheck(entry: TWithFields): boolean {
   return !!titleIs('DifficultyWhite', entry)
 }
-function isARedCheck (entry: TWithFields): boolean {
+function isARedCheck(entry: TWithFields): boolean {
   return !!titleIs('DifficultyRed', entry)
 }
 /* function isAPassiveCheck (entry: TWithFields): boolean {
   return !!valueOf('Title', entry).match(/Variable\[\"([A-Za-z]+.\w+)\"\]/)
 } */
-function isAPassiveCheck (entry: TWithFields): boolean {
+function isAPassiveCheck(entry: TWithFields): boolean {
   return !!titleIs('DifficultyPass', entry)
 }
-function isARedOrWhiteCheck (entry: TWithFields): boolean {
+function isARedOrWhiteCheck(entry: TWithFields): boolean {
   return isAWhiteCheck(entry) || isARedCheck(entry)
 }
-function isACheck (entry: TWithFields): boolean {
+function isACheck(entry: TWithFields): boolean {
   return isAWhiteCheck(entry) || isARedCheck(entry) || isAPassiveCheck(entry)
 }
 
 type TCheckType = 'red' | 'white' | 'passive' | 'all' | 'both'
 
 //TODO: move templating-style fns into the proper template file.
-function CheckTemplate (entry: TWithFields, type: TCheckType) {
+function CheckTemplate(entry: TWithFields, type: TCheckType) {
   if (!!!applyActorFilters(entry)) {
     return undefined
   }
@@ -87,7 +87,7 @@ function CheckTemplate (entry: TWithFields, type: TCheckType) {
   }
 }
 
-function getCheckAspectList (entry: TWithFields) {
+function getCheckAspectList(entry: TWithFields) {
   const checks = []
   // if there's a skill check that has more than 21 modifiers, uh...it loses at blackjack?
   for (let i = 0; i < 20; i++) {
@@ -110,7 +110,7 @@ function getCheckAspectList (entry: TWithFields) {
 /* TODO: Look, I get it. We could do a lot with variable function names.
  * Favoring explicit/SOLID over clever/DRY.
  */
-function getTypeVerifier (type: TCheckType): (entry: TWithFields) => boolean {
+function getTypeVerifier(type: TCheckType): (entry: TWithFields) => boolean {
   switch (type) {
     case 'both':
       return isARedOrWhiteCheck
@@ -127,7 +127,7 @@ function getTypeVerifier (type: TCheckType): (entry: TWithFields) => boolean {
   }
 }
 
-function getChecksByType (type: TCheckType, convo: TWithFields) {
+function getChecksByType(type: TCheckType, convo: TWithFields) {
   const verifier = getTypeVerifier(type)
   if (convo?.dialogueEntries?.length < 1) {
     return undefined
@@ -142,28 +142,28 @@ function getChecksByType (type: TCheckType, convo: TWithFields) {
   return results?.length > 0 ? results : undefined
 }
 
-function getWhiteChecks (entry: TWithFields) {
+function getWhiteChecks(entry: TWithFields) {
   return getChecksByType('white', entry)
 }
 
-function getRedChecks (entry: TWithFields) {
+function getRedChecks(entry: TWithFields) {
   return getChecksByType('red', entry)
 }
 
-function getWhiteAndRedChecks (entry: TWithFields) {
+function getWhiteAndRedChecks(entry: TWithFields) {
   return getChecksByType('both', entry)
 }
 
-function getAllChecks (entry: TWithFields) {
+function getAllChecks(entry: TWithFields) {
   return getChecksByType('all', entry)
 }
 
-function getPassiveChecks (entry: TWithFields) {
+function getPassiveChecks(entry: TWithFields) {
   return getChecksByType('passive', entry)
 }
 
 //TODO: complete outgoinglinks xref
-function getOutgoingLinks (convo: TWithFields) {
+function getOutgoingLinks(convo: TWithFields) {
   return convo?.dialogueEntries?.reduce((entries, entry) => {
     entry.outgoingLinks.map(row => {
       entries.push({

@@ -24,6 +24,8 @@ export function skillNameFromId(id: number | string): string {
   const key: string = typeof id === 'string' ? 'refId' : 'actorId'
   return id === 387
     ? 'You'
+    : id === 0
+    ? 'None'
     : getState('cache')?.actors.find(actor => actor[key] === id)?.name
 }
 

@@ -22,8 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     itemGroup: DataTypes.NUMBER,
     itemValue: DataTypes.NUMBER,
     mediumText: DataTypes.STRING,
-    multipleAllowed: DataTypes.BOOLEAN,
-    equipOrb: DataTypes.STRING
+    multipleAllowed: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Items_consumable',

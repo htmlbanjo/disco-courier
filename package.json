@@ -13,7 +13,8 @@
     "courier-read": "ts-node ./src/index.ts --export=read",
     "courier-health": "ts-node ./src/index.ts --export=read --start=4 --results=1 actors.attribute",
     "courier": "ts-node ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "rsync -a --delete ./src/data/ ../DiscoSwinger/src/data/"
   },
   "bin": {
     "courier": "./index.js"

@@ -46,7 +46,8 @@ module.exports = (sequelize, DataTypes) => {
     isClothing: DataTypes.BOOLEAN,
     isNote: DataTypes.BOOLEAN,
     isTare: DataTypes.BOOLEAN,
-    isDice: DataTypes.BOOLEAN
+    isDice: DataTypes.BOOLEAN,
+    isKey: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Items',

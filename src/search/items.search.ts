@@ -5,70 +5,75 @@ import {
   booleanValueOf,
   valueExistsInKey
 } from './index.search'
+import { normalizedNames } from '../replace/conversations.replace'
 
 const items = {
-  itemType (item: TWithFields): IResultEntry {
+  itemType(item: TWithFields): IResultEntry {
     return keyFunction('itemType', 'number', item)
   },
-  itemGroup (item: TWithFields): IResultEntry {
+  itemGroup(item: TWithFields): IResultEntry {
     return keyFunction('itemGroup', 'number', item)
   },
-  itemValue (item: TWithFields): IResultEntry {
+  itemValue(item: TWithFields): IResultEntry {
     return keyFunction('itemValue', 'number', item)
   },
-  thoughtType (item: TWithFields): IResultEntry {
+  thoughtType(item: TWithFields): IResultEntry {
     return keyFunction('thoughtType', 'number', item)
   },
-  timeLeft (item: TWithFields): IResultEntry {
+  timeLeft(item: TWithFields): IResultEntry {
     return keyFunction('timeLeft', 'number', item)
   },
-  conversation (item: TWithFields): IResultEntry {
-    return keyFunction('conversation', 'string', item)
+  conversation(item: TWithFields): IResultEntry {
+    return keyFunction('conversation', 'string', item, {
+      returnValueFn: normalizedNames
+    })
   },
-  stackName (item: TWithFields): IResultEntry {
+  stackName(item: TWithFields): IResultEntry {
     return keyFunction('stackName', 'string', item)
   },
-  equipOrb (item: TWithFields): IResultEntry {
-    return keyFunction('equipOrb', 'string', item)
+  equipOrb(item: TWithFields): IResultEntry {
+    return keyFunction('equipOrb', 'string', item, {
+      returnValueFn: normalizedNames
+    })
   },
-  mediumTextValue (item: TWithFields): IResultEntry {
+  mediumTextValue(item: TWithFields): IResultEntry {
     return keyFunction('MediumTextValue', 'string', item, {
       returnKey: 'mediumText'
     })
   },
-  bonus (item: TWithFields): IResultEntry {
+  bonus(item: TWithFields): IResultEntry {
     return keyFunction('bonus', 'string', item)
   },
-  fixtureBonus (item: TWithFields): IResultEntry {
+  fixtureBonus(item: TWithFields): IResultEntry {
     return keyFunction('fixtureBonus', 'string', item)
   },
-  fixtureDescription (item: TWithFields): IResultEntry {
+  fixtureDescription(item: TWithFields): IResultEntry {
     return keyFunction('fixtureDescription', 'string', item)
   },
-  requirement (item: TWithFields): IResultEntry {
+  requirement(item: TWithFields): IResultEntry {
     return keyFunction('requirement', 'string', item)
   },
-  isItem (item: TWithFields): IResultEntry {
+  isItem(item: TWithFields): IResultEntry {
     return keyFunction('IsItem', 'boolean', item, { returnKey: 'isItem' })
   },
-  isCursed (item: TWithFields): IResultEntry {
+  isCursed(item: TWithFields): IResultEntry {
     return keyFunction('isCursed', 'boolean', item)
   },
-  isThought (item: TWithFields): IResultEntry {
+  isThought(item: TWithFields): IResultEntry {
     return keyFunction('isThought', 'boolean', item)
   },
-  isSubstance (item: TWithFields): IResultEntry {
+  isSubstance(item: TWithFields): IResultEntry {
     return keyFunction('isSubstance', 'boolean', item)
   },
-  isConsumable (item: TWithFields): IResultEntry {
+  isConsumable(item: TWithFields): IResultEntry {
     return keyFunction('isConsumable', 'boolean', item)
   },
-  isAutoEquipable (item: TWithFields): IResultEntry {
+  isAutoEquipable(item: TWithFields): IResultEntry {
     return keyFunction('autoequip', 'boolean', item, {
       returnKey: 'isAutoEquipable'
     })
   },
-  multipleAllowed (item: TWithFields): IResultEntry {
+  multipleAllowed(item: TWithFields): IResultEntry {
     return keyFunction('multipleAllowed', 'boolean', item)
   }
 }

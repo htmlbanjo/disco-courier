@@ -26,8 +26,8 @@ module.exports = {
       itemGroup: {
         type: Sequelize.NUMBER
       },
-      conversation: {
-        type: Sequelize.STRING
+      equipOrb: {
+        type:Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
