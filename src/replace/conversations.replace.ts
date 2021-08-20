@@ -46,6 +46,10 @@ export const normalizedNames = <TKeyOutputFunction>(name: string): string => {
       'WHIRLING F1 ORB / communist'
     )
     name = name.replace(/ORB AFTERTHOUGHT/, 'AFTERTHOUGHT ORB')
+    name = name.replace(
+      /LANDS END \/ ladder afterthought/,
+      'LANDS END ORB / ladder afterthought'
+    )
 
     // normalize location/subject
     name = name.replace(/MEASUREHEAD \/ FASCHA DQ/, 'FASCHA_DQ / MEASUREHEAD')
@@ -128,6 +132,8 @@ export const normalizedNames = <TKeyOutputFunction>(name: string): string => {
       /APT ORB \/ foreclosed apt door/,
       'APT ORB / foreclosed apt DOOR'
     )
+    name = name.replace(/YARD \/ CUNODOOR/, 'YARD / CUNO SHACK DOOR')
+
     //OOF THIS ONE
     name = name.replace(
       /APT \/ smoker door orb/,

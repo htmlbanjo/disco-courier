@@ -80,7 +80,6 @@ function ExtendedTemplate(convo: TWithFields): TConversationEntry {
       ...conversations.taskCompleted(convo),
       ...conversations.taskCancelled(convo),
       ...conversations.taskReward(convo),
-      ...conversations.taskIsTimed(convo),
       ...conversations.getCheckType(convo),
       ...conversations.getCondition(convo),
       ...conversations.getInstruction(convo),
@@ -89,7 +88,6 @@ function ExtendedTemplate(convo: TWithFields): TConversationEntry {
       ...conversations.getActorNameFromId(convo),
       ...conversations.getConversant(convo),
       ...conversations.getConversantNameFromId(convo),
-      ...conversations.getAltOrbText(convo),
       ...conversations.getOnUse(convo),
       ...conversations.getDialogOverride(convo),
       subTasks: getSubtasks(convo, 'string')
@@ -104,8 +102,6 @@ function CourierExtendedTemplate(convo: TWithFields) {
   if (isValidEntry(convo)) {
     return {
       numSubtasks: getSubtaskCount(convo),
-      hasSubtask: hasASubtask(convo),
-      hasALocation: hasALocation(convo),
       dialogLength: convo?.dialogueEntries?.length,
       ...nameExtendedSplitColumns(convo)
     }

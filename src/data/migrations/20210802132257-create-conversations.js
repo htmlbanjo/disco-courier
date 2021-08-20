@@ -33,13 +33,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       taskReward: {
-        type: Sequelize.STRING
-      },
-      taskTimed: {
-        type: Sequelize.BOOLEAN
-      },
-      hasSubtask: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.NUMBER
       },
       numSubtasks: {
         type: Sequelize.NUMBER
@@ -70,12 +64,6 @@ module.exports = {
       },
       conversantName: {
         type: Sequelize.STRING
-      },
-      altOrbText: {
-        type: Sequelize.STRING
-      },
-      hasALocation: {
-        type: Sequelize.BOOLEAN
       },
       location: {
         type: Sequelize.STRING

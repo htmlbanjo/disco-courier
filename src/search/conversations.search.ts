@@ -40,10 +40,14 @@ export const conversations = {
     })
   },
   taskReward(convo: TWithFields): IResultEntryNumber {
-    return getNumberEntry('taskReward', convo)
+    return getNumberEntry('task_reward', convo, {
+      returnKey: 'taskReward'
+    })
   },
   taskIsTimed(convo: TWithFields): IResultEntryBoolean {
-    return getBooleanEntry('taskTimed', convo)
+    return getBooleanEntry('task_timed', convo, {
+      returnKey: 'taskTimed'
+    })
   },
   getCheckType(convo: TWithFields): IResultEntryNumber {
     return getNumberEntry('CheckType', convo, {
@@ -186,7 +190,8 @@ export const isATask = (convo: TWithFields): boolean =>
 export const hasASubtask = (convo: TWithFields): boolean =>
   !!valueOf('subtask_title_01', convo)
 
-export const isADoor = (name: string): boolean => !!name?.match(/\bDOOR\b/)
+export const isADoor = (name: string): boolean =>
+  !!(name?.match(/\bDOOR\b/) || name?.match(/\bFLAP\b/))
 
 export const isAnOrb = (name: string): boolean => !!name?.match(/\bORB\b/)
 
@@ -276,6 +281,26 @@ export const getConversationSubType = (convo: TWithFields): string => {
     ? 'Dream'
     : isQuestInitiation(name)
     ? 'Quest'
+    : !!(isAnOrb(name) && convo.dialogueEntries.length > 2)
+    ? 'DialogueOrb'
+    : !!(isAnOrb(name) && convo.dialogueEntries.length < 3)
+    ? 'FlavorOrb'
+    : isAThought(name)
+    ? 'Cabinet'
+    : !!(isATask(convo) && hasASubtask(convo))
+    ? 'hasSubtask'
+    : !!(
+        isATask(convo) &&
+        !hasASubtask(convo) &&
+        conversations.taskIsTimed(convo).taskTimed
+      )
+    ? 'Timed'
+    : !!(
+        isATask(convo) &&
+        !hasASubtask(convo) &&
+        !conversations.taskIsTimed(convo).taskTimed
+      )
+    ? 'None'
     : 'Misc'
 }
 
