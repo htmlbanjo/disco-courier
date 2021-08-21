@@ -54,7 +54,8 @@ const initialState = {
   hasNonConversations: undefined,
   filters: {},
   cache: {
-    actors: undefined
+    actors: undefined,
+    items: undefined
   }
 }
 

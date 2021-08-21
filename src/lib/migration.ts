@@ -26,7 +26,7 @@ import {
 
 const options = getOptions()
 
-function versionList (supportedVersions: ISupportedVersion[]): string {
+function versionList(supportedVersions: ISupportedVersion[]): string {
   return supportedVersions
     .reduce((versions: string[], v: ISupportedVersion) => {
       versions.push(v.version)
@@ -35,7 +35,7 @@ function versionList (supportedVersions: ISupportedVersion[]): string {
     .join(', ')
 }
 
-function isSupportedVersion (
+function isSupportedVersion(
   source: string,
   supportedVersionList: ISupportedVersion[],
   action: (matchedVersion) => void
@@ -61,7 +61,7 @@ function isSupportedVersion (
   })
 }
 
-function writeStream (
+function writeStream(
   mode: 'write' | 'seed' | 'read' | 'mark' | 'cache',
   entity: string,
   file: string
@@ -87,45 +87,59 @@ function writeStream (
   }
 }
 
-function processActorPipe (
+function processCachePipe(
   pipe: ReadStream,
   lookupExists: boolean,
+  entity: string,
   callback: (response) => void
 ) {
   let totalRows = 0
-  const actors = []
+  const cacheData = []
   pipe.on('data', data => {
     ++totalRows
-    actors.push(data)
-    if (totalRows === getState('currentVersion')?.rowCounts['actors']) {
-      callback(actors)
+    cacheData.push(data)
+    if (totalRows === getState('currentVersion')?.rowCounts[entity]) {
+      callback(cacheData)
       pipe.destroy()
     }
   })
 }
 
-// create a compact actors reference on first run
-function getOrCreateLookup () {
-  const lookupExists = !!fs.existsSync(`./src/data/cache/actors.cache.json`)
+function setOrCreateLookupInState(lookup) {
+  const lookupExists = !!fs.existsSync(`./src/data/cache/${lookup}.json`)
+  const [entity, subEntity] = lookup.split('.')
+  const cacheName = `cache_${entity}`
   let pipe
   if (lookupExists) {
     pipe = chain([
-      fs.createReadStream(`./src/data/cache/actors.cache.json`),
+      fs.createReadStream(`./src/data/cache/${lookup}.json`),
       parser(),
-      pick({ filter: 'cache_actors' }),
+      pick({ filter: cacheName }),
       streamValues(),
       data => data.value
     ])
   } else {
-    pipe = streamSource(options.sourceJSON, 'actors.cache')
+    pipe = streamSource(options.sourceJSON, lookup)
   }
-  processActorPipe(pipe, lookupExists, function (response) {
-    setState('cache', { ...getState('cache'), actors: response })
+  processCachePipe(pipe, lookupExists, entity, function (response) {
+    setState('cache', { ...getState('cache'), [entity]: response })
     if (!!!lookupExists) {
-      writeStream('cache', 'actors.cache', 'actors.cache').write(
-        JSON.stringify({ cache_actors: response }, null, 2)
-      )
+      try {
+        writeStream('cache', lookup, lookup).write(
+          JSON.stringify({ [cacheName]: response }, null, 2)
+        )
+      } catch (err) {
+        // TODO: add a message
+        console.log(err)
+      }
     }
+  })
+}
+
+// create a compact set to reference on first run
+function setCachedItems() {
+  ;['actors.cache', 'items.cache'].map((lookup: string) => {
+    setOrCreateLookupInState(lookup)
   })
 }
 
@@ -255,7 +269,7 @@ const streamSource = (source: string, entity: string) => {
   ])
 }
 
-function buildIgnoreExpression (
+function buildIgnoreExpression(
   entityParent: string,
   entitySubProcess: string
 ): RegExp {
@@ -270,14 +284,14 @@ function buildIgnoreExpression (
   return new RegExp(`\\b${ignoreList.join('\\b|\\b')}\\b`)
 }
 
-function sourceFileExists (value: string): boolean {
+function sourceFileExists(value: string): boolean {
   return !!!fs.existsSync(`./src/data/${value}.json`) &&
     !!!fs.existsSync(`./src/data/${value}`)
     ? false
     : true
 }
 
-function confirmOrCreateDirectory (section: string, dirName: string): void {
+function confirmOrCreateDirectory(section: string, dirName: string): void {
   try {
     if (!fs.existsSync(`./src/data/${section}/${dirName}`)) {
       fs.mkdirSync(`./src/data/${section}/${dirName}`)
@@ -286,11 +300,11 @@ function confirmOrCreateDirectory (section: string, dirName: string): void {
     throw new Error(messageText.failedToCreateDirectory(dirName, err))
   }
 }
-function zeroPadded (value: number): string {
+function zeroPadded(value: number): string {
   return value.toString().padStart(2, '0')
 }
 
-function formatTableName (entity: string): string {
+function formatTableName(entity: string): string {
   entity = entity.split('.').join('_')
   // entity arg gets the first letter uppercased to match model names
   // e.g. 'actors' key exports to an 'Actors' table.
@@ -300,7 +314,7 @@ function formatTableName (entity: string): string {
 /*****************************************************************
  * AS CACHE FILES
  *****************************************************************/
-function cacheFileName (entity: string, file: string): string {
+function cacheFileName(entity: string, file: string): string {
   const directory = entity.split('.')[0]
   // TODO: refactor confirmOrCreateDirectory to DRY this up.
   try {
@@ -318,7 +332,7 @@ function cacheFileName (entity: string, file: string): string {
 /*****************************************************************
  * AS JSON
  *****************************************************************/
-function jsonFileName (entity: string, file: string): string {
+function jsonFileName(entity: string, file: string): string {
   const directory = entity.split('.')[0]
   confirmOrCreateDirectory('json', directory)
   return `./src/data/json/${directory}/${file}.json`
@@ -327,7 +341,7 @@ function jsonFileName (entity: string, file: string): string {
 /*****************************************************************
  * AS SEQUELIZE SEEDER
  *****************************************************************/
-function seedFileName (entity: string): string {
+function seedFileName(entity: string): string {
   const now = new Date()
   return `./src/data/seeders/${now.getUTCFullYear()}${zeroPadded(
     now.getUTCMonth() + 1
@@ -336,7 +350,7 @@ function seedFileName (entity: string): string {
   )}${zeroPadded(now.getUTCSeconds())}-add-${entity}.js`
 }
 
-function seed (entity: string, data): string {
+function seed(entity: string, data): string {
   // don't indent.
   return `
 'use-strict';
@@ -356,12 +370,12 @@ module.exports = {
  * AS A MARKDOWN TABLE
  *****************************************************************/
 
-function mdFileName (entity: string): string {
+function mdFileName(entity: string): string {
   const directory = getParentEntity(entity)
   confirmOrCreateDirectory('markdown', directory)
   return `./src/data/markdown/${directory}/${entity}.md`
 }
-function mark (entity: string, data): string {
+function mark(entity: string, data): string {
   const [entityName, groupName] = entity.split('.')
   return `
   Results for ${entityName} 
@@ -394,7 +408,7 @@ const read = (entity, file, data) => {
 export {
   versionList,
   isSupportedVersion,
-  getOrCreateLookup,
+  setCachedItems,
   setActorFilters,
   actorConversantArgsSanityCheck,
   streamSource,

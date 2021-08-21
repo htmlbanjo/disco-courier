@@ -3,8 +3,10 @@ import {
   keyFunction,
   valueOf,
   booleanValueOf,
-  valueExistsInKey
+  valueExistsInKey,
+  isAnEvidence
 } from './index.search'
+import { getState } from '../lib/shared'
 import { normalizedNames } from '../replace/conversations.replace'
 
 const items = {
@@ -99,7 +101,8 @@ const isAConsumable = (item: TWithFields): boolean =>
   booleanValueOf('isConsumable', item)
 
 const isABook = (item: TWithFields): boolean =>
-  nameValueStartsWith('book_', item)
+  nameValueStartsWith('book_', item) ||
+  valueOf('Name', item) === 'rubys_journal'
 
 const isAGame = (item: TWithFields): boolean =>
   nameValueStartsWith('game_', item)
@@ -121,7 +124,14 @@ const isAClothing = (item: TWithFields): boolean =>
   nameValueStartsWith('pants_', item) ||
   nameValueStartsWith('shirt_', item) ||
   nameValueStartsWith('jacket_', item) ||
-  nameValueStartsWith('neck_', item)
+  nameValueStartsWith('neck_', item) ||
+  nameValueStartsWith('hat_', item) ||
+  nameValueStartsWith('glasses_', item)
+
+const isAMap = (item: TWithFields): boolean => nameValueStartsWith('map_', item)
+
+const isAPostcard = (item: TWithFields): boolean =>
+  nameValueStartsWith('postcard_', item)
 
 const isAStackable = (item: TWithFields): boolean =>
   !!valueOf('stackName', item)
@@ -130,7 +140,49 @@ const isATare = (item: TWithFields): boolean =>
   nameValueEndsWith('_tare', item) ||
   valueExistsInKey(`^yellow_plastic_bag`, 'stackName', item)
 
-const isADie = (item: TWithFields): boolean => nameValueEndsWith('_die', item)
+const isADie = (item: TWithFields): boolean =>
+  nameValueEndsWith('_die', item) || nameValueEndsWith('_dice', item)
+
+const itemType = (item: TWithFields): string => {
+  return !!isAThought(item)
+    ? 'THOUGHT'
+    : isAKey(item)
+    ? 'KEY'
+    : !!isADrug(item)
+    ? 'SUBSTANCE'
+    : !!isAConsumable(item)
+    ? 'CONSUMABLE'
+    : !!isABook(item)
+    ? 'BOOK'
+    : !!isAGame(item)
+    ? 'GAME'
+    : !!isATape(item)
+    ? 'TAPE'
+    : !!isAMusic(item)
+    ? 'MUSIC'
+    : !!isANote(item)
+    ? 'NOTE'
+    : !!isAClothing(item)
+    ? 'CLOTHING'
+    : !!isATare(item)
+    ? 'TARE'
+    : !!isADie(item)
+    ? 'DICE'
+    : !!isAMap(item)
+    ? 'MAP'
+    : !!isAPostcard(item)
+    ? 'POSTCARD'
+    : !!isAnEvidence(item)
+    ? 'EVIDENCE'
+    : !!isAStackable(item)
+    ? 'GENERIC-STACKABLE'
+    : 'GENERIC-ITEM'
+}
+function itemTypeFromConversationTitle(conversationTitle: string): string {
+  return getState('cache')?.items.find(
+    item => item['conversation'] === conversationTitle
+  )?.type
+}
 
 export {
   items,
@@ -148,5 +200,7 @@ export {
   isANote,
   isATare,
   isAStackable,
-  isADie
+  isADie,
+  itemType,
+  itemTypeFromConversationTitle
 }

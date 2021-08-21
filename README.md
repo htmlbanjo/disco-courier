@@ -45,16 +45,15 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 | `courier -- --export=db actors`                                                                                    | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                                                                                                        |
 | `courier -- --export=read --start=100 variables`                                                                   | displays all variables, starting at entry 100 to finish.                                                                                                                                           |
 | `courier -- --export=md --start=4 --results=1 conversations`                                                       | writes entry #4 in conversations as a table to `/data/markdown/conversations.md`                                                                                                                   |
-| `courier -- --export=db --results=2 items.consumable`                                                              | generates a seed file for an "Items_consumable" table, and populates it with the first two consumable items.                                                                                       |
 | `courier -- --export=read --results=4 actors.skill conversations.task`                                             | prints the first four results for both actors that are a skill, and conversations representing a task.                                                                                             |
 | `courier -- --export=md conversations.whitecheck conversations.redcheck`                                           | writes all white checks as a markdown-friendly table to `/data/markdown/conversations.whitecheck.md` and likewise all redchecks to `data/markdown/conversations.redcheck.md`                       |
 | `courier -- --export=db conversations.link`                                                                        | generates a seed file representing the entire dialog graph, normalized for a cross-reference table in a relational db                                                                              |
 | `courier -- --export=json --start=188 conversations.dialog`                                                        | writes all dialog entries starting at the 188th result to `data/json/conversations.dialog.json`                                                                                                    |
 | `courier -- --export=db --start=1 conversations.link conversations.task conversations.subtask conversations.check` | generates seed files for the dialog graph, a list of all tasks, a list of all subtasks, and all checks (white/red/passive) for their respective tables and populates with the first entry of each. |
-| `courier -- --export=read --results=5 --actor=3 --conversant=8 conversations.dialogtext`                               | Creates a markdown-friendly table of the first five instances of Kim dialog where Jean Viqmarc is the conversant.                                                                                                              |
-| `courier -- --export=json --actor=3 --OR=true --conversant=6 conversations.dialog` | Creates a detailed json export where the speaker is Kim, OR the conversant is Garte. |
+| `courier -- --export=read --results=5 --actor=3 --conversant=8 conversations.dialogtext`                           | Creates a markdown-friendly table of the first five instances of Kim dialog where Jean Viqmarc is the conversant.                                                                                  |
+| `courier -- --export=json --actor=3 --OR=true --conversant=6 conversations.dialog`                                 | Creates a detailed json export where the speaker is Kim, OR the conversant is Garte.                                                                                                               |
 
-***Important:*** Make sure you include the empty double-dash (--) between the courier command and the arguments.
+**_Important:_** Make sure you include the empty double-dash (--) between the courier command and the arguments.
 
 Note this is not raw output: each command passes through an extensive templating system that can be customized to taste.
 
@@ -69,10 +68,9 @@ Arguments take the form of options for paging and output, and a list of entities
 | `--start=<#>`                   | begins output at specified number, starting with 1 (no zero index). Similar to an `offset` command.                                                                                                                                                                                                           |
 | `--results=<#>`                 | limits results to specified number. If used with start, will print the expected number of results _from the start number_. Similar to a `limit` command.                                                                                                                                                      |
 | `--export=<read\|json\|md\|db>` | The `read` option prints results to your terminal. The `json` option writes the results to an "entity.group.json" file. The `md` option attempts to format the result in a markdown-friendly table. The `db` option generates a sequelize seed file (see the Sequelize seed section for more on this option). |
-| `--actor=<id#>` | filter results by actor ID (only applies to relevant conversation groups) |
-| `--conversant=<id#>` | filter results by conversant ID (only applies to relevant conversation groups) |
-| `--OR=true` | used to apply filters conditionally (actor OR conversant are true) default is AND (both conditions must be met) |
-
+| `--actor=<id#>`                 | filter results by actor ID (only applies to relevant conversation groups)                                                                                                                                                                                                                                     |
+| `--conversant=<id#>`            | filter results by conversant ID (only applies to relevant conversation groups)                                                                                                                                                                                                                                |
+| `--OR=true`                     | used to apply filters conditionally (actor OR conversant are true) default is AND (both conditions must be met)                                                                                                                                                                                               |
 
 #### Entities and groups
 
@@ -83,7 +81,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 |**locations**|(none)
 |**actors**|`actors:skill`, `actors:attribute`
 |**variables**| (none)
-|**items**| `items.thought`, `items.key`, `items.substance`, `items.consumable`, `items.game`, `items.book`, `items.clothing`, `items.tare`
+|**items**| (none - may re-introduce sub-types at a later date)
 |**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.dialogtext`, `conversations.orb`, `conversations.check` `conversations.whitecheck`, `conversations.redcheck` `conversations.passivecheck`
 
 #### Customizing output

@@ -16,6 +16,7 @@ import {
   valueExistsInKey,
   cleanVariableName
 } from './index.search'
+import { itemTypeFromConversationTitle } from './items.search'
 import { skillNameFromId } from './actors.search'
 import { normalizedNames } from '../replace/conversations.replace'
 import { getState } from 'lib/shared'
@@ -91,7 +92,7 @@ export const conversations = {
   },
   getConversantNameFromId(convo: TWithFields) {
     return {
-      conversantName: skillNameFromId(this.getConversant(convo).conversantIdId)
+      conversantName: skillNameFromId(this.getConversant(convo).conversantId)
     }
   },
   getAltOrbText(convo: TWithFields): IResultEntryString {
@@ -273,6 +274,7 @@ export const getConversationType = (convo: TWithFields): string => {
 }
 export const getConversationSubType = (convo: TWithFields): string => {
   const name: string = normalizedNames(valueOf('Title', convo))
+  const itemType = itemTypeFromConversationTitle(name)
   return isAHub(name)
     ? 'HUB'
     : isADoor(name)
@@ -295,13 +297,9 @@ export const getConversationSubType = (convo: TWithFields): string => {
         conversations.taskIsTimed(convo).taskTimed
       )
     ? 'TIMED'
-    : !!(
-        isATask(convo) &&
-        !hasASubtask(convo) &&
-        !conversations.taskIsTimed(convo).taskTimed
-      )
-    ? 'BASIC'
-    : 'MISC'
+    : !!itemType
+    ? itemType
+    : null
 }
 
 export const nameExtendedSplitColumns = (convo: TWithFields) => {
