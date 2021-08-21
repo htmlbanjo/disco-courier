@@ -14,6 +14,9 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      type: {
+        type: Sequelize.STRING
+      },
       displayName: {
         type: Sequelize.STRING
       },
@@ -35,9 +38,6 @@ module.exports = {
       stackName: {
         type: Sequelize.STRING
       },
-      isCursed: {
-        type: Sequelize.BOOLEAN
-      },
       mediumText: {
         type: Sequelize.STRING
       },
@@ -45,18 +45,6 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       isAutoEquipable: {
-        type: Sequelize.BOOLEAN
-      },
-      isThought: {
-        type: Sequelize.BOOLEAN
-      },
-      isSubstance: {
-        type: Sequelize.BOOLEAN
-      },
-      isConsumable: {
-        type: Sequelize.BOOLEAN
-      },
-      isItem: {
         type: Sequelize.BOOLEAN
       },
       equipOrb: {
@@ -83,31 +71,10 @@ module.exports = {
       isStackable: {
         type: Sequelize.BOOLEAN
       },
-      isMusic: {
-        type: Sequelize.BOOLEAN
-      },
-      isTape: {
-        type: Sequelize.BOOLEAN
-      },
       isEvidence: {
         type: Sequelize.BOOLEAN
       },
       isInventoryItem: {
-        type: Sequelize.BOOLEAN
-      },
-      isClothing: {
-        type: Sequelize.BOOLEAN
-      },
-      isNote: {
-        type: Sequelize.BOOLEAN
-      },
-      isTare: {
-        type: Sequelize.BOOLEAN
-      },
-      isDice: {
-        type: Sequelize.BOOLEAN
-      },
-      isKey:{
         type: Sequelize.BOOLEAN
       },
       createdAt: {

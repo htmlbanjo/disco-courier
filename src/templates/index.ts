@@ -4,19 +4,9 @@ import {
   ActorTemplate,
   SkillTemplate,
   AttributeTemplate,
-  LookupTemplate
+  ActorLookupTemplate
 } from './actors.template'
-import {
-  ItemTemplate,
-  ThoughtTemplate,
-  KeyTemplate,
-  SubstanceTemplate,
-  ConsumableTemplate,
-  GameTemplate,
-  BookTemplate,
-  ClothingTemplate,
-  TareTemplate
-} from './items.template'
+import { ItemTemplate, ItemLookupTemplate } from './items.template'
 import {
   ConversationTemplate,
   TaskTemplate,
@@ -41,25 +31,11 @@ const templatize = (entity, item) => {
     case 'actors.attribute':
       return AttributeTemplate(item)
     case 'actors.cache':
-      return LookupTemplate(item)
+      return ActorLookupTemplate(item)
     case 'items':
       return ItemTemplate(item)
-    case 'items.thought':
-      return ThoughtTemplate(item)
-    case 'items.key':
-      return KeyTemplate(item)
-    case 'items.substance':
-      return SubstanceTemplate(item)
-    case 'items.consumable':
-      return ConsumableTemplate(item)
-    case 'items.game':
-      return GameTemplate(item)
-    case 'items.book':
-      return BookTemplate(item)
-    case 'items.clothing':
-      return ClothingTemplate(item)
-    case 'items.tare':
-      return TareTemplate(item)
+    case 'items.cache':
+      return ItemLookupTemplate(item)
     case 'locations':
       return LocationTemplate(item)
     case 'variables':

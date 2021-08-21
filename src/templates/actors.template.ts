@@ -9,7 +9,7 @@ import {
   refId
 } from '../search/index.search'
 
-function BaseTemplate (item: TWithFields, extended: any) {
+function BaseTemplate(item: TWithFields, extended: any) {
   return {
     actorId: item.id,
     refId: refId(item),
@@ -20,7 +20,7 @@ function BaseTemplate (item: TWithFields, extended: any) {
     ...extended
   }
 }
-function ExtendedTemplate (item: TWithFields) {
+function ExtendedTemplate(item: TWithFields) {
   return BaseTemplate(item, {
     isPlayer: booleanValueOf('IsPlayer', item),
     isNPC: booleanValueOf('IsNPC', item),
@@ -50,7 +50,7 @@ export const AttributeTemplate = (item: TWithFields) => {
   }
 }
 
-export const LookupTemplate = (item: TWithFields) => {
+export const ActorLookupTemplate = (item: TWithFields) => {
   return {
     actorId: item.id,
     name: valueOf('Name', item),

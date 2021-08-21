@@ -7,7 +7,7 @@ import {
   streamSource,
   sourceFileExists,
   isSupportedVersion,
-  getOrCreateLookup,
+  setCachedItems,
   setActorFilters,
   actorConversantArgsSanityCheck,
   seedFileName,
@@ -225,7 +225,7 @@ import {
       )
       updateProgress(messageText.openingSourceFile())
 
-      getOrCreateLookup() // caching
+      setCachedItems() // caching
       setActorFilters() //filters
       actorConversantArgsSanityCheck() // convenience messaging ux
 
