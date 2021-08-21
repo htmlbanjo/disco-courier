@@ -250,58 +250,58 @@ export const isGameOver = (convo: TWithFields): boolean =>
 export const getConversationType = (convo: TWithFields): string => {
   const name: string = normalizedNames(valueOf('Title', convo))
   return isAnInventoryItem(name)
-    ? 'Inventory'
+    ? 'INVENTORY'
     : isAThought(name)
-    ? 'Thought'
+    ? 'THOUGHT'
     : isAnInitiation(name)
-    ? 'Initiation'
+    ? 'INITIATION'
     : isALifeline(name)
-    ? 'Lifeline'
+    ? 'LIFELINE'
     : isATask(convo)
-    ? 'Task'
+    ? 'TASK'
     : isAKimSwitch(name)
-    ? 'Kim_Switch'
+    ? 'KIM_SWITCH'
     : isABedEvent(name)
-    ? 'Bed_Event'
+    ? 'BED_EVENT'
     : isABark(name)
-    ? 'Bark'
+    ? 'BARK'
     : isAnOrb(name)
-    ? 'Orb'
+    ? 'ORB'
     : isGameOver(convo)
     ? 'END'
-    : 'General'
+    : 'GENERAL'
 }
 export const getConversationSubType = (convo: TWithFields): string => {
   const name: string = normalizedNames(valueOf('Title', convo))
   return isAHub(name)
-    ? 'Hub'
+    ? 'HUB'
     : isADoor(name)
-    ? 'Door'
+    ? 'DOOR'
     : isADream(name)
-    ? 'Dream'
+    ? 'DREAM'
     : isQuestInitiation(name)
-    ? 'Quest'
+    ? 'QUEST'
     : !!(isAnOrb(name) && convo.dialogueEntries.length > 2)
-    ? 'DialogueOrb'
+    ? 'DIALOGUEORB'
     : !!(isAnOrb(name) && convo.dialogueEntries.length < 3)
-    ? 'FlavorOrb'
+    ? 'FLAVORORB'
     : isAThought(name)
-    ? 'Cabinet'
+    ? 'CABINET'
     : !!(isATask(convo) && hasASubtask(convo))
-    ? 'hasSubtask'
+    ? 'HASSUBTASK'
     : !!(
         isATask(convo) &&
         !hasASubtask(convo) &&
         conversations.taskIsTimed(convo).taskTimed
       )
-    ? 'Timed'
+    ? 'TIMED'
     : !!(
         isATask(convo) &&
         !hasASubtask(convo) &&
         !conversations.taskIsTimed(convo).taskTimed
       )
-    ? 'None'
-    : 'Misc'
+    ? 'BASIC'
+    : 'MISC'
 }
 
 export const nameExtendedSplitColumns = (convo: TWithFields) => {

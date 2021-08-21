@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Conversations_task.init({
     conversationId: DataTypes.NUMBER,
     name: DataTypes.STRING,
+    conversationType: DataTypes.STRING,
+    conversationSubType: DataTypes.STRING,
     description: DataTypes.STRING,
     taskActive: DataTypes.STRING,
     taskComplete: DataTypes.STRING,
