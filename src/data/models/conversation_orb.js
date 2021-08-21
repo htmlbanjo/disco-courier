@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Conversation_orb.init({
     conversationId: DataTypes.NUMBER,
     name: DataTypes.STRING,
+    conversationType: DataTypes.STRING,
+    conversationSubType: DataTypes.STRING,
     description: DataTypes.STRING,
     checkType: DataTypes.NUMBER,
     condition: DataTypes.STRING,

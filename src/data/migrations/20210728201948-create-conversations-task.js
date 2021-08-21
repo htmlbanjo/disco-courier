@@ -11,6 +11,12 @@ module.exports = {
       conversationId: {
         type: Sequelize.NUMBER
       },
+      conversationType: {
+        type: Sequelize.STRING
+      },
+      conversationSubType: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },
