@@ -53,7 +53,11 @@ export const normalizedNames = <TKeyOutputFunction>(name: string): string => {
 
     // normalize location/subject
     name = name.replace(/MEASUREHEAD \/ FASCHA DQ/, 'FASCHA_DQ / MEASUREHEAD')
-
+    // spelling
+    name = name.replace(
+      /KIM SWITCH \/ REJOIN AFTER MEASURHEAD TALK/,
+      'KIM SWITCH / REJOIN AFTER MEASUREHEAD TALK'
+    )
     // add FLOOR designators for whirling where appropriate
     name = name.replace(
       /WHIRLING \/ MONEYMAN barks/,
