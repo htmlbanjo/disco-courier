@@ -231,7 +231,7 @@ export const DialogTemplate = (convo: TWithFields) => {
           isRoot: entry.isRoot,
           isGroup: entry.isGroup,
           refId: refId(convo),
-          isHub: isAHub(convo),
+          isHub: isAHub(valueOf('Title', convo)),
           dialogShort: valueOf('Title', entry),
           dialogLong: valueOf('Dialogue Text', entry),
           actorId,
@@ -249,6 +249,7 @@ export const DialogTemplate = (convo: TWithFields) => {
           inputId: valueOf('InputId', entry),
           outputId: valueOf('OutputId', entry),
           flag: valueOf('FlagName', entry),
+
           ...tableDates()
         })
       }
