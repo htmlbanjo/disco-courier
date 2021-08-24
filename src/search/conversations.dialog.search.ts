@@ -169,6 +169,7 @@ function getOutgoingLinks(convo: TWithFields) {
   if (!!!convo?.dialogueEntries) {
     return []
   }
+
   return convo?.dialogueEntries?.reduce((entries: ILinkRow[], entry) => {
     if (!!entry?.outgoingLinks) {
       entry.outgoingLinks.map(row => {
@@ -182,7 +183,6 @@ function getOutgoingLinks(convo: TWithFields) {
           ...tableDates()
         })
       })
-    } else {
     }
     return entries || []
   }, [])
