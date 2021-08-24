@@ -43,3 +43,4 @@ src/app/.notes
 /src/data/cache
 /src/data/dialog.json
 /src/data/storage.sqlite3
+deploy.sh
