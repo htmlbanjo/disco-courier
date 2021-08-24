@@ -1,25 +1,20 @@
 import {
   TWithFields,
-  IResultEntry,
   IResultEntryString,
   IResultEntryNumber,
   IResultEntryBoolean
 } from '../defs/import'
 import {
-  keyFunction,
   getStringEntry,
   getNumberEntry,
   getStringToNumberEntry,
   getBooleanEntry,
   valueOf,
-  numericValueOf,
-  valueExistsInKey,
   cleanVariableName
 } from './index.search'
 import { itemTypeFromConversationTitle } from './items.search'
 import { skillNameFromId } from './actors.search'
 import { normalizedNames } from '../replace/conversations.replace'
-import { getState } from 'lib/shared'
 
 export const conversations = {
   taskActive(convo: TWithFields): IResultEntryString {

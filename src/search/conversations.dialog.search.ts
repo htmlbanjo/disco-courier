@@ -1,4 +1,5 @@
-import { Field, TWithFields, IResultEntry } from '../defs/import'
+import { Field, TWithFields } from '../defs/import'
+import { ILinkRow } from '../defs/templates'
 import { getOptions } from '../lib/shared'
 import { titleIs, valueOf, booleanValueOf, refId } from './index.search'
 import { applyActorFilters } from './filters.search'
@@ -162,21 +163,27 @@ function getPassiveChecks(entry: TWithFields) {
   return getChecksByType('passive', entry)
 }
 
-//TODO: complete outgoinglinks xref
 function getOutgoingLinks(convo: TWithFields) {
-  return convo?.dialogueEntries?.reduce((entries, entry) => {
-    entry.outgoingLinks.map(row => {
-      entries.push({
-        originConversationId: row.originConversationID,
-        originDialogId: row.originDialogueID,
-        destinationConversationId: row.destinationConversationID,
-        destinationDialogId: row.destinationDialogueID,
-        isConnector: row.isConnector,
-        priority: row.priority,
-        ...tableDates()
+  // fix -- added guards for a fallover event around CID #1257.
+  // TODO: investigate 1257.
+  if (!!!convo?.dialogEntries) {
+    return []
+  }
+  return convo?.dialogueEntries?.reduce((entries: ILinkRow[], entry) => {
+    if (!!entry?.outgoingLinks) {
+      entry.outgoingLinks.map(row => {
+        entries.push({
+          originConversationId: row.originConversationID,
+          originDialogId: row.originDialogueID,
+          destinationConversationId: row.destinationConversationID,
+          destinationDialogId: row.destinationDialogueID,
+          isConnector: row.isConnector,
+          priority: row.priority,
+          ...tableDates()
+        })
       })
-    })
-    return entries
+    }
+    return entries || []
   }, [])
 }
 
