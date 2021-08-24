@@ -166,7 +166,7 @@ function getPassiveChecks(entry: TWithFields) {
 function getOutgoingLinks(convo: TWithFields) {
   // fix -- added guards for a fallover event around CID #1257.
   // TODO: investigate 1257.
-  if (!!!convo?.dialogEntries) {
+  if (!!!convo?.dialogueEntries) {
     return []
   }
   return convo?.dialogueEntries?.reduce((entries: ILinkRow[], entry) => {
@@ -182,6 +182,7 @@ function getOutgoingLinks(convo: TWithFields) {
           ...tableDates()
         })
       })
+    } else {
     }
     return entries || []
   }, [])
