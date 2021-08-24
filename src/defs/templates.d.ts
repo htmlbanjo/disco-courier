@@ -29,3 +29,11 @@ export interface ITmplDialogEntryField {
   inputID: string | undefined
   outputID: string | undefined
 }
+interface ILinkRow {
+  originConversationId: number
+  originDialogId: number
+  destinationConversationId: number
+  destinationDialogId: number
+  isConnector: number
+  priority: number
+}
