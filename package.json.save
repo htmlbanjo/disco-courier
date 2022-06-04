@@ -1,0 +1,52 @@
+{
+  "name": "Disco-Courier",
+  "version": "1.0.0-alpha.1",
+  "author": "htmlbanjo",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon -w src -e ts,json -x ts-node ./src/index.ts",
+    "db:up": "sequelize db:migrate && sequelize db:seed:all",
+    "db:down": "sequelize db:seed:undo:all && sequelize db:migrate:undo:all",
+    "courier-seed": "ts-node ./src/index.ts --export=db",
+    "courier-write": "ts-node ./src/index.ts --export=json",
+    "courier-read": "ts-node ./src/index.ts --export=read",
+    "courier-health": "ts-node ./src/index.ts --export=read --start=4 --results=1 actors.attribute",
+    "courier": "ts-node ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "rsync -a --delete ./src/data/ ../DiscoSwinger/src/data/"
+  },
+  "bin": {
+    "courier": "./index.js"
+  },
+  "keywords": [
+    "express",
+    "typescript"
+  ],
+  "devDependencies": {
+    "@types/node": "^14.17.4",
+    "@types/sequelize": "github:types/sequelize",
+    "@types/validator": "^13.6.3",
+    "@types/yargs": "^17.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+x    "chalk": "^4.1.1",
+    "eslint": "^7.29.0",
+    "minimist2": "^1.0.2",
+    "nodemon": "^2.0.12",
+    "sequelize-cli": "^6.2.0",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.10.1",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "env-cmd": "^10.1.0",
+    "fs": "0.0.1-security",
+    "immer": "^9.0.5",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2",
+    "stream-json": "^1.7.2",
+    "tablemark": "^2.0.0",
+    "yargs": "^17.0.1"
+  }
+}
