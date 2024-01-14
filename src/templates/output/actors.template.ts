@@ -1,4 +1,4 @@
-import { TWithFields } from '../defs/import'
+import { TWithFields } from '../../defs/import'
 import {
   valueOf,
   booleanValueOf,
@@ -7,9 +7,9 @@ import {
   longDescription,
   tableDates,
   refId
-} from '../search/index.search'
+} from '../../search/index.search'
 
-function BaseTemplate(item: TWithFields, extended: any) {
+function BaseTemplate (item: TWithFields, extended: any) {
   return {
     actorId: item.id,
     refId: refId(item),
@@ -20,7 +20,7 @@ function BaseTemplate(item: TWithFields, extended: any) {
     ...extended
   }
 }
-function ExtendedTemplate(item: TWithFields) {
+function ExtendedTemplate (item: TWithFields) {
   return BaseTemplate(item, {
     isPlayer: booleanValueOf('IsPlayer', item),
     isNPC: booleanValueOf('IsNPC', item),
@@ -45,12 +45,12 @@ export const SkillTemplate = (item: TWithFields) => {
 }
 
 export const AttributeTemplate = (item: TWithFields) => {
-  if (item.id < 5) {
+  if (item.id > 416) {
     return BaseTemplate(item, {})
   }
 }
 
-export const ActorLookupTemplate = (item: TWithFields) => {
+export const LookupTemplate = (item: TWithFields) => {
   return {
     actorId: item.id,
     name: valueOf('Name', item),

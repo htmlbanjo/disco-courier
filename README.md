@@ -21,6 +21,7 @@ _**Things you can use Disco-Courier for:**_
 
 - You'll need a purchased copy of the game and access to its data.
 - Assumes you have [Node.js and npm](https://medium.com/@nodesource/installing-node-js-tutorial-using-nvm-5c6ff5925dd8) installed.
+- This older software only receives occasional maintenance updates. PRs are still welcome, however.
 
 ## Setup
 
@@ -28,7 +29,7 @@ _**Things you can use Disco-Courier for:**_
 - run `npm install` in the directory created.
 - place a copy of your [exported data](https://github.com/Perfare/AssetStudio) in /data/dialog.json
 - note: make sure your [extracted game data is in the JSON format](https://github.com/Perfare/AssetStudio/issues/477)!
-- run a health check: `npm run courier:health`
+- run a health check: `npm run courier-health`
 
 If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!?_ Yeah me either).
 

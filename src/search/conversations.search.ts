@@ -109,8 +109,9 @@ export const conversations = {
     return getStringToNumberEntry('Title', convo, {
       returnKey: 'floorNumber',
       returnValueFn: <TKeyOutputFunction>(value: string): number => {
+        console.log(value)        
         const retVal = value?.replace(
-          /(ROOF)|F{1}(\d{1})|S{1}(\d{1})$)/,
+          /(ROOF)|F{1}(\d{1})|S{1}(\d{1})$/,
           (
             orig: string,
             roof: string,
@@ -318,11 +319,14 @@ export const nameExtendedSplitColumns = (convo: TWithFields) => {
     }
   }
 
+
+  
   const [, second] = name?.split('/')
   const [orbLocation, orbDescription] = name?.split(' ORB /')
   const [location, floorDesignator] = orbLocation.split(' ')
-  const [doorDescription, isDoor] = second?.split(' DOOR')
-  const [barkDescription, isBark] = second?.split(' barks')
+
+  const [doorDescription, isDoor] = (second?.includes(' DOOR')) ? second?.split(' DOOR') : [undefined, undefined]
+  const [barkDescription, isBark] = (second?.includes(' barks')) ? second?.split(' barks') : [undefined, undefined]
   const subject = isDoor ? doorDescription : isBark ? barkDescription : second
 
   const floor = floorDesignator === '/' ? 'main' : floorDesignator

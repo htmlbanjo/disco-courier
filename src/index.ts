@@ -59,7 +59,7 @@ import {
       ) {
         // don't wait for readStream end event
         pipe.destroy()
-      }
+      } 
     })
     pipe.on('close', data => {
       if (all[entity].length < 1) {
