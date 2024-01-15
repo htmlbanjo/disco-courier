@@ -17,6 +17,8 @@ _**Things you can use Disco-Courier for:**_
 
 \*(please, please let me know if you do this).
 
+(Note/Update: for Jamais Vu support (May 2023), see the 1.0-beta4RC1 branch)
+
 ## Requirements
 
 - You'll need a purchased copy of the game and access to its data.
@@ -28,7 +30,7 @@ _**Things you can use Disco-Courier for:**_
 - run `npm install` in the directory created.
 - place a copy of your [exported data](https://github.com/Perfare/AssetStudio) in /data/dialog.json
 - note: make sure your [extracted game data is in the JSON format](https://github.com/Perfare/AssetStudio/issues/477)!
-- run a health check: `npm run courier:health`
+- run a health check: `npm run courier-health`
 
 If everything is setup correctly, you'll get a json response with summary details of the game's "FYS" attribute (_...get it? ...Health check? ...GET IT?!?_ Yeah me either).
 
@@ -79,7 +81,7 @@ Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own 
 |Entity|Group|
 ---|---|
 |**locations**|(none)
-|**actors**|`actors:skill`, `actors:attribute`
+|**actors**|`actors,skill`, `actors.attribute`
 |**variables**| (none)
 |**items**| (none - may re-introduce sub-types at a later date)
 |**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.dialogtext`, `conversations.orb`, `conversations.check` `conversations.whitecheck`, `conversations.redcheck` `conversations.passivecheck`
