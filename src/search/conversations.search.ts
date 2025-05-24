@@ -190,7 +190,7 @@ export const hasASubtask = (convo: TWithFields): boolean =>
 export const isADoor = (name: string): boolean =>
   !!(name?.match(/\bDOOR\b/) || name?.match(/\bFLAP\b/))
 
-export const isAnOrb = (name: string): boolean => !!name?.match(/\bORB\b/)
+export const isAnOrb = (convo: TWithFields): boolean => !!valueOf('Title', convo)?.match(/\bORB\b/)
 
 export const isAHub = (name: string): boolean => !!name?.match(/HUB/i)
 
