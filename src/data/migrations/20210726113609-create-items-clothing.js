@@ -1,48 +1,33 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Actors_all', {
+    await queryInterface.createTable('Items_clothing', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      actorId: {
+      itemId: {
         type: Sequelize.NUMBER
-      },
-      refId: {
-        type: Sequelize.STRING
       },
       name: {
         type: Sequelize.STRING
       },
-      shortDescription: {
+      displayName: {
         type: Sequelize.STRING
       },
-      longDescription: {
+      description: {
         type: Sequelize.TEXT
       },
-      isPlayer: {
-        type: Sequelize.BOOLEAN
+      itemType: {
+        type: Sequelize.NUMBER
       },
-      isNPC: {
-        type: Sequelize.BOOLEAN
+      itemGroup: {
+        type: Sequelize.NUMBER
       },
-      isFemale: {
-        type: Sequelize.BOOLEAN
-      },
-      PSY: {
-        type: Sequelize.INTEGER
-      },
-      COR: {
-        type: Sequelize.INTEGER
-      },
-      ITL: {
-        type: Sequelize.INTEGER
-      },
-      MOT: {
-        type: Sequelize.INTEGER
+      equipOrb: {
+        type:Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -55,6 +40,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Actors_all');
+    await queryInterface.dropTable('Items_clothing');
   }
 };

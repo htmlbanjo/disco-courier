@@ -108,7 +108,7 @@ function getCheckAspectList(entry: TWithFields) {
   return checks
 }
 
-/* TODO: Look, I get it. We could do a lot with variable function names.
+/* DONTFIX: Look, I get it. We could do a lot with variable function names.
  * Favoring explicit/SOLID over clever/DRY.
  */
 function getTypeVerifier(type: TCheckType): (entry: TWithFields) => boolean {

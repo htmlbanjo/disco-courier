@@ -23,6 +23,7 @@ _**Things you can use Disco-Courier for:**_
 
 - You'll need a purchased copy of the game and access to its data.
 - Assumes you have [Node.js and npm](https://medium.com/@nodesource/installing-node-js-tutorial-using-nvm-5c6ff5925dd8) installed.
+- This older software only receives occasional maintenance updates. PRs are still welcome, however.
 
 ## Setup
 

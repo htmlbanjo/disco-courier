@@ -30,10 +30,10 @@ const options = {
   sourceJSON: <string>'dialog',
   supportedVersions: <ISupportedVersion[]>[
     {
-      version: <string>'4/6/2021 11:49:13 AM',
+      version: <string>'5/20/2022 12:05:57 PM',
       rowCounts: {
         locations: <number>2,
-        actors: <number>420,
+        actors: <number>424,
         items: <number>258,
         variables: <number>10510,
         conversations: <number>134504
