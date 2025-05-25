@@ -7,7 +7,7 @@ The goal of Disco-Courier is to normalize and condense data for easy reading or 
 Courier is the first of three repos aimed at a larger project:
 - **Disco Courier**: Data Prep (this repo)
 - **Disco Swinger**: API layer
-- **Disco Rider**: UI layer)
+- **Disco Rider**: UI layer
 
 _**Things you can use Disco-Courier for:**_
 
