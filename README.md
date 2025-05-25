@@ -5,8 +5,8 @@ _**A data-mover-and-shaker for Disco Elysium.**_
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice. It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
 Courier is the first of three repos aimed at a larger project:
-- **Disco Courier**: Data Prep (this repo)
-- **Disco Swinger**: API layer
+- **[Disco Courier](https://github.com/htmlbanjo/disco-courier/)**: Data Prep (this repo)
+- **[Disco Swinger](https://github.com/htmlbanjo/DiscoSwinger/)**: API layer
 - **Disco Rider**: UI layer
 
 _**Things you can use Disco-Courier for:**_
