@@ -4,7 +4,10 @@ _**A data-mover-and-shaker for Disco Elysium.**_
 
 The goal of Disco-Courier is to normalize and condense data for easy reading or transfer to the format of your choice. It drives data around in a _SSSSOUPED UP MOTOR CARRIAGE!_
 
-It is the first of three repos aimed at a larger project.
+Courier is the first of three repos aimed at a larger project:
+- **Disco Courier**: Data Prep (this repo)
+- **Disco Swinger**: API layer
+- **Disco Rider**: UI layer)
 
 _**Things you can use Disco-Courier for:**_
 
@@ -16,8 +19,6 @@ _**Things you can use Disco-Courier for:**_
 - isolate Garte-only dialog and train an AI model on it.\*
 
 \*(please, please let me know if you do this).
-
-(Note/Update: for Jamais Vu support (May 2023), see the 1.0-beta4RC1 branch)
 
 ## Requirements
 
