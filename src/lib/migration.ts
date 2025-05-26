@@ -66,24 +66,19 @@ function writeStream(
   entity: string,
   file: string
 ): NodeJS.WritableStream {
-  if (mode === 'read') {
-    return
-  }
-  let pathAndFilename
-  try {
-    pathAndFilename =
-      mode === 'seed'
-        ? (pathAndFilename = seedFileName(entity))
-        : mode === 'mark'
-        ? (pathAndFilename = mdFileName(entity))
-        : mode === 'write'
-        ? jsonFileName(entity, file)
-        : cacheFileName(entity, file)
-    return fs.createWriteStream(pathAndFilename)
-  } catch (err) {
-    console.log(chalk.red(`Error writing file "${pathAndFilename}": ${err}`))
-    chalk.italic(chalk.blueBright('Do we have permission to write files here?'))
-    process.exit(1)
+  if (mode === 'read') return;
+  const pathAndFilename = (() => {
+    switch (mode) {
+      case 'seed':   return seedFileName(entity);
+      case 'mark':   return mdFileName(entity);
+      case 'write':  return jsonFileName(entity, file);
+      default:       return cacheFileName(entity, file);
+  }})();
+  try { return fs.createWriteStream(pathAndFilename) }
+  catch (err) {
+    console.log(chalk.red(`Error writing file "${pathAndFilename}": ${err}`));
+    console.log(chalk.italic(chalk.blueBright('Do we have permission to write files here?')));
+    process.exit(1);
   }
 }
 
