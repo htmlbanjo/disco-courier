@@ -294,7 +294,7 @@ function sourceFileExists(value: string): boolean {
 function confirmOrCreateDirectory(section: string, dirName: string): void {
   try {
     if (!fs.existsSync(`./src/data/${section}/${dirName}`)) {
-      fs.mkdirSync(`./src/data/${section}/${dirName}`)
+      fs.mkdirSync(`./src/data/${section}/${dirName}`, {recursive: true})
     }
   } catch (err) {
     throw new Error(messageText.failedToCreateDirectory(dirName, err))
