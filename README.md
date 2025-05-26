@@ -44,7 +44,7 @@ Here's a bunch of sample commands you can try to give you an idea of what's poss
 
 | Command                                                                                                            | Result                                                                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `courier -- --export=read locations`                                                                               | prints a list of locations in json format to the screen.                                                                                                                                           |
+| `courier -- --export=read items`                                                                               | prints a list of game items in json format to the screen.                                                                                                                                              |
 | `courier -- --export=json items`                                                                                   | writes a list of all in-game items to a json file in `/data/json/items.json`                                                                                                                       |
 | `courier -- --export=db actors`                                                                                    | generates a Sequelize seed file for a table named "Actors" and populates it with all actors                                                                                                        |
 | `courier -- --export=read --start=100 variables`                                                                   | displays all variables, starting at entry 100 to finish.                                                                                                                                           |
@@ -82,11 +82,11 @@ Use these as last argument to specify output. Can use multiple args.
 Omitting a sub-item exports all groups for the entity (e.g. "actors" on its own producs all rows in actors)
 |Entity|Group|
 ---|---|
-|**locations**|(none)
 |**actors**|`actors,skill`, `actors.attribute`
 |**variables**| (none)
 |**items**| (none - may re-introduce sub-types at a later date)
 |**conversations**|`conversations.task`, `conversations.subtask`, `conversations.dialog`, `conversations.dialogtext`, `conversations.orb`, `conversations.check` `conversations.whitecheck`, `conversations.redcheck` `conversations.passivecheck`
+|**locations**|(removed in Jamais Vu update - entity no longer supported)
 
 #### Customizing output
 
