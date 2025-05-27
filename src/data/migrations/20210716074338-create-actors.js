@@ -32,18 +32,6 @@ module.exports = {
       isFemale: {
         type: Sequelize.BOOLEAN
       },
-      PSY: {
-        type: Sequelize.INTEGER
-      },
-      COR: {
-        type: Sequelize.INTEGER
-      },
-      ITL: {
-        type: Sequelize.INTEGER
-      },
-      MOT: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
